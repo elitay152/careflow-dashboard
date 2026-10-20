@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "synthetic_only": true,
+  "exported_at": "2026-10-20T22:08:25.844757+00:00",
+  "current": {
+    "label": "Hand-authored extended demo",
+    "raw_schema": "public",
+    "analytics_schema": "analytics",
+    "source_loaded_at": "2026-10-20T21:33:26.628460+00:00",
+    "counts": {
+      "patients": 3,
+      "encounters": 3,
+      "conditions": 3,
+      "medications": 3,
+      "loads": 1,
+      "quarantine": 1
+    },
+    "monthly_utilization": [
+      {
+        "encounter_month": "2025-01-01",
+        "encounter_count": 3,
+        "unique_patients": 3,
+        "average_duration_minutes": 60.0
+      }
+    ],
+    "conditions": [
+      {
+        "condition_name": "Diabetes mellitus type 2",
+        "code_system": "http://snomed.info/sct",
+        "code": "44054006",
+        "affected_patients": 2,
+        "total_patients": 3,
+        "prevalence_fraction": 0.6666666666666666
+      },
+      {
+        "condition_name": "Hypertension",
+        "code_system": "http://snomed.info/sct",
+        "code": "38341003",
+        "affected_patients": 1,
+        "total_patients": 3,
+        "prevalence_fraction": 0.3333333333333333
+      }
+    ],
+    "medication_status": [
+      {
+        "status": "active",
+        "request_count": 3
+      }
+    ],
+    "quality": {
+      "status": "passed",
+      "completed_at": "2026-10-20T22:06:59.473649Z",
+      "models_passed": 10,
+      "checks_passed": 32,
+      "checks_total": 32,
+      "invocation_id": "28c8b770-ab36-49dc-840e-6b07c0449f94"
+    }
+  },
+  "archive": {
+    "label": "Synthea 3.3.0 \u00b7 seed 42",
+    "recorded_on": "2026-10-20",
+    "evidence_url": "https://github.com/elitay152/Careflow/blob/main/docs/validation-results.json",
+    "counts": {
+      "patients": 108,
+      "encounters": 6428,
+      "conditions": 3514,
+      "medications": 4152,
+      "loads": 110,
+      "quarantine": 0
+    },
+    "resources": {
+      "AllergyIntolerance": 82,
+      "CarePlan": 342,
+      "CareTeam": 342,
+      "Claim": 10580,
+      "Condition": 3514,
+      "Device": 179,
+      "DiagnosticReport": 11416,
+      "DocumentReference": 6428,
+      "Encounter": 6428,
+      "ExplanationOfBenefit": 10580,
+      "ImagingStudy": 44,
+      "Immunization": 1651,
+      "Location": 257,
+      "Medication": 1204,
+      "MedicationAdministration": 1204,
+      "MedicationRequest": 4152,
+      "Observation": 46796,
+      "Organization": 256,
+      "Patient": 108,
+      "Practitioner": 256,
+      "PractitionerRole": 256,
+      "Procedure": 13548,
+      "Provenance": 108,
+      "SupplyDelivery": 790
+    },
+    "accepted": 14202,
+    "rejected": 0,
+    "ignored": 106319,
+    "input_files": 110,
+    "dbt_models_passed": 10,
+    "dbt_tests_passed": 32
+  },
+  "assistant": {
+    "mode": "baseline",
+    "execution": "exported_replay",
+    "examples": [
+      {
+        "question": "Monthly encounters in 2025-01",
+        "status": "answered",
+        "answer": "Monthly finished encounters: 1 month(s) returned, newest first. Most recent displayed month: 2025-01, 3 encounters.",
+        "rows": [
+          {
+            "encounter_month": "2025-01-01",
+            "value": 3
+          }
+        ],
+        "citations": [
+          {
+            "metric_id": "monthly_encounters",
+            "title": "Monthly finished encounters",
+            "definition": "Number of encounters with status finished, grouped by UTC start month.",
+            "relation": "analytics.mart_monthly_utilization",
+            "limitations": [
+              "Other encounter statuses are excluded.",
+              "Months with no finished encounters are absent."
+            ]
+          }
+        ],
+        "plan": {
+          "metric": "monthly_encounters",
+          "start_month": "2025-01-01",
+          "end_month": "2025-02-01",
+          "condition_filter": null
+        }
+      },
+      {
+        "question": "Condition prevalence for diabetes",
+        "status": "answered",
+        "answer": "Diabetes mellitus type 2: 2 of 3 loaded patients (66.7%).",
+        "rows": [
+          {
+            "code_system": "http://snomed.info/sct",
+            "code": "44054006",
+            "condition_name": "Diabetes mellitus type 2",
+            "affected_patients": 2,
+            "total_patients": 3,
+            "prevalence_fraction": 0.6666666666666666
+          }
+        ],
+        "citations": [
+          {
+            "metric_id": "condition_prevalence",
+            "title": "Recorded condition prevalence",
+            "definition": "Distinct patients with a confirmed active, recurrent, or relapsed condition divided by all loaded patients, grouped by terminology system and code. An optional filter matches the condition name.",
+            "relation": "analytics.mart_condition_prevalence",
+            "limitations": [
+              "This is a current recorded snapshot, not historical population prevalence.",
+              "The denominator includes all loaded patients, including deceased patients.",
+              "Unknown verification, refuted, error, and inactive conditions are excluded.",
+              "Name filters are literal substring matches, not clinical concept sets; condition groups can overlap."
+            ]
+          }
+        ],
+        "plan": {
+          "metric": "condition_prevalence",
+          "start_month": null,
+          "end_month": null,
+          "condition_filter": "diabetes"
+        }
+      },
+      {
+        "question": "Medication requests by status",
+        "status": "answered",
+        "answer": "3 medication requests across 1 status group(s). Requests do not establish dispensing or adherence.",
+        "rows": [
+          {
+            "status": "active",
+            "request_count": 3
+          }
+        ],
+        "citations": [
+          {
+            "metric_id": "medication_requests",
+            "title": "Medication requests by status",
+            "definition": "Number of MedicationRequest resources grouped by request status; includes all statuses.",
+            "relation": "analytics.fct_medication_requests",
+            "limitations": [
+              "Requests do not establish dispensing, administration, or adherence.",
+              "Date and drug-name filters are not supported by this assistant yet."
+            ]
+          }
+        ],
+        "plan": {
+          "metric": "medication_requests",
+          "start_month": null,
+          "end_month": null,
+          "condition_filter": null
+        }
+      }
+    ]
+  },
+  "forecast": {
+    "status": "not_evaluated",
+    "predictions": null,
+    "held_out_metrics": null
+  }
+}
