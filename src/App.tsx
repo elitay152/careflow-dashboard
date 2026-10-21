@@ -66,6 +66,8 @@ const duration = (minutes: number | null) => {
   const days = minutes >= 1440;
   return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(minutes / (days ? 1440 : 60))} ${days ? "days" : "h"}`;
 };
+const medianDuration = (minutes: number | null) =>
+  minutes === null ? "Unavailable" : `${number(minutes)} min`;
 
 const nav = [
   {
@@ -92,11 +94,11 @@ const nav = [
     id: "analytics",
     label: "Analytics",
     icon: BarChart3,
-    eyebrow: "FROM RECORDS TO INSIGHT",
-    title: "Numbers with context.",
-    accent: "Definitions included.",
+    eyebrow: "ANALYTICS",
+    title: "Inside the cohort",
+    accent: "",
     description:
-      "Explore the current cohort warehouse through aggregate utilization, conditions, and medication requests.",
+      "Explore visits, encounter durations, conditions, and prescriptions across the synthetic dataset.",
   },
   {
     id: "agent",
@@ -726,16 +728,24 @@ function Analytics() {
   const xAt = (date: string) =>
     left + ((monthIndex(date) - firstMonth + step / 2) * 775) / span;
   const isDuration = measure.endsWith("duration_minutes");
-  const durationDivisor = isDuration && max >= 2880 ? 1440 : 60;
-  const durationUnit = durationDivisor === 1440 ? "days" : "h";
+  const durationDivisor =
+    measure === "median_duration_minutes"
+      ? 1
+      : isDuration && max >= 2880
+        ? 1440
+        : 60;
+  const durationUnit =
+    durationDivisor === 1 ? "min" : durationDivisor === 1440 ? "days" : "h";
   const axisValue = (value: number) =>
     isDuration ? number(value / durationDivisor) : number(Math.round(value));
   const measureValue = (value: number | null) =>
     value === null
       ? "Unavailable"
-      : isDuration
-        ? duration(value)
-        : number(value);
+      : measure === "median_duration_minutes"
+        ? medianDuration(value)
+        : isDuration
+          ? duration(value)
+          : number(value);
   const barWidth = Math.min(60, (720 / (span / step)) * 0.65);
   const latest = rows[rows.length - 1];
   const selected =
@@ -811,7 +821,7 @@ function Analytics() {
           value={
             summary?.median_duration_minutes == null
               ? "—"
-              : duration(summary.median_duration_minutes)
+              : `${number(summary.median_duration_minutes)} min`
           }
           note={
             summary
@@ -1036,7 +1046,7 @@ function Analytics() {
               </p>
               <p>
                 Mean {duration(selected.average_duration_minutes)} · median{" "}
-                {duration(selected.median_duration_minutes)}
+                {medianDuration(selected.median_duration_minutes)}
               </p>
             </div>
             <label>
@@ -1098,7 +1108,7 @@ function Analytics() {
                     <td>{number(row.encounter_count)}</td>
                     <td>{number(row.unique_patients)}</td>
                     <td>{duration(row.average_duration_minutes)}</td>
-                    <td>{duration(row.median_duration_minutes)}</td>
+                    <td>{medianDuration(row.median_duration_minutes)}</td>
                     <td>{number(row.measured_duration_count)}</td>
                   </tr>
                 ))}
@@ -2117,8 +2127,12 @@ export default function App() {
               <span className="eyebrow">{selected.eyebrow}</span>
               <h1 ref={titleRef} tabIndex={-1}>
                 {selected.title}
-                <br />
-                <span>{selected.accent}</span>
+                {selected.accent && (
+                  <>
+                    <br />
+                    <span>{selected.accent}</span>
+                  </>
+                )}
               </h1>
               <p>{selected.description}</p>
             </div>

@@ -252,7 +252,7 @@ test("KPIs use distinct patients and median duration while annual trends retain 
     .locator(".analytics-summary .metric")
     .filter({ hasText: "Median encounter duration" });
   await expect(median.locator("strong")).toContainText(
-    `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(summary.median_duration_minutes! / (summary.median_duration_minutes! >= 1440 ? 1440 : 60))} ${summary.median_duration_minutes! >= 1440 ? "days" : "h"}`,
+    `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(summary.median_duration_minutes!)} min`,
   );
   await page.getByRole("button", { name: "Annual", exact: true }).click();
   await page.getByRole("button", { name: "View exact values" }).click();
@@ -269,7 +269,7 @@ test("KPIs use distinct patients and median duration while annual trends retain 
   await page
     .getByRole("button", { name: "Median duration", exact: true })
     .click();
-  await expect(page.getByText(/Duration axis:/)).toContainText(/h|days/);
+  await expect(page.getByText(/Duration axis:/)).toContainText("min");
   await page.getByLabel("Condition view").selectOption("chronic");
   await expect(page.locator("main")).toContainText("distinct union, not a sum");
 });
