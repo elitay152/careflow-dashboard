@@ -6,6 +6,11 @@ known dependency advisories. The review found gaps in incoming snapshot
 validation and release-file controls; those are fixed on this review branch.
 No paid model calls or deployment were performed.
 
+Deployment extension: the later [Pages workflow](deployment.md) adds publishing
+from `main` after validation, using a separate environment and narrowly scoped
+Pages/OIDC permissions. The audit below records the earlier baseline; it does
+not attest the future published origin or its response headers.
+
 ## Scope
 
 Reviewed React rendering, forms and navigation; snapshot import and download;
@@ -59,8 +64,10 @@ warehouse metrics; that logic remains in Careflow.
   npm audit reported zero known advisories, including development dependencies.
 - Workflow actions are pinned to commit SHAs, repository permissions are
   `contents: read`, checkout does not persist credentials, and the job has a
-  15-minute timeout. There is no privileged `pull_request_target`, automatic
-  deployment, provider secret binding, or paid-evaluation step.
+  15-minute timeout. At the audit baseline there was no privileged
+  `pull_request_target`, automatic deployment, provider secret binding, or
+  paid-evaluation step. See the deployment extension above for the later
+  main-only publishing job.
 
 ## Secret review
 

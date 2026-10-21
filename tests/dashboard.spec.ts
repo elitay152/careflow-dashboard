@@ -15,12 +15,17 @@ for (const route of [
   }, testInfo) => {
     const errors: string[] = [];
     const external: string[] = [];
+    const failedResponses: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("request", (request) => {
       if (new URL(request.url()).origin !== "http://127.0.0.1:4173")
         external.push(request.url());
     });
-    await page.goto(`/#${route}`);
+    page.on("response", (response) => {
+      if (response.status() >= 400)
+        failedResponses.push(`${response.status()} ${response.url()}`);
+    });
+    await page.goto(`./#${route}`);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.locator("main")).toContainText("Not clinical evidence");
     expect(
@@ -30,6 +35,7 @@ for (const route of [
     ).toBe(true);
     expect(errors).toEqual([]);
     expect(external).toEqual([]);
+    expect(failedResponses).toEqual([]);
     const accessibility = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
       .analyze();
@@ -42,7 +48,7 @@ for (const route of [
 }
 
 test("navigation and browser history work", async ({ page }, testInfo) => {
-  await page.goto("/#overview");
+  await page.goto("./#overview");
   if (testInfo.project.name === "mobile")
     await page.getByRole("button", { name: "Open navigation" }).click();
   await page
@@ -59,7 +65,7 @@ test("navigation and browser history work", async ({ page }, testInfo) => {
 });
 
 test("cohort filters show only persisted resource types", async ({ page }) => {
-  await page.goto("/#cohort");
+  await page.goto("./#cohort");
   await page.getByRole("button", { name: "Persisted subset" }).click();
   await expect(page.locator("tbody tr")).toHaveCount(4);
   await page
@@ -78,7 +84,7 @@ test("cohort filters show only persisted resource types", async ({ page }) => {
 test("agent replays cited baseline answers and declines unsupported text", async ({
   page,
 }) => {
-  await page.goto("/#agent");
+  await page.goto("./#agent");
   await page
     .getByRole("button", { name: "Monthly encounters in 2025-01", exact: true })
     .click();
@@ -103,7 +109,7 @@ test("agent replays cited baseline answers and declines unsupported text", async
 test("current metrics and archived evidence remain separate", async ({
   page,
 }) => {
-  await page.goto("/#analytics");
+  await page.goto("./#analytics");
   await expect(
     page.locator(".note").filter({ hasText: "Current demo export:" }),
   ).toContainText(`${data.current.counts.patients} patients`);
@@ -114,11 +120,11 @@ test("current metrics and archived evidence remain separate", async ({
     "aria-label",
     /average duration minutes/,
   );
-  await page.goto("/#health");
+  await page.goto("./#health");
   await expect(page.locator(".invocation")).toContainText(
     data.current.quality.invocation_id,
   );
-  const response = await page.request.get("/data/careflow.json");
+  const response = await page.request.get("./data/careflow.json");
   expect(response.status()).toBe(200);
   expect(await response.json()).toEqual(data);
 });
@@ -126,7 +132,7 @@ test("current metrics and archived evidence remain separate", async ({
 test("forecasting has no invented predictions or accuracy", async ({
   page,
 }) => {
-  await page.goto("/#forecasting");
+  await page.goto("./#forecasting");
   await expect(
     page.getByRole("heading", { name: "No forecast published yet." }),
   ).toBeVisible();
@@ -143,7 +149,7 @@ test("CSP blocks inline script and off-origin connections", async ({
     if (new URL(request.url()).origin !== "http://127.0.0.1:4173")
       outbound.push(request.url());
   });
-  await page.goto("/#overview");
+  await page.goto("./#overview");
   const result = await page.evaluate(async () => {
     const violations: string[] = [];
     document.addEventListener("securitypolicyviolation", (event) =>
@@ -178,7 +184,7 @@ test("hostile form text stays inert and never contacts a model", async ({
 }) => {
   const requests: string[] = [];
   page.on("request", (request) => requests.push(request.url()));
-  await page.goto("/#agent");
+  await page.goto("./#agent");
   await page
     .getByRole("textbox", { name: "Analytics question" })
     .fill(
