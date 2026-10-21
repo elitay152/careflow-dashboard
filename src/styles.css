@@ -3163,3 +3163,203 @@ input::placeholder {
     grid-template-columns: 1fr;
   }
 }
+
+.flu-source-note {
+  margin-bottom: 1.5rem;
+}
+.flu-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.flu-kpis article {
+  border: 1px solid var(--border, #dce6df);
+  border-radius: 12px;
+  background: white;
+  padding: 1.2rem;
+  min-width: 0;
+}
+.flu-kpis span,
+.flu-kpis small {
+  display: block;
+  font-size: 0.78rem;
+  color: #52695c;
+  line-height: 1.6;
+}
+.flu-kpis strong {
+  display: block;
+  margin: 0.65rem 0;
+  font-size: 1.22rem;
+  line-height: 1.35;
+  color: var(--ink, #24483b);
+}
+.flu-panel {
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.flu-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  align-items: end;
+}
+.flu-controls label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  min-width: 0;
+  color: #415d50;
+}
+.flu-controls select {
+  max-width: 100%;
+  border: 1px solid #cad9cd;
+  border-radius: 6px;
+  padding: 0.65rem;
+  background: white;
+  color: #24483b;
+}
+.flu-controls .flu-checkbox {
+  display: flex;
+  align-items: center;
+  padding: 0.65rem 0;
+}
+.flu-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 180px;
+  padding: 0.5rem 1rem;
+}
+.flu-chart text {
+  fill: #52695c;
+  font-size: 12px;
+}
+.flu-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 0.25rem;
+  font-size: 0.75rem;
+  color: #52695c;
+}
+.flu-chart-legend span {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+.flu-chart-legend i {
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+}
+.flu-observed {
+  background: #205a4b;
+}
+.flu-predicted {
+  background: #b17b47;
+}
+.flu-baseline {
+  background: #728c9a;
+}
+.flu-score-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  background: #f3f7f1;
+  margin: 0.5rem 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: #5a7061;
+}
+.flu-score-strip strong {
+  display: block;
+  color: #24483b;
+  margin-top: 0.4rem;
+  font-size: 1rem;
+}
+.flu-detail {
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: #617668;
+  margin: 1rem 1.5rem;
+}
+.flu-panel > .text-link {
+  margin: 0 1.5rem 1.25rem;
+}
+.flu-selected {
+  background: #f1f6ed;
+}
+.flu-selected small {
+  display: block;
+  font-size: 0.68rem;
+  color: #527051;
+  margin-top: 0.25rem;
+}
+.flu-panel > details {
+  padding: 1.5rem;
+}
+.flu-panel summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #365d48;
+  font-size: 0.86rem;
+}
+.flu-panel details .flu-detail {
+  margin: 1rem 0;
+}
+.flu-method {
+  color: #5a7061;
+  line-height: 1.85;
+  font-size: 0.82rem;
+  padding-top: 1rem;
+}
+.flu-method p {
+  margin-bottom: 1rem;
+}
+.flu-method ul {
+  padding-left: 1.2rem;
+  margin-bottom: 1rem;
+}
+.flu-method a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.flu-method pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.7rem;
+  line-height: 1.8;
+  padding-top: 1rem;
+}
+@media (max-width: 1000px) {
+  .flu-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .flu-kpis {
+    gap: 0.65rem;
+  }
+  .flu-kpis article {
+    padding: 0.9rem;
+  }
+  .flu-kpis strong {
+    font-size: 1rem;
+  }
+  .flu-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .flu-chart {
+    padding: 0.3rem;
+  }
+  .flu-chart text {
+    font-size: 24px;
+  }
+  .flu-chart-legend {
+    gap: 0.6rem;
+  }
+}

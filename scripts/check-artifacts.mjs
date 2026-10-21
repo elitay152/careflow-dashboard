@@ -2,6 +2,7 @@ import { lstat, readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readSnapshot } from "./validate-data.mjs";
+import { readFluSnapshot } from "./validate-flu.mjs";
 
 async function walk(root, prefix = "") {
   const files = [];
@@ -26,6 +27,7 @@ export async function checkArtifacts(root, stage) {
   const required = [
     "favicon.svg",
     "data/careflow.json",
+    "data/flusight.json",
     ...(stage === "dist" ? ["index.html"] : []),
   ];
   for (const file of files) {
@@ -45,10 +47,15 @@ export async function checkArtifacts(root, stage) {
 export async function checkRelease(root) {
   await checkArtifacts(join(root, "public"), "public");
   await checkArtifacts(join(root, "dist"), "dist");
-  const source = await readSnapshot(join(root, "public/data/careflow.json"));
-  const built = await readFile(join(root, "dist/data/careflow.json"));
-  if (!source.equals(built))
-    throw new Error("Built snapshot differs from validated public snapshot");
+  for (const [name, read] of [
+    ["careflow", readSnapshot],
+    ["flusight", readFluSnapshot],
+  ]) {
+    const source = await read(join(root, `public/data/${name}.json`));
+    const built = await readFile(join(root, `dist/data/${name}.json`));
+    if (!source.equals(built))
+      throw new Error("Built snapshot differs from validated public snapshot");
+  }
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = fileURLToPath(new URL("../", import.meta.url));
