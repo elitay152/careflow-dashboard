@@ -7,12 +7,13 @@
     "dev": "vite --host 127.0.0.1",
     "build": "node scripts/validate-data.mjs && node scripts/check-artifacts.mjs --public && tsc --noEmit && vite build && node scripts/check-artifacts.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "playwright test",
+    "test": "npm run test:capacity && playwright test",
     "data:sync": "node scripts/sync-data.mjs",
     "data:refresh": "node scripts/refresh-data.mjs",
     "data:check": "node scripts/validate-data.mjs",
     "test:security": "node --test tests/security.test.mjs",
-    "test:pages": "playwright test --config playwright.pages.config.ts"
+    "test:pages": "playwright test --config playwright.pages.config.ts",
+    "test:capacity": "node --experimental-strip-types --test tests/capacity.test.mjs"
   },
   "engines": {
     "node": ">=22.12"

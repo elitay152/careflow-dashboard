@@ -2961,3 +2961,118 @@ input::placeholder {
 .demand-note {
   display: block;
 }
+
+.demand-examples {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 18px 23px 0;
+}
+.demand-examples button {
+  display: grid;
+  gap: 7px;
+  text-align: left;
+  padding: 13px;
+  border: 1px solid #dee8dd;
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: #36564b;
+}
+.demand-examples button[aria-pressed="true"] {
+  border-color: #347a67;
+  background: #edf5ee;
+  box-shadow: inset 0 0 0 1px #347a67;
+}
+.demand-examples strong {
+  font-size: 12px;
+}
+.demand-examples span {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.demand-examples small {
+  color: #617054;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.capacity-panel {
+  padding-bottom: 22px;
+}
+.capacity-intro,
+.capacity-explanation {
+  margin: 0 23px 18px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #617054;
+}
+.capacity-explanation {
+  margin-top: 16px;
+}
+.capacity-inputs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 23px 22px;
+}
+.capacity-inputs label {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  color: #36564b;
+  font-size: 11px;
+}
+.capacity-inputs input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #dee8dd;
+  border-radius: 6px;
+  padding: 10px;
+  color: #244b40;
+  background: white;
+  font: inherit;
+}
+.capacity-inputs input[aria-invalid="true"] {
+  border-color: #98623e;
+}
+.capacity-inputs small {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #617054;
+}
+.capacity-kpis {
+  margin: 0 23px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.capacity-panel > .forecast-legend,
+.capacity-panel > .utilization-chart,
+.capacity-definitions,
+.capacity-panel > .text-link,
+.capacity-panel > .note {
+  margin: 16px 23px;
+}
+.capacity-definitions {
+  font-size: 11px;
+  color: #617054;
+  line-height: 1.8;
+}
+.capacity-definitions summary {
+  cursor: pointer;
+  color: #36564b;
+  font-weight: 600;
+}
+.capacity-definitions p {
+  margin-top: 10px;
+}
+@media (max-width: 1000px) {
+  .capacity-inputs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .demand-examples,
+  .capacity-inputs,
+  .capacity-kpis {
+    grid-template-columns: 1fr;
+  }
+}

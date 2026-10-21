@@ -30,7 +30,7 @@ support the GitHub Pages repository path.
 | Simulated cohort | Aggregate inventory of five persisted FHIR resource types, including provider organizations. |
 | Analytics | Latest-12-month KPIs, monthly/annual trends, duration statistics, clinical/contextual groups, and medication request statuses. |
 | Analytics agent | Three cited baseline answers replayed from the export; other inputs are declined. |
-| Forecasting | Facility-first demand histories by care setting, ZIP-area comparisons, sparse-data gates, and whole-cohort development benchmarks. |
+| Forecasting | Facility/ZIP demand histories, guided ambulatory examples, an editable appointment-capacity scenario, and model development benchmarks. |
 | Pipeline health | Source-load, build, and export timestamps, quality checks, quarantines, and downloadable evidence. |
 
 The snapshot contains 1,194 synthetic patients and a reference catalog of 852
@@ -39,6 +39,14 @@ facility assignments are simulated. Metrics describe recorded
 simulation data, not real healthcare demand or historical population rates.
 [Definitions and forecast protocol](https://github.com/elitay152/Careflow/blob/main/docs/metrics.md)
 live in Careflow, alongside the calculations.
+
+The appointment scenario replays the latest 12 calendar months with observations.
+Sessions, hours, appointment length, bookable time, and demand change are editable
+assumptions. Whole slots are rounded down per clinician session; scenario visits
+are rounded up, and monthly shortfalls do not carry forward. It runs locally over
+exported counts without forecasting future demand or estimating real staffing.
+The steady/increasing/decreasing examples use recorded histories, not model scores.
+`npm test` checks the arithmetic before running the browser suite.
 
 ## Refresh from PostgreSQL
 

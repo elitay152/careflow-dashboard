@@ -456,3 +456,49 @@ test("facility demand separates care settings and withholds sparse comparisons",
     .locator("tbody tr");
   await expect(rows.last()).toContainText(String(group.counts.at(-1)));
 });
+
+test("capacity scenarios replay recorded demand and keep assumptions separate", async ({
+  page,
+}) => {
+  await page.goto("./#forecasting");
+  const planner = page.locator(".capacity-panel");
+  await expect(planner).toContainText("not a forecast");
+  await expect(
+    page.getByRole("button", { name: /^Steady volume/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: /^Recent increase/ }).click();
+  await expect(planner.getByRole("status")).toContainText("3 of 12");
+  await expect(planner.getByRole("status")).toContainText("23");
+  await planner
+    .getByRole("button", { name: "View monthly capacity values" })
+    .click();
+  const table = planner.getByRole("region", {
+    name: "Monthly appointment capacity values",
+  });
+  await expect(table.locator("tbody tr")).toHaveCount(12);
+  await expect(table.locator("tbody tr").last()).toContainText("32");
+  await planner
+    .getByRole("spinbutton", { name: "Sessions per month", exact: true })
+    .fill("6");
+  await expect(planner.getByRole("status")).toContainText("0 of 12");
+  await planner
+    .getByRole("spinbutton", { name: "Sessions per month", exact: true })
+    .fill("0");
+  await expect(planner.getByRole("status")).toContainText("12 of 12");
+  await planner
+    .getByRole("spinbutton", { name: "Demand change (%)", exact: true })
+    .fill("-100");
+  await expect(planner.getByRole("status")).toContainText("0 of 12");
+  await planner
+    .getByRole("spinbutton", { name: "Minutes per visit", exact: true })
+    .fill("");
+  await expect(planner.getByRole("alert")).toBeVisible();
+  await expect(planner.getByRole("status")).toHaveCount(0);
+  await planner.getByRole("button", { name: "Reset assumptions" }).click();
+  await expect(
+    planner.getByRole("spinbutton", { name: "Minutes per visit", exact: true }),
+  ).toHaveValue("30");
+  await expect(planner.getByRole("status")).toContainText("3 of 12");
+  await page.getByLabel("Demand care setting").selectOption("inpatient");
+  await expect(planner).toHaveCount(0);
+});
