@@ -14,7 +14,6 @@ import {
   Download,
   FileJson,
   FlaskConical,
-  GitBranch,
   Code2 as Github,
   HeartPulse,
   Info,
@@ -67,17 +66,19 @@ const duration = (minutes: number | null) => {
   const days = minutes >= 1440;
   return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(minutes / (days ? 1440 : 60))} ${days ? "days" : "h"}`;
 };
+const medianDuration = (minutes: number | null) =>
+  minutes === null ? "Unavailable" : `${number(minutes)} min`;
 
 const nav = [
   {
     id: "overview",
     label: "Overview",
     icon: LayoutDashboard,
-    eyebrow: "THE BIG PICTURE",
-    title: "Synthetic healthcare.",
-    accent: "Real engineering.",
+    eyebrow: "A DATA ENGINEERING PORTFOLIO",
+    title: "Careflow.",
+    accent: "Built to show my work.",
     description:
-      "A small healthcare data platform with a clear path from raw FHIR to trustworthy analytics.",
+      "A custom portfolio project built with agentic development, using synthetic healthcare data to demonstrate an ETL pipeline and example metrics.",
   },
   {
     id: "cohort",
@@ -93,11 +94,11 @@ const nav = [
     id: "analytics",
     label: "Analytics",
     icon: BarChart3,
-    eyebrow: "FROM RECORDS TO INSIGHT",
-    title: "Numbers with context.",
-    accent: "Definitions included.",
+    eyebrow: "ANALYTICS",
+    title: "Inside the cohort",
+    accent: "",
     description:
-      "Explore the current cohort warehouse through aggregate utilization, conditions, and medication requests.",
+      "Explore visits, encounter durations, conditions, and prescriptions across the synthetic dataset.",
   },
   {
     id: "agent",
@@ -280,6 +281,42 @@ function Overview() {
   ];
   return (
     <>
+      <section className="author-intro" aria-labelledby="author-heading">
+        <div className="author-role">
+          FORMER NURSE
+          <br />
+          DATA ENGINEER
+        </div>
+        <div>
+          <h2 id="author-heading">Hi, I’m Eli Taylor.</h2>
+          <p>
+            I’m a former nurse turned data engineer. My work spans healthcare
+            data pipelines, reporting automation, and data quality using Python,
+            SQL, Snowflake, Databricks, and dbt. At CareOregon, that included
+            immunization registry ingestion for roughly 600,000 members and
+            standardizing data feeds from more than 15 external partners.
+          </p>
+          <p>
+            I’m also pursuing a Doctor of Information Technology with an AI
+            concentration. Careflow brings my healthcare background and
+            engineering experience together in a project I can share openly.
+          </p>
+          <p>
+            This is a custom portfolio project built with an agentic development
+            workflow. I use synthetic data to demonstrate the pipeline end to
+            end, from FHIR records and PostgreSQL to dbt quality checks and the
+            analytics you can explore here.
+          </p>
+          <a
+            className="text-link"
+            href={source}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Explore the project on GitHub <Icon icon={ArrowUpRight} size={15} />
+          </a>
+        </div>
+      </section>
       <div className="evidence-banner">
         <div>
           <Icon icon={Database} />
@@ -451,14 +488,14 @@ function Overview() {
       </Panel>
       <div className="cohort-callout">
         <div className="callout-icon">
-          <Icon icon={GitBranch} size={24} />
+          <Icon icon={BarChart3} size={24} />
         </div>
         <div>
-          <h3>Two datasets. Clearly separated.</h3>
+          <h3>Explore this cohort</h3>
           <p>
-            The 108-patient validation is archived evidence. Interactive
-            analytics use the current {number(current.counts.patients)}-patient
-            cohort export.
+            The analytics page shows encounter trends, duration statistics,
+            conditions, and medication requests for{" "}
+            {number(current.counts.patients)} synthetic patients.
           </p>
         </div>
         <a className="button secondary" href="#analytics">
@@ -490,6 +527,28 @@ function Cohort() {
         loaded PostgreSQL rows exported {utc(snapshot.exported_at)}, not a live
         population.
       </Note>
+      <Panel
+        title="Where the data comes from"
+        subtitle="Simulated patient histories generated with Synthea"
+      >
+        <div className="cohort-source">
+          <p>
+            Synthea is an open-source patient simulator that generates fictional
+            people and their medical histories, including healthcare visits,
+            diagnoses, and prescriptions. It exports those histories as FHIR
+            JSON bundles, a standard format for exchanging healthcare data.
+          </p>
+          <p>
+            Careflow validates the supported records, loads them into
+            PostgreSQL, and transforms them with dbt for the metrics on this
+            site. The Synthea records are simulated, not anonymized records from
+            real patients.
+          </p>
+          <External href="https://synthetichealth.github.io/synthea/">
+            About Synthea
+          </External>
+        </div>
+      </Panel>
       <div className="metrics-grid three">
         <Metric
           label="Synthetic patients"
@@ -601,11 +660,6 @@ function Cohort() {
           compatibility testing, not full FHIR conformance.
         </div>
       </Panel>
-      <Note>
-        Resource totals are not interchangeable. A MedicationRequest is a
-        request, not evidence that medication was dispensed. Patient histories
-        can contain many encounters and conditions.
-      </Note>
     </>
   );
 }
@@ -674,16 +728,24 @@ function Analytics() {
   const xAt = (date: string) =>
     left + ((monthIndex(date) - firstMonth + step / 2) * 775) / span;
   const isDuration = measure.endsWith("duration_minutes");
-  const durationDivisor = isDuration && max >= 2880 ? 1440 : 60;
-  const durationUnit = durationDivisor === 1440 ? "days" : "h";
+  const durationDivisor =
+    measure === "median_duration_minutes"
+      ? 1
+      : isDuration && max >= 2880
+        ? 1440
+        : 60;
+  const durationUnit =
+    durationDivisor === 1 ? "min" : durationDivisor === 1440 ? "days" : "h";
   const axisValue = (value: number) =>
     isDuration ? number(value / durationDivisor) : number(Math.round(value));
   const measureValue = (value: number | null) =>
     value === null
       ? "Unavailable"
-      : isDuration
-        ? duration(value)
-        : number(value);
+      : measure === "median_duration_minutes"
+        ? medianDuration(value)
+        : isDuration
+          ? duration(value)
+          : number(value);
   const barWidth = Math.min(60, (720 / (span / step)) * 0.65);
   const latest = rows[rows.length - 1];
   const selected =
@@ -759,7 +821,7 @@ function Analytics() {
           value={
             summary?.median_duration_minutes == null
               ? "—"
-              : duration(summary.median_duration_minutes)
+              : `${number(summary.median_duration_minutes)} min`
           }
           note={
             summary
@@ -984,7 +1046,7 @@ function Analytics() {
               </p>
               <p>
                 Mean {duration(selected.average_duration_minutes)} · median{" "}
-                {duration(selected.median_duration_minutes)}
+                {medianDuration(selected.median_duration_minutes)}
               </p>
             </div>
             <label>
@@ -1046,7 +1108,7 @@ function Analytics() {
                     <td>{number(row.encounter_count)}</td>
                     <td>{number(row.unique_patients)}</td>
                     <td>{duration(row.average_duration_minutes)}</td>
-                    <td>{duration(row.median_duration_minutes)}</td>
+                    <td>{medianDuration(row.median_duration_minutes)}</td>
                     <td>{number(row.measured_duration_count)}</td>
                   </tr>
                 ))}
@@ -2065,8 +2127,12 @@ export default function App() {
               <span className="eyebrow">{selected.eyebrow}</span>
               <h1 ref={titleRef} tabIndex={-1}>
                 {selected.title}
-                <br />
-                <span>{selected.accent}</span>
+                {selected.accent && (
+                  <>
+                    <br />
+                    <span>{selected.accent}</span>
+                  </>
+                )}
               </h1>
               <p>{selected.description}</p>
             </div>
