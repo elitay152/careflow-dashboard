@@ -115,11 +115,11 @@ const nav = [
     id: "forecasting",
     label: "Forecasting",
     icon: FlaskConical,
-    eyebrow: "HELD-OUT EVIDENCE",
-    title: "Forecasts start",
-    accent: "with a fair test.",
+    eyebrow: "EXPERIMENTAL FORECASTING",
+    title: "Monthly encounter forecasts",
+    accent: "",
     description:
-      "Compare simulated encounter forecasts against a seasonal baseline on data kept out of model selection.",
+      "Estimate how many finished encounters occur each month in the synthetic cohort. This forecasts visits, not unique patients; one patient can have multiple encounters.",
   },
   {
     id: "health",
@@ -1476,7 +1476,12 @@ function Agent() {
   );
 }
 
-type ForecastModel = "seasonal_naive" | "seasonal_mean" | "seasonal_trend";
+type ForecastModel =
+  | "seasonal_naive"
+  | "seasonal_mean"
+  | "seasonal_trend"
+  | "damped_trend"
+  | "poisson_seasonal";
 type ForecastMetrics = {
   model: ForecastModel;
   mae: number;
@@ -1500,7 +1505,12 @@ type ForecastSnapshot = {
     model_window_months: number;
     selected_model: ForecastModel;
     selected_beats_baseline: boolean;
-    folds: { training_end: string; test_start: string; test_end: string }[];
+    folds: {
+      training_end: string;
+      test_start: string;
+      test_end: string;
+      predictions: ({ actual: number } & Record<ForecastModel, number>)[];
+    }[];
     validation_metrics: ForecastMetrics[];
     test_predictions: {
       encounter_month: string;
@@ -1508,6 +1518,8 @@ type ForecastSnapshot = {
       seasonal_naive: number;
       seasonal_mean: number;
       seasonal_trend: number;
+      damped_trend: number;
+      poisson_seasonal: number;
     }[];
   } | null;
 };
@@ -1519,6 +1531,8 @@ function Forecasting() {
     seasonal_naive: "Seasonal naive",
     seasonal_mean: "Seasonal mean",
     seasonal_trend: "Seasonal trend",
+    damped_trend: "Damped trend",
+    poisson_seasonal: "Poisson seasonal",
   };
   if (!e || !forecast.held_out_metrics)
     return (
@@ -1566,27 +1580,28 @@ function Forecasting() {
   return (
     <>
       <Note>
-        <strong>Held-out evaluation on synthetic data.</strong>{" "}
-        {month(e.test_start)}–{month(e.test_end)} was reserved for testing. The
-        model was chosen on earlier validation years. These are experimental
-        simulated encounter counts, not real healthcare demand.
+        <strong>Development benchmark on synthetic data.</strong>{" "}
+        {month(e.test_start)}–{month(e.test_end)} has already been inspected.
+        Models are ranked on three earlier validation windows; this final year
+        is a development comparison, not an untouched test. These simulated
+        encounter counts do not represent real healthcare demand.
       </Note>
       <div className="metrics-grid three analytics-summary">
         <Metric
-          label="Seasonal naive · held-out MAE"
+          label="Seasonal naive · benchmark MAE"
           value={number(baseline.mae)}
           note="Mean absolute error in encounters per month"
           icon={BarChart3}
         />
         <Metric
-          label={`${names[e.selected_model]} · held-out MAE`}
+          label={`${names[e.selected_model]} · benchmark MAE`}
           value={number(selected.mae)}
           note="Model selected using earlier validation folds"
           icon={FlaskConical}
           tone="gold"
         />
         <Metric
-          label="Selected model · held-out WAPE"
+          label="Selected model · benchmark WAPE"
           value={
             selected.wape === null ? "—" : `${number(selected.wape * 100)}%`
           }
@@ -1599,10 +1614,14 @@ function Forecasting() {
         title={
           e.selected_beats_baseline
             ? "Selected model clears the baseline"
-            : "The simpler baseline wins the held-out year"
+            : "The baseline is at least as good on the benchmark"
         }
         subtitle={forecast.reason}
       >
+        <p className="kpi-caption">
+          Chart values are finished encounters per month. Dashed lines are model
+          estimates; the solid line shows recorded counts.
+        </p>
         <div className="forecast-legend">
           {series.map((s) => (
             <span key={s.field}>
@@ -1614,13 +1633,13 @@ function Forecasting() {
         <div
           className="utilization-chart"
           role="region"
-          aria-label="Held-out comparison chart"
+          aria-label="Benchmark comparison chart"
           tabIndex={0}
         >
           <svg
             viewBox="0 0 850 250"
             role="img"
-            aria-label="Held-out encounters: observed versus model estimates"
+            aria-label="Benchmark encounters: observed versus model estimates"
           >
             {[0, 1, 2, 3].map((tick) => (
               <g key={tick}>
@@ -1678,22 +1697,22 @@ function Forecasting() {
         </div>
         <div className="panel-foot split">
           <span>
-            Test estimates use pre-holdout data only. No uncertainty intervals
-            were estimated.
+            Estimates use only data before the comparison year. No uncertainty
+            intervals were estimated.
           </span>
           <button
             className="text-link"
             onClick={() => setShowValues(!showValues)}
             aria-expanded={showValues}
           >
-            {showValues ? "Hide" : "View"} held-out values
+            {showValues ? "Hide" : "View"} benchmark values
           </button>
         </div>
         {showValues && (
           <div
             className="table-scroll"
             role="region"
-            aria-label="Held-out monthly values"
+            aria-label="Benchmark monthly values"
             tabIndex={0}
           >
             <table>
@@ -1719,10 +1738,60 @@ function Forecasting() {
           </div>
         )}
       </Panel>
+      <Panel
+        title="Performance across historical windows"
+        subtitle="Twelve months per window; each fit uses only earlier data. Lower MAE is better."
+      >
+        <div
+          className="table-scroll"
+          role="region"
+          aria-label="Historical validation windows"
+          tabIndex={0}
+        >
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                {e.folds.map((fold) => (
+                  <th key={fold.test_start}>
+                    {month(fold.test_start)}–{month(fold.test_end)}
+                  </th>
+                ))}
+                <th>Mean MAE</th>
+              </tr>
+            </thead>
+            <tbody>
+              {metrics.map((metric) => (
+                <tr key={metric.model}>
+                  <td>{names[metric.model]}</td>
+                  {e.folds.map((fold) => (
+                    <td key={fold.test_start}>
+                      {number(
+                        fold.predictions.reduce(
+                          (sum, row) =>
+                            sum + Math.abs(row.actual - row[metric.model]),
+                          0,
+                        ) / 12,
+                      )}
+                    </td>
+                  ))}
+                  <td>
+                    {number(
+                      e.validation_metrics.find(
+                        (row) => row.model === metric.model,
+                      )!.mae,
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
       <div className="forecast-result-grid">
         <Panel
-          title="Every model, the same holdout"
-          subtitle="Selection used validation MAE, not these test results"
+          title="Five models, the same benchmark"
+          subtitle="Ranking uses earlier validation MAE; the final year is already known"
         >
           <div
             className="table-scroll"
@@ -1735,9 +1804,9 @@ function Forecasting() {
                 <tr>
                   <th>Model</th>
                   <th>Validation MAE</th>
-                  <th>Test MAE</th>
-                  <th>Test RMSE</th>
-                  <th>Test WAPE</th>
+                  <th>Benchmark MAE</th>
+                  <th>Benchmark RMSE</th>
+                  <th>Benchmark WAPE</th>
                 </tr>
               </thead>
               <tbody>
@@ -1766,7 +1835,7 @@ function Forecasting() {
         </Panel>
         <Panel
           title="Reproducible evaluation"
-          subtitle="Rolling-origin protocol v1"
+          subtitle="Rolling-origin protocol v2"
         >
           <ul className="evaluation-notes">
             <li>
@@ -1780,16 +1849,19 @@ function Forecasting() {
             <li>
               Seasonal naive repeats last year's month; seasonal mean averages
               matching months across five years; seasonal trend fits a linear
-              trend with month effects.
+              trend with month effects. Damped trend shrinks future slope
+              increments by a fixed 0.8 per month. Poisson seasonal fits month
+              effects and a log-linear count trend, bounded to ±2 log units per
+              year.
             </li>
             <li>
               Only the latest 120 consecutive observed months are used. Missing
               months cause evaluation to be withheld.
             </li>
             <li>
-              Selection and settings were fixed before test scoring. Forecast
-              export is gated on the selected model beating seasonal naive on
-              test MAE.
+              This is a revised experiment after inspecting the final year.
+              Future forecasts remain withheld regardless of its scores until
+              independent evaluation is available.
             </li>
             <li>
               Evaluated {utc(e.evaluated_at)}. This retrospective cohort has
@@ -1833,10 +1905,9 @@ function Forecasting() {
         </Panel>
       ) : (
         <Note tone="amber">
-          <strong>Future predictions withheld.</strong> The selected model did
-          not improve on the seasonal baseline in the held-out year. The
-          evaluation remains visible; no future curve or accuracy claim is
-          published.
+          <strong>Future predictions withheld.</strong> This development
+          benchmark helps compare models, but cannot establish independent
+          forecast accuracy. No future curve is published.
         </Note>
       )}
     </>

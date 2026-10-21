@@ -197,6 +197,12 @@ test("forecasting shows evaluated holdout results and honors the publication gat
   page,
 }) => {
   await page.goto("./#forecasting");
+  await expect(
+    page.getByRole("heading", { name: "Monthly encounter forecasts" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/This forecasts visits, not unique patients/),
+  ).toBeVisible();
   if (data.forecast.status === "not_evaluated") {
     await expect(
       page.getByText("Not evaluated.", { exact: true }),
@@ -209,7 +215,7 @@ test("forecasting shows evaluated holdout results and honors the publication gat
     page.getByRole("heading", {
       name: passed
         ? "Selected model clears the baseline"
-        : "The simpler baseline wins the held-out year",
+        : "The baseline is at least as good on the benchmark",
     }),
   ).toBeVisible();
   if (!passed) {
@@ -219,20 +225,28 @@ test("forecasting shows evaluated holdout results and honors the publication gat
     expect(data.forecast.predictions).toBeNull();
   }
 
-  expect(data.forecast.held_out_metrics).toHaveLength(3);
+  expect(data.forecast.held_out_metrics).toHaveLength(5);
   await expect(
     page
       .getByRole("region", { name: "Model comparison metrics" })
       .locator("tbody tr"),
-  ).toHaveCount(3);
-  await page.getByRole("button", { name: "View held-out values" }).click();
+  ).toHaveCount(5);
   await expect(
     page
-      .getByRole("region", { name: "Held-out monthly values" })
+      .getByRole("region", { name: "Historical validation windows" })
+      .locator("tbody tr"),
+  ).toHaveCount(5);
+  await expect(
+    page.getByText("Development benchmark on synthetic data.", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "View benchmark values" }).click();
+  await expect(
+    page
+      .getByRole("region", { name: "Benchmark monthly values" })
       .locator("tbody tr"),
   ).toHaveCount(12);
   await expect(
-    page.getByRole("region", { name: "Held-out monthly values" }),
+    page.getByRole("region", { name: "Benchmark monthly values" }),
   ).toContainText(data.forecast.evaluation!.test_start);
 });
 

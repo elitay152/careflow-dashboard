@@ -1,7 +1,7 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "synthetic_only": true,
-  "exported_at": "2026-10-21T15:05:39.689393+00:00",
+  "exported_at": "2026-10-21T15:41:24.729020+00:00",
   "current": {
     "label": "Synthea 3.3.0 \u00b7 seed 43 \u00b7 1,000 living-patient target",
     "raw_schema": "synthea_p1000_seed43",
@@ -12856,11 +12856,11 @@
     ],
     "quality": {
       "status": "passed",
-      "completed_at": "2026-10-21T15:05:38.716593Z",
+      "completed_at": "2026-10-21T15:41:23.863861Z",
       "models_passed": 10,
       "checks_passed": 32,
       "checks_total": 32,
-      "invocation_id": "2bb1ff05-bae9-48c3-8bb2-9fc51e552ab5"
+      "invocation_id": "bef45ccc-93c5-40b4-8813-438729b654b0"
     }
   },
   "archive": {
@@ -13089,11 +13089,24 @@
         "mae": 42.56666666666666,
         "rmse": 48.67077322856774,
         "wape": 0.09457507868913163
+      },
+      {
+        "model": "damped_trend",
+        "mae": 42.14572458817706,
+        "rmse": 48.37057963846059,
+        "wape": 0.09363982504316325
+      },
+      {
+        "model": "poisson_seasonal",
+        "mae": 42.57975075629081,
+        "rmse": 48.7171729506557,
+        "wape": 0.09460414906044985
       }
     ],
     "evaluation": {
-      "protocol": "rolling_origin_v1",
-      "evaluated_at": "2026-10-21T15:05:39.689259+00:00",
+      "protocol": "rolling_origin_v2",
+      "benchmark_status": "development",
+      "evaluated_at": "2026-10-21T15:41:24.728884+00:00",
       "input_sha256": "9e03e72292a09dbcf66d5940643fdd5bfc11bfae0b8d6d2b0becf048f8a4a121",
       "training_start": "2015-01-01",
       "training_end": "2023-12-01",
@@ -13105,17 +13118,347 @@
         {
           "training_end": "2020-12-01",
           "test_start": "2021-01-01",
-          "test_end": "2021-12-01"
+          "test_end": "2021-12-01",
+          "predictions": [
+            {
+              "encounter_month": "2021-01-01",
+              "actual": 540,
+              "seasonal_naive": 487.0,
+              "seasonal_mean": 487.2,
+              "seasonal_trend": 474.625,
+              "damped_trend": 474.6948611111111,
+              "poisson_seasonal": 474.4591005855332
+            },
+            {
+              "encounter_month": "2021-02-01",
+              "actual": 508,
+              "seasonal_naive": 418.0,
+              "seasonal_mean": 426.2,
+              "seasonal_trend": 413.625,
+              "damped_trend": 413.82061111111113,
+              "poisson_seasonal": 415.0543281394792
+            },
+            {
+              "encounter_month": "2021-03-01",
+              "actual": 632,
+              "seasonal_naive": 449.0,
+              "seasonal_mean": 498.8,
+              "seasonal_trend": 486.225,
+              "damped_trend": 486.59107222222224,
+              "poisson_seasonal": 485.75574583756975
+            },
+            {
+              "encounter_month": "2021-04-01",
+              "actual": 674,
+              "seasonal_naive": 437.0,
+              "seasonal_mean": 467.8,
+              "seasonal_trend": 455.22499999999997,
+              "damped_trend": 455.7973022222222,
+              "poisson_seasonal": 455.5664352502308
+            },
+            {
+              "encounter_month": "2021-05-01",
+              "actual": 652,
+              "seasonal_naive": 470.0,
+              "seasonal_mean": 480.4,
+              "seasonal_trend": 467.825,
+              "damped_trend": 468.6321473333333,
+              "poisson_seasonal": 467.8369292308912
+            },
+            {
+              "encounter_month": "2021-06-01",
+              "actual": 557,
+              "seasonal_naive": 452.0,
+              "seasonal_mean": 476.4,
+              "seasonal_trend": 463.825,
+              "damped_trend": 464.8898845333333,
+              "poisson_seasonal": 463.94153431639575
+            },
+            {
+              "encounter_month": "2021-07-01",
+              "actual": 487,
+              "seasonal_naive": 477.0,
+              "seasonal_mean": 497.8,
+              "seasonal_trend": 485.225,
+              "damped_trend": 486.5659354044445,
+              "poisson_seasonal": 484.7818971089459
+            },
+            {
+              "encounter_month": "2021-08-01",
+              "actual": 540,
+              "seasonal_naive": 425.0,
+              "seasonal_mean": 454.6,
+              "seasonal_trend": 442.02500000000003,
+              "damped_trend": 443.6566372124445,
+              "poisson_seasonal": 442.71163203239615
+            },
+            {
+              "encounter_month": "2021-09-01",
+              "actual": 542,
+              "seasonal_naive": 402.0,
+              "seasonal_mean": 458.0,
+              "seasonal_trend": 445.425,
+              "damped_trend": 447.3590597699556,
+              "poisson_seasonal": 446.02271770971726
+            },
+            {
+              "encounter_month": "2021-10-01",
+              "actual": 550,
+              "seasonal_naive": 473.0,
+              "seasonal_mean": 483.0,
+              "seasonal_trend": 470.425,
+              "damped_trend": 472.6708589270756,
+              "poisson_seasonal": 470.3689359253131
+            },
+            {
+              "encounter_month": "2021-11-01",
+              "actual": 523,
+              "seasonal_naive": 482.0,
+              "seasonal_mean": 489.6,
+              "seasonal_trend": 477.025,
+              "damped_trend": 479.59015936388266,
+              "poisson_seasonal": 476.7963375342305
+            },
+            {
+              "encounter_month": "2021-12-01",
+              "actual": 475,
+              "seasonal_naive": 502.0,
+              "seasonal_mean": 491.6,
+              "seasonal_trend": 479.025,
+              "damped_trend": 481.91546082443944,
+              "poisson_seasonal": 478.7440349914781
+            }
+          ]
         },
         {
           "training_end": "2021-12-01",
           "test_start": "2022-01-01",
-          "test_end": "2022-12-01"
+          "test_end": "2022-12-01",
+          "predictions": [
+            {
+              "encounter_month": "2022-01-01",
+              "actual": 526,
+              "seasonal_naive": 540.0,
+              "seasonal_mean": 497.0,
+              "seasonal_trend": 528.5500000000001,
+              "damped_trend": 528.3747222222222,
+              "poisson_seasonal": 529.607943375398
+            },
+            {
+              "encounter_month": "2022-02-01",
+              "actual": 464,
+              "seasonal_naive": 508.0,
+              "seasonal_mean": 436.4,
+              "seasonal_trend": 467.95000000000005,
+              "damped_trend": 467.45922222222225,
+              "poisson_seasonal": 465.032005008096
+            },
+            {
+              "encounter_month": "2022-03-01",
+              "actual": 442,
+              "seasonal_naive": 632.0,
+              "seasonal_mean": 526.2,
+              "seasonal_trend": 557.75,
+              "damped_trend": 556.8315444444445,
+              "poisson_seasonal": 560.7237420606327
+            },
+            {
+              "encounter_month": "2022-04-01",
+              "actual": 500,
+              "seasonal_naive": 674.0,
+              "seasonal_mean": 512.6,
+              "seasonal_trend": 544.15,
+              "damped_trend": 542.7141244444445,
+              "poisson_seasonal": 546.2314522620303
+            },
+            {
+              "encounter_month": "2022-05-01",
+              "actual": 496,
+              "seasonal_naive": 652.0,
+              "seasonal_mean": 515.4,
+              "seasonal_trend": 546.95,
+              "damped_trend": 544.9249106666667,
+              "poisson_seasonal": 549.215158985272
+            },
+            {
+              "encounter_month": "2022-06-01",
+              "actual": 495,
+              "seasonal_naive": 557.0,
+              "seasonal_mean": 494.0,
+              "seasonal_trend": 525.5500000000001,
+              "damped_trend": 522.8782618666667,
+              "poisson_seasonal": 526.4111147433533
+            },
+            {
+              "encounter_month": "2022-07-01",
+              "actual": 458,
+              "seasonal_naive": 487.0,
+              "seasonal_mean": 496.0,
+              "seasonal_trend": 527.55,
+              "damped_trend": 524.1856650488888,
+              "poisson_seasonal": 528.5423338313832
+            },
+            {
+              "encounter_month": "2022-08-01",
+              "actual": 465,
+              "seasonal_naive": 540.0,
+              "seasonal_mean": 475.4,
+              "seasonal_trend": 506.95,
+              "damped_trend": 502.8563098168889,
+              "poisson_seasonal": 506.59077722467646
+            },
+            {
+              "encounter_month": "2022-09-01",
+              "actual": 473,
+              "seasonal_naive": 542.0,
+              "seasonal_mean": 477.4,
+              "seasonal_trend": 508.95,
+              "damped_trend": 504.0975478535111,
+              "poisson_seasonal": 508.7219963127064
+            },
+            {
+              "encounter_month": "2022-10-01",
+              "actual": 462,
+              "seasonal_naive": 550.0,
+              "seasonal_mean": 493.6,
+              "seasonal_trend": 525.15,
+              "damped_trend": 519.5152605050312,
+              "poisson_seasonal": 525.9848709257474
+            },
+            {
+              "encounter_month": "2022-11-01",
+              "actual": 455,
+              "seasonal_naive": 523.0,
+              "seasonal_mean": 498.4,
+              "seasonal_trend": 529.9499999999999,
+              "damped_trend": 523.5141528484693,
+              "poisson_seasonal": 531.0997967370189
+            },
+            {
+              "encounter_month": "2022-12-01",
+              "actual": 452,
+              "seasonal_naive": 475.0,
+              "seasonal_mean": 494.2,
+              "seasonal_trend": 525.75,
+              "damped_trend": 518.4979889454421,
+              "poisson_seasonal": 526.6242366521564
+            }
+          ]
         },
         {
           "training_end": "2022-12-01",
           "test_start": "2023-01-01",
-          "test_end": "2023-12-01"
+          "test_end": "2023-12-01",
+          "predictions": [
+            {
+              "encounter_month": "2023-01-01",
+              "actual": 478,
+              "seasonal_naive": 526.0,
+              "seasonal_mean": 503.0,
+              "seasonal_trend": 521.35,
+              "damped_trend": 521.2480555555555,
+              "poisson_seasonal": 522.1284623064957
+            },
+            {
+              "encounter_month": "2023-02-01",
+              "actual": 424,
+              "seasonal_naive": 464.0,
+              "seasonal_mean": 441.4,
+              "seasonal_trend": 459.75,
+              "damped_trend": 459.46455555555553,
+              "poisson_seasonal": 458.1858911771118
+            },
+            {
+              "encounter_month": "2023-03-01",
+              "actual": 469,
+              "seasonal_naive": 442.0,
+              "seasonal_mean": 510.2,
+              "seasonal_trend": 528.5500000000001,
+              "damped_trend": 528.0158111111111,
+              "poisson_seasonal": 529.6022693216187
+            },
+            {
+              "encounter_month": "2023-04-01",
+              "actual": 521,
+              "seasonal_naive": 500.0,
+              "seasonal_mean": 511.6,
+              "seasonal_trend": 529.9499999999999,
+              "damped_trend": 529.1148711111111,
+              "poisson_seasonal": 531.0555095745591
+            },
+            {
+              "encounter_month": "2023-05-01",
+              "actual": 469,
+              "seasonal_naive": 496.0,
+              "seasonal_mean": 517.6,
+              "seasonal_trend": 535.95,
+              "damped_trend": 534.7721746666666,
+              "poisson_seasonal": 537.2836820871615
+            },
+            {
+              "encounter_month": "2023-06-01",
+              "actual": 475,
+              "seasonal_naive": 495.0,
+              "seasonal_mean": 498.0,
+              "seasonal_trend": 516.35,
+              "damped_trend": 514.7960730666666,
+              "poisson_seasonal": 516.9383185459939
+            },
+            {
+              "encounter_month": "2023-07-01",
+              "actual": 494,
+              "seasonal_naive": 458.0,
+              "seasonal_mean": 485.6,
+              "seasonal_trend": 503.95,
+              "damped_trend": 501.9932473422222,
+              "poisson_seasonal": 504.06676201994895
+            },
+            {
+              "encounter_month": "2023-08-01",
+              "actual": 499,
+              "seasonal_naive": 465.0,
+              "seasonal_mean": 470.0,
+              "seasonal_trend": 488.35,
+              "damped_trend": 485.96904231822225,
+              "poisson_seasonal": 487.87351348718295
+            },
+            {
+              "encounter_month": "2023-09-01",
+              "actual": 473,
+              "seasonal_naive": 473.0,
+              "seasonal_mean": 477.0,
+              "seasonal_trend": 495.34999999999997,
+              "damped_trend": 492.5277338545778,
+              "poisson_seasonal": 495.1397147518857
+            },
+            {
+              "encounter_month": "2023-10-01",
+              "actual": 472,
+              "seasonal_naive": 462.0,
+              "seasonal_mean": 486.8,
+              "seasonal_trend": 505.15000000000003,
+              "damped_trend": 501.8727426392178,
+              "poisson_seasonal": 505.3123965224695
+            },
+            {
+              "encounter_month": "2023-11-01",
+              "actual": 487,
+              "seasonal_naive": 455.0,
+              "seasonal_mean": 489.0,
+              "seasonal_trend": 507.34999999999997,
+              "damped_trend": 503.6068052224853,
+              "poisson_seasonal": 507.59605977709043
+            },
+            {
+              "encounter_month": "2023-12-01",
+              "actual": 463,
+              "seasonal_naive": 452.0,
+              "seasonal_mean": 485.4,
+              "seasonal_trend": 503.75,
+              "damped_trend": 499.53211084465494,
+              "poisson_seasonal": 503.859156269529
+            }
+          ]
         }
       ],
       "validation_metrics": [
@@ -13136,6 +13479,18 @@
           "mae": 59.106944444444444,
           "rmse": 76.55430489020341,
           "wape": 0.1176127570196772
+        },
+        {
+          "model": "damped_trend",
+          "mae": 57.23532725416122,
+          "rmse": 75.14030572295214,
+          "wape": 0.11388855743697789
+        },
+        {
+          "model": "poisson_seasonal",
+          "mae": 59.43134939738688,
+          "rmse": 76.83203066340464,
+          "wape": 0.11825826764901214
         }
       ],
       "selected_model": "seasonal_mean",
@@ -13146,87 +13501,111 @@
           "actual": 477,
           "seasonal_naive": 478.0,
           "seasonal_mean": 503.4,
-          "seasonal_trend": 507.45
+          "seasonal_trend": 507.45,
+          "damped_trend": 507.4275,
+          "poisson_seasonal": 507.5861574513237
         },
         {
           "encounter_month": "2024-02-01",
           "actual": 411,
           "seasonal_naive": 424.0,
           "seasonal_mean": 444.2,
-          "seasonal_trend": 448.25
+          "seasonal_trend": 448.25,
+          "damped_trend": 448.187,
+          "poisson_seasonal": 447.89386400452526
         },
         {
           "encounter_month": "2024-03-01",
           "actual": 423,
           "seasonal_naive": 469.0,
           "seasonal_mean": 507.0,
-          "seasonal_trend": 511.05
+          "seasonal_trend": 511.05,
+          "damped_trend": 510.9321,
+          "poisson_seasonal": 511.21609421498044
         },
         {
           "encounter_month": "2024-04-01",
           "actual": 470,
           "seasonal_naive": 521.0,
           "seasonal_mean": 527.0,
-          "seasonal_trend": 531.05
+          "seasonal_trend": 531.05,
+          "damped_trend": 530.86568,
+          "poisson_seasonal": 531.3824095686286
         },
         {
           "encounter_month": "2024-05-01",
           "actual": 457,
           "seasonal_naive": 469.0,
           "seasonal_mean": 515.2,
-          "seasonal_trend": 519.25
+          "seasonal_trend": 519.25,
+          "damped_trend": 518.9900439999999,
+          "poisson_seasonal": 519.4842835099761
         },
         {
           "encounter_month": "2024-06-01",
           "actual": 443,
           "seasonal_naive": 475.0,
           "seasonal_mean": 496.8,
-          "seasonal_trend": 500.84999999999997
+          "seasonal_trend": 500.84999999999997,
+          "damped_trend": 500.50703519999996,
+          "poisson_seasonal": 500.9312733846199
         },
         {
           "encounter_month": "2024-07-01",
           "actual": 470,
           "seasonal_naive": 494.0,
           "seasonal_mean": 479.6,
-          "seasonal_trend": 483.65000000000003
+          "seasonal_trend": 483.65000000000003,
+          "damped_trend": 483.21812816000005,
+          "poisson_seasonal": 483.5882421804825
         },
         {
           "encounter_month": "2024-08-01",
           "actual": 436,
           "seasonal_naive": 499.0,
           "seasonal_mean": 474.6,
-          "seasonal_trend": 478.65000000000003
+          "seasonal_trend": 478.65000000000003,
+          "damped_trend": 478.124502528,
+          "poisson_seasonal": 478.5466633420705
         },
         {
           "encounter_month": "2024-09-01",
           "actual": 409,
           "seasonal_naive": 473.0,
           "seasonal_mean": 467.2,
-          "seasonal_trend": 471.25
+          "seasonal_trend": 471.25,
+          "damped_trend": 470.62710202240004,
+          "poisson_seasonal": 471.0851266612206
         },
         {
           "encounter_month": "2024-10-01",
           "actual": 478,
           "seasonal_naive": 472.0,
           "seasonal_mean": 483.6,
-          "seasonal_trend": 487.65
+          "seasonal_trend": 487.65,
+          "damped_trend": 486.92668161792,
+          "poisson_seasonal": 487.62150525121217
         },
         {
           "encounter_month": "2024-11-01",
           "actual": 480,
           "seasonal_naive": 487.0,
           "seasonal_mean": 484.8,
-          "seasonal_trend": 488.84999999999997
+          "seasonal_trend": 488.84999999999997,
+          "damped_trend": 488.02384529433596,
+          "poisson_seasonal": 488.831484172431
         },
         {
           "encounter_month": "2024-12-01",
           "actual": 447,
           "seasonal_naive": 463.0,
           "seasonal_mean": 479.8,
-          "seasonal_trend": 483.85
+          "seasonal_trend": 483.85,
+          "damped_trend": 482.9190762354688,
+          "poisson_seasonal": 483.78990533401895
         }
       ]
     },
-    "reason": "Future predictions withheld: the validation-selected model did not beat seasonal naive on held-out MAE."
+    "reason": "Development benchmark: this final year was previously inspected. Future predictions remain withheld pending independent evaluation."
   }
 }

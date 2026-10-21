@@ -198,10 +198,16 @@ function durationEvidence(row, location) {
     } else numeric(row[key], location);
   }
 }
-const FORECAST_MODELS = ["seasonal_naive", "seasonal_mean", "seasonal_trend"];
+const FORECAST_MODELS = [
+  "seasonal_naive",
+  "seasonal_mean",
+  "seasonal_trend",
+  "damped_trend",
+  "poisson_seasonal",
+];
 function forecastMetrics(rows, location) {
-  array(rows, location, 3);
-  if (rows.length !== 3) fail(location);
+  array(rows, location, FORECAST_MODELS.length);
+  if (rows.length !== FORECAST_MODELS.length) fail(location);
   rows.forEach((row, index) => {
     keys(row, ["model", "mae", "rmse", "wape"], location);
     if (row.model !== FORECAST_MODELS[index]) fail(location);
@@ -234,6 +240,7 @@ function validateForecast(forecast, monthly, exportedAt) {
     e,
     [
       "protocol",
+      "benchmark_status",
       "evaluated_at",
       "input_sha256",
       "training_start",
@@ -251,7 +258,8 @@ function validateForecast(forecast, monthly, exportedAt) {
     "forecast.evaluation",
   );
   if (
-    e.protocol !== "rolling_origin_v1" ||
+    e.protocol !== "rolling_origin_v2" ||
+    e.benchmark_status !== "development" ||
     e.training_months !== 108 ||
     e.model_window_months !== 60 ||
     typeof e.selected_beats_baseline !== "boolean"
@@ -289,7 +297,11 @@ function validateForecast(forecast, monthly, exportedAt) {
   array(e.folds, "forecast.folds", 3);
   if (e.folds.length !== 3) fail("forecast.folds");
   e.folds.forEach((fold, i) => {
-    keys(fold, ["training_end", "test_start", "test_end"], "forecast.folds");
+    keys(
+      fold,
+      ["training_end", "test_start", "test_end", "predictions"],
+      "forecast.folds",
+    );
     const stop = 72 + i * 12;
     if (
       fold.training_end !== series[stop - 1].encounter_month ||
@@ -297,8 +309,53 @@ function validateForecast(forecast, monthly, exportedAt) {
       fold.test_end !== series[stop + 11].encounter_month
     )
       fail("forecast.folds");
+    array(fold.predictions, "forecast.fold.predictions", 12);
+    if (fold.predictions.length !== 12) fail("forecast.fold.predictions");
+    fold.predictions.forEach((row, j) => {
+      keys(
+        row,
+        ["encounter_month", "actual", ...FORECAST_MODELS],
+        "forecast.fold.prediction",
+      );
+      if (
+        row.encounter_month !== series[stop + j].encounter_month ||
+        row.actual !== series[stop + j].encounter_count
+      )
+        fail("forecast.fold.actual");
+      FORECAST_MODELS.forEach((model) =>
+        numeric(row[model], "forecast.fold.prediction"),
+      );
+      if (row.seasonal_naive !== series[stop + j - 12].encounter_count)
+        fail("forecast.fold.baseline");
+    });
   });
   forecastMetrics(e.validation_metrics, "forecast.validation_metrics");
+  FORECAST_MODELS.forEach((model, i) => {
+    const rows = e.folds.flatMap((fold) => fold.predictions);
+    const absolute = rows.reduce(
+      (sum, row) => sum + Math.abs(row.actual - row[model]),
+      0,
+    );
+    const total = rows.reduce((sum, row) => sum + row.actual, 0);
+    near(
+      e.validation_metrics[i].mae,
+      absolute / rows.length,
+      "forecast.validation.mae",
+    );
+    near(
+      e.validation_metrics[i].rmse,
+      Math.sqrt(
+        rows.reduce((sum, row) => sum + (row.actual - row[model]) ** 2, 0) /
+          rows.length,
+      ),
+      "forecast.validation.rmse",
+    );
+    near(
+      e.validation_metrics[i].wape,
+      total ? absolute / total : null,
+      "forecast.validation.wape",
+    );
+  });
   const winner = e.validation_metrics.reduce((best, row) =>
     row.mae < best.mae ? row : best,
   );
@@ -342,18 +399,7 @@ function validateForecast(forecast, monthly, exportedAt) {
     e.selected_model !== "seasonal_naive" &&
     selected.mae < forecast.held_out_metrics[0].mae;
   if (e.selected_beats_baseline !== beats) fail("forecast.gate");
-  if (!beats) {
-    if (forecast.predictions !== null) fail("forecast.publication");
-  } else {
-    array(forecast.predictions, "forecast.predictions", 12);
-    if (forecast.predictions.length !== 12) fail("forecast.predictions");
-    forecast.predictions.forEach((row, i) => {
-      keys(row, ["encounter_month", "value"], "forecast.predictions");
-      if (row.encounter_month !== shiftMonth(e.test_end, i + 1))
-        fail("forecast.predictions");
-      numeric(row.value, "forecast.predictions");
-    });
-  }
+  if (forecast.predictions !== null) fail("forecast.publication");
 }
 
 const SEGMENT_DIMENSIONS = {
@@ -471,7 +517,7 @@ export function validateData(data) {
     ],
     "root",
   );
-  if (data.schema_version !== 4 || data.synthetic_only !== true) fail("root");
+  if (data.schema_version !== 5 || data.synthetic_only !== true) fail("root");
   timestamp(data.exported_at, "exported_at");
   const current = data.current;
   keys(
