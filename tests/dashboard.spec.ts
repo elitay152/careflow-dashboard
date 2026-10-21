@@ -739,3 +739,43 @@ test("flu intervals expose calibrated bounds, coverage and width without changin
       .locator("td"),
   ).toHaveCount(4);
 });
+
+test("overview tour connects the source, evidence, analytics and forecasting", async ({
+  page,
+}) => {
+  await page.goto("./#overview");
+  const tour = page.getByRole("region", {
+    name: "A quick tour of Careflow",
+    exact: true,
+  });
+  await expect(tour).toBeVisible();
+  await expect(tour.locator("ol li")).toHaveCount(4);
+  await expect(
+    tour.getByRole("link", { name: "Run the reproducible demo" }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/elitay152/Careflow/blob/main/docs/demo.md",
+  );
+  for (const [label, hash, title] of [
+    ["Explore the simulated cohort", "cohort", "A fictional population."],
+    ["Inspect pipeline evidence", "health", "Evidence over"],
+    ["Explore cohort analytics", "analytics", "Inside the cohort"],
+    [
+      "Review the forecasting evidence",
+      "forecasting",
+      "Hospital demand forecasting",
+    ],
+  ]) {
+    await tour.getByRole("link", { name: new RegExp(label) }).click();
+    await expect(page).toHaveURL(new RegExp(`#${hash}$`));
+    await expect(page.locator("h1")).toContainText(title);
+    if (hash === "forecasting")
+      await expect(
+        page.getByText("Observed public data · United States.", {
+          exact: true,
+        }),
+      ).toBeVisible();
+    await page.goBack();
+    await expect(tour).toBeVisible();
+  }
+});

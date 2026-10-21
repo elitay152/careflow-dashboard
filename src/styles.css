@@ -621,93 +621,6 @@ h1 > span {
 .trust-panel > .text-link {
   margin: 0 23px 23px;
 }
-.pipeline-flow {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding: 24px 24px 23px;
-  gap: 20px;
-}
-.flow-top {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  position: relative;
-  margin-bottom: 16px;
-}
-.flow-icon {
-  width: 39px;
-  height: 39px;
-  border: 1px solid #e1e9dc;
-  background: #f6f8f2;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  color: #57734f;
-}
-.flow-top > span:nth-child(2) {
-  font-size: 11px;
-  font-family: ui-monospace, monospace;
-  color: #666e63;
-}
-.flow-arrow {
-  color: #666e60;
-  width: 17px;
-  position: absolute;
-  right: 7px;
-}
-.flow-item h3 {
-  font-size: 14px;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-.flow-item p {
-  font-size: 11px;
-  color: #646e61;
-  margin-bottom: 7px;
-  line-height: 1.6;
-}
-.flow-item small {
-  font-size: 10px;
-  color: #676e61;
-}
-.cohort-callout {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  background: #eef3e9;
-  border: 1px solid #dee6d5;
-  border-radius: 9px;
-  padding: 19px 22px;
-  margin-bottom: 25px;
-}
-.callout-icon {
-  display: grid;
-  place-items: center;
-  width: 43px;
-  height: 43px;
-  flex-shrink: 0;
-  border: 1px solid #d8e3cb;
-  border-radius: 9px;
-  color: #5d724e;
-  background: #f6f8f0;
-}
-.cohort-callout h3 {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #586e4e;
-}
-.cohort-callout p {
-  font-size: 11px;
-  color: #646f5c;
-  line-height: 1.7;
-  max-width: 570px;
-}
-.cohort-callout > .button,
-.cohort-callout > .text-link {
-  margin-left: auto;
-  flex-shrink: 0;
-}
 .button {
   display: inline-flex;
   align-items: center;
@@ -1599,24 +1512,6 @@ tbody tr:last-child td {
     margin-right: 19px;
     font-size: 11px;
   }
-  .cohort-callout {
-    padding: 15px;
-    gap: 10px;
-  }
-  .cohort-callout .button {
-    font-size: 10px;
-    padding: 9px;
-  }
-  .pipeline-flow {
-    padding: 22px 19px;
-    gap: 12px;
-  }
-  .flow-item p {
-    font-size: 10px;
-  }
-  .flow-item small {
-    font-size: 9px;
-  }
   .heading-aside small {
     font-size: 9px;
   }
@@ -1739,36 +1634,6 @@ tbody tr:last-child td {
   .trust-panel > .text-link {
     grid-column: 1/-1;
     margin-top: 0;
-  }
-  .pipeline-flow {
-    gap: 15px;
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .flow-item:nth-child(2) .flow-arrow {
-    display: none;
-  }
-  .flow-top {
-    margin-bottom: 10px;
-  }
-  .flow-item p {
-    font-size: 11px;
-  }
-  .flow-item small {
-    font-size: 10px;
-  }
-  .cohort-callout {
-    flex-wrap: wrap;
-    padding: 18px;
-  }
-  .cohort-callout > div:nth-child(2) {
-    flex: 1;
-  }
-  .cohort-callout > .button,
-  .cohort-callout > .text-link {
-    margin: 3px 0 0 53px;
-  }
-  .cohort-callout p {
-    font-size: 11px;
   }
   .metrics-grid.three {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2007,21 +1872,6 @@ tbody tr:last-child td {
   .trust-mark strong {
     font-size: 14px;
   }
-  .flow-item p {
-    font-size: 12px;
-  }
-  .flow-item small {
-    font-size: 11px;
-  }
-  .cohort-callout h3 {
-    font-size: 14px;
-  }
-  .cohort-callout p {
-    font-size: 12px;
-  }
-  .cohort-callout > .button {
-    font-size: 11px;
-  }
   .note {
     font-size: 12px;
   }
@@ -2177,49 +2027,6 @@ tbody tr:last-child td {
   }
   .trust-panel > .text-link {
     margin-left: 17px;
-  }
-  .pipeline-flow {
-    padding: 24px 17px;
-    gap: 23px 13px;
-  }
-  .flow-item p {
-    font-size: 11px;
-  }
-  .flow-item small {
-    font-size: 10px;
-  }
-  .flow-arrow {
-    right: 0;
-    width: 15px;
-  }
-  .flow-icon {
-    width: 33px;
-    height: 33px;
-  }
-  .flow-top {
-    gap: 7px;
-  }
-  .cohort-callout {
-    padding: 15px;
-    gap: 12px;
-  }
-  .cohort-callout > div:nth-child(2) {
-    min-width: 205px;
-  }
-  .cohort-callout > .button,
-  .cohort-callout > .text-link {
-    margin-left: 0;
-  }
-  .cohort-callout p {
-    font-size: 11px;
-  }
-  .callout-icon {
-    width: 33px;
-    height: 33px;
-  }
-  .callout-icon svg {
-    width: 19px;
-    height: 19px;
   }
   .stage-list {
     padding-left: 16px;
@@ -3392,4 +3199,93 @@ input::placeholder {
   background: #d3e4df;
   border: 1px solid #317b6b;
   height: 0.65rem;
+}
+
+.portfolio-tour {
+  margin-bottom: 1.5rem;
+}
+.portfolio-tour-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0 1.5rem 1.5rem;
+  gap: 0.9rem;
+}
+.portfolio-tour-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.1rem;
+  border: 1px solid #d8e3db;
+  border-radius: 9px;
+  color: #24483b;
+  background: #f8faf7;
+  text-decoration: none;
+}
+.portfolio-tour-link:hover {
+  background: #edf4eb;
+  border-color: #789580;
+}
+.portfolio-tour-link:focus-visible {
+  outline: 3px solid #205a4b;
+  outline-offset: 3px;
+}
+.portfolio-tour-number {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #52695c;
+  font-size: 0.8rem;
+}
+.portfolio-tour-link h3 {
+  font-size: 0.95rem;
+  margin: 1rem 0 0.65rem;
+}
+.portfolio-tour-link p {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #52695c;
+  margin: 0 0 1rem;
+}
+.portfolio-tour-action {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.6;
+}
+.portfolio-tour-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  border-top: 1px solid #e1e8e0;
+  padding: 1rem 1.5rem;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: #52695c;
+}
+.portfolio-tour-footer a {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  color: #205a4b;
+  font-weight: 650;
+}
+@media (max-width: 1100px) {
+  .portfolio-tour-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .portfolio-tour-steps {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 1rem 1rem;
+  }
+  .portfolio-tour-footer {
+    padding: 1rem;
+  }
 }
