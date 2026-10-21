@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import snapshot from "../public/data/careflow.json";
 import CohortExplorer from "./CohortExplorer";
+import RegionalDemand from "./RegionalDemand";
 
 const current = snapshot.current;
 const archive = snapshot.archive;
@@ -40,6 +41,7 @@ const supported = new Set([
   "Encounter",
   "Condition",
   "MedicationRequest",
+  "Organization",
 ]);
 const number = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(value);
@@ -119,7 +121,7 @@ const nav = [
     title: "Monthly encounter forecasts",
     accent: "",
     description:
-      "Estimate how many finished encounters occur each month in the synthetic cohort. This forecasts visits, not unique patients; one patient can have multiple encounters.",
+      "Explore monthly finished encounters by facility, care setting, or provider ZIP area. This forecasts visits, not unique patients; one patient can have multiple encounters.",
   },
   {
     id: "health",
@@ -260,7 +262,8 @@ function Overview() {
     current.counts.patients +
     current.counts.encounters +
     current.counts.conditions +
-    current.counts.medications;
+    current.counts.medications +
+    (snapshot.demand?.facility_count ?? 0);
   const quality = current.quality;
   const domains = [
     {
@@ -279,6 +282,11 @@ function Overview() {
       color: "var(--blue)",
     },
     { label: "Patients", value: current.counts.patients, color: "var(--gold)" },
+    {
+      label: "Provider organizations",
+      value: snapshot.demand?.facility_count ?? 0,
+      color: "#9480a0",
+    },
   ];
   return (
     <>
@@ -335,7 +343,7 @@ function Overview() {
         <Metric
           label="Supported records loaded"
           value={number(loaded)}
-          note="Across four persisted FHIR resource types"
+          note="Across five persisted FHIR resource types"
           icon={Layers}
           tone="blue"
         />
@@ -387,7 +395,8 @@ function Overview() {
           </div>
           <div className="panel-foot">
             <span className="mini-dot" />
-            Only the four supported resource types are persisted.
+            Five supported resource types are persisted, including provider
+            organizations.
           </div>
         </Panel>
         <Panel
@@ -513,6 +522,7 @@ function Cohort() {
     Encounter: current.counts.encounters,
     Condition: current.counts.conditions,
     MedicationRequest: current.counts.medications,
+    Organization: snapshot.demand?.facility_count ?? 0,
   }).sort((a, b) => b[1] - a[1]);
   const filtered = resources.filter(
     ([name]) =>
@@ -1524,6 +1534,35 @@ type ForecastSnapshot = {
   } | null;
 };
 function Forecasting() {
+  const [view, setView] = useState("regional");
+  return (
+    <>
+      <div className="segmented demand-view" aria-label="Forecast view">
+        <button
+          className={view === "regional" ? "active" : ""}
+          aria-pressed={view === "regional"}
+          onClick={() => setView("regional")}
+        >
+          Facilities & ZIP areas
+        </button>
+        <button
+          className={view === "cohort" ? "active" : ""}
+          aria-pressed={view === "cohort"}
+          onClick={() => setView("cohort")}
+        >
+          Whole cohort benchmark
+        </button>
+      </div>
+      {view === "regional" ? (
+        <RegionalDemand data={snapshot.demand} />
+      ) : (
+        <CohortForecasting />
+      )}
+    </>
+  );
+}
+
+function CohortForecasting() {
   const [showValues, setShowValues] = useState(false);
   const forecast = snapshot.forecast as ForecastSnapshot;
   const e = forecast.evaluation;

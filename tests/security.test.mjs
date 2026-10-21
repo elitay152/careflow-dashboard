@@ -90,6 +90,64 @@ test("development benchmarks cannot publish future predictions even after improv
 });
 const mutations = [
   [
+    "private fields in a demand group",
+    (d) => {
+      d.demand.groups[0].patient_ids = ["audit-sentinel"];
+    },
+  ],
+  [
+    "a nested facility label",
+    (d) => {
+      d.demand.groups[0].label = { private_notes: "audit-sentinel" };
+    },
+  ],
+  [
+    "an invalid demand scope",
+    (d) => {
+      d.demand.groups[0].scope = "patient";
+    },
+  ],
+  [
+    "duplicated demand groups",
+    (d) => {
+      d.demand.groups.push({ ...d.demand.groups[0] });
+    },
+  ],
+  [
+    "fabricated demand volume",
+    (d) => {
+      d.demand.groups[0].annual_count += 1;
+    },
+  ],
+  [
+    "a sparse group incorrectly scored",
+    (d) => {
+      const g = d.demand.groups.find((g) => !g.eligible);
+      g.eligible = true;
+    },
+  ],
+  [
+    "changed regional coverage",
+    (d) => {
+      d.demand.coverage.annual_matched_provider_encounters -= 1;
+    },
+  ],
+  [
+    "a changed demand calendar",
+    (d) => {
+      d.demand.months[0] = "2000-01-01";
+    },
+  ],
+  [
+    "future regional predictions",
+    (d) => {
+      d.demand.groups.find((g) => g.eligible).forecast.predictions = [
+        { encounter_month: "2025-01-01", value: 100 },
+      ];
+    },
+  ],
+
+  [
     "uninspected-test claim on development data",
     (d) => {
       d.forecast.evaluation.benchmark_status = "untouched";
