@@ -602,3 +602,58 @@ test("public flu forecasts keep observed data separate and expose the frozen ben
     page.getByText("Observed public data · United States.", { exact: true }),
   ).toHaveCount(0);
 });
+
+test("flu peak analysis follows model and horizon without changing the frozen result", async ({
+  page,
+}) => {
+  await page.goto("./#forecasting");
+  const section = page.getByRole("region", {
+    name: "Where did the forecast miss?",
+    exact: true,
+  });
+  const table = page.getByRole("region", {
+    name: "Flu errors by peak period",
+    exact: true,
+  });
+  const fmt = (n: number) =>
+    new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(n);
+  const signed = (n: number) =>
+    new Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 0,
+      signDisplay: "exceptZero",
+    }).format(n);
+  const diagnostics = flu.evaluation.holdout.peak_diagnostics;
+  await expect(section).toContainText("42,500 admissions on Jan 3, 2026");
+  await expect(table.locator("tbody tr")).toHaveCount(3);
+  for (const [horizon, model] of [
+    [1, "seasonal_autoreg"],
+    [4, "seasonal_autoreg"],
+    [4, "last_value"],
+  ] as const) {
+    await page.getByLabel("Flu forecast horizon").selectOption(String(horizon));
+    await page.getByLabel("Flu comparison model").selectOption(model);
+    const detail = diagnostics.by_horizon
+      .find((h) => h.horizon === horizon)!
+      .models.find((m) => m.model === model)!;
+    for (const [i, phase] of detail.phases.entries()) {
+      const cells = table.locator("tbody tr").nth(i).locator("td");
+      await expect(cells.nth(0)).toHaveText(String(phase.n));
+      await expect(cells.nth(1)).toHaveText(fmt(phase.mae!));
+      await expect(cells.nth(3)).toHaveText(signed(phase.bias!));
+    }
+    await expect(section).toContainText(
+      `${detail.peak.lag_weeks} week${detail.peak.lag_weeks === 1 ? "" : "s"} later`,
+    );
+    if (model === "last_value") {
+      const row = table.locator("tbody tr").nth(2);
+      await expect(row.locator("td").nth(1)).toHaveText(
+        await row.locator("td").nth(2).innerText(),
+      );
+    }
+  }
+  await section.getByText("How to read peak timing", { exact: true }).click();
+  await expect(section).toContainText("new independent test");
+  await expect(
+    page.getByText("Future projection withheld.", { exact: true }),
+  ).toBeVisible();
+});

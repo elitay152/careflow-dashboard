@@ -15,6 +15,31 @@ test("public flu evidence has reproducible source, arithmetic and publication ch
   assert.equal(validateFlu(snapshot), snapshot));
 const mutations = [
   [
+    "forged peak timing",
+    (d) => {
+      d.evaluation.holdout.peak_diagnostics.by_horizon[0].models[0].peak.lag_weeks += 1;
+    },
+  ],
+  [
+    "forged peak error shares",
+    (d) => {
+      d.evaluation.holdout.peak_diagnostics.by_horizon[0].models[0].phases[0].error_share = 0;
+    },
+  ],
+  [
+    "redefined peak window",
+    (d) => {
+      d.evaluation.holdout.peak_diagnostics.peak_window.start = "2025-07-05";
+    },
+  ],
+  [
+    "hidden fields in peak analysis",
+    (d) => {
+      d.evaluation.holdout.peak_diagnostics.patient_rows = [];
+    },
+  ],
+
+  [
     "patient rows",
     (d) => {
       d.patient_rows = [{ patient_id: "audit-sentinel" }];

@@ -127,6 +127,84 @@ function metrics(rows, models, where) {
   }
 }
 
+function checkPeakDiagnostics(rows, diagnostics) {
+  const observed = rows.filter((r) => r.horizon === 1);
+  const peak = observed.reduce((a, b) => (b.actual > a.actual ? b : a));
+  const start = shift(peak.week, -2),
+    end = shift(peak.week, 2);
+  const expected = {
+    method: "descriptive_peak_window_v1",
+    observed_peak: { week: peak.week, count: peak.actual },
+    peak_window: { start, end },
+    by_horizon: [1, 2, 3, 4].map((horizon) => {
+      const part = rows.filter((r) => r.horizon === horizon);
+      return {
+        horizon,
+        models: fluModels.map((model) => {
+          const total = part.reduce(
+            (s, r) => s + Math.abs(r[model] - r.actual),
+            0,
+          );
+          const highest = part.reduce((a, b) => (b[model] > a[model] ? b : a));
+          return {
+            model,
+            phases: ["before", "peak", "after"].map((phase) => {
+              const subset = part.filter(
+                (r) =>
+                  (r.week < start
+                    ? "before"
+                    : r.week > end
+                      ? "after"
+                      : "peak") === phase,
+              );
+              const abs = subset.reduce(
+                (s, r) => s + Math.abs(r[model] - r.actual),
+                0,
+              );
+              return {
+                phase,
+                n: subset.length,
+                mae: subset.length ? abs / subset.length : null,
+                bias: subset.length
+                  ? subset.reduce((s, r) => s + r[model] - r.actual, 0) /
+                    subset.length
+                  : null,
+                error_share: total ? abs / total : null,
+              };
+            }),
+            peak: {
+              week: highest.week,
+              count: highest[model],
+              lag_weeks:
+                (Date.parse(highest.week) - Date.parse(peak.week)) /
+                (7 * 86400000),
+              count_error: highest[model] - peak.actual,
+            },
+          };
+        }),
+      };
+    }),
+  };
+  function check(a, b, path) {
+    if (typeof b === "number") {
+      if (
+        typeof a !== "number" ||
+        !Number.isFinite(a) ||
+        Math.abs(a - b) > 1e-8 * Math.max(1, Math.abs(b))
+      )
+        fail(path);
+    } else if (Array.isArray(b)) {
+      array(a, path, b.length);
+      if (a.length !== b.length) fail(path);
+      b.forEach((v, i) => check(a[i], v, `${path}.${i}`));
+    } else if (b && typeof b === "object") {
+      keys(a, Object.keys(b), path);
+      for (const k of Object.keys(b)) check(a[k], b[k], `${path}.${k}`);
+    } else if (a !== b) fail(path);
+  }
+  check(diagnostics, expected, "holdout.peak_diagnostics");
+}
+
 export function validateFlu(data) {
   keys(
     data,
@@ -357,6 +435,7 @@ export function validateFlu(data) {
       "forecasts",
       "metrics",
       "predictions",
+      "peak_diagnostics",
     ],
     "holdout",
   );
@@ -366,6 +445,7 @@ export function validateFlu(data) {
     fail("holdout.counts");
   checkRows(e.holdout.predictions, [p.holdout], "holdout.predictions");
   metrics(e.holdout.predictions, e.holdout.metrics, "holdout.metrics");
+  checkPeakDiagnostics(e.holdout.predictions, e.holdout.peak_diagnostics);
   const selectedMae = e.holdout.metrics.find((m) => m.model === selected).mae;
   const publish = ["last_value", "seasonal_naive"].every(
     (m) => selectedMae < e.holdout.metrics.find((x) => x.model === m).mae,
