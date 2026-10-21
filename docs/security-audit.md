@@ -9,7 +9,9 @@ database access, model credentials, and spending controls belong in Careflow.
 - Snapshot validation uses exact field allowlists, primitive types, numeric/date
   bounds, and fixed evidence destinations. Unexpected private fields fail.
 - Forecast checks verify input hashes, split dates, score arithmetic, selection,
-  and publication gating. These establish consistency, not source authenticity.
+  and publication gating. Interval checks recompute earlier-season quantiles,
+  radii, coverage, width, misses, and interval scores against the fixed calibration
+  protocol. These establish consistency, not source authenticity.
 - Sync validates one bounded UTF-8 read and atomically renames those bytes.
   Invalid data leaves the existing snapshot intact.
 - Build allowlists reject unexpected files, symlinks, source maps, and mismatched

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "dataset_kind": "observed_public_aggregate",
-  "generated_at": "2026-10-21T20:16:55.933205+00:00",
+  "generated_at": "2026-10-21T20:33:56.971258+00:00",
   "source": {
     "name": "CDC/NHSN via FluSight",
     "repository": "https://github.com/cdcepi/FluSight-forecast-hub",
@@ -12,7 +12,7 @@
     "license_url": "https://github.com/cdcepi/FluSight-forecast-hub/blob/ff95b0fd9883aa15f4ce3f6e46830973f905ffd1/LICENSE",
     "license_notice": "MIT License\n\nCopyright (c) 2022 Consortium of Infectious Disease Modeling Hubs\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
     "attribution": "Observed laboratory-confirmed influenza hospital admissions reported to CDC/NHSN, distributed by the CDC FluSight Forecast Hub. No source model forecasts are used. No CDC endorsement is implied.",
-    "verified_at": "2026-10-21T20:16:55.933205+00:00",
+    "verified_at": "2026-10-21T20:33:56.971258+00:00",
     "quality": {
       "rows": 13038,
       "locations": 53,
@@ -7593,7 +7593,1492 @@
       "status": "withheld",
       "reason": "Validation winner did not strictly beat both simple baselines on pooled holdout MAE."
     },
-    "forecast": null
+    "forecast": null,
+    "intervals": {
+      "protocol": {
+        "protocol": "flusight_intervals_v1",
+        "evaluation_role": "Retrospective interval experiment specified after inspecting point-forecast holdout results; not a fresh independent test",
+        "method": "Fixed per-model, per-horizon absolute-residual quantile bands",
+        "levels": [
+          80,
+          95
+        ],
+        "calibration_start": "2023-07-01",
+        "calibration_end": "2025-06-07",
+        "calibration_source": "Earlier validation predictions only; common cutoff no later than the earliest four-week holdout origin",
+        "quantile": "Sorted absolute residual at one-based rank ceil((n+1)*level/100); refuse rank beyond n",
+        "bounds": "Lower=max(0,floor(point-radius)); upper=ceil(point+radius)",
+        "adaptation": "No updates from holdout outcomes",
+        "metrics": [
+          "coverage",
+          "mean_width",
+          "below",
+          "above",
+          "mean_interval_score"
+        ],
+        "guarantee": "No guaranteed coverage: temporal dependence, distribution shift, and model selection share earlier seasons",
+        "publication": "Does not change point forecasts, model selection, or publication gate; future projections stay subject to the existing point-forecast gate"
+      },
+      "protocol_sha256": "f9746433204a9d13a47145dc79897b2807140c06db8124b0d7bd62303a61f4ec",
+      "by_horizon": [
+        {
+          "horizon": 1,
+          "calibration_n": 102,
+          "quantile_ranks": [
+            {
+              "level": 80,
+              "rank": 83
+            },
+            {
+              "level": 95,
+              "rank": 98
+            }
+          ],
+          "models": [
+            {
+              "model": "last_value",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 2795.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8461538461538461,
+                    "mean_width": 4607.596153846154,
+                    "below": 4,
+                    "above": 4,
+                    "mean_interval_score": 12671.634615384617
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 0.9583333333333334,
+                      "mean_width": 4093.6666666666665,
+                      "below": 0,
+                      "above": 1,
+                      "mean_interval_score": 4464.5
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 5590.0,
+                      "below": 2,
+                      "above": 3,
+                      "mean_interval_score": 85908.00000000001
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9130434782608695,
+                      "mean_width": 4930.304347826087,
+                      "below": 2,
+                      "above": 0,
+                      "mean_interval_score": 5314.652173913043
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 7800.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9230769230769231,
+                    "mean_width": 11187.538461538461,
+                    "below": 2,
+                    "above": 2,
+                    "mean_interval_score": 24984.461538461524
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 9426.458333333334,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 9426.458333333334
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.2,
+                      "mean_width": 15600.0,
+                      "below": 2,
+                      "above": 2,
+                      "mean_interval_score": 159087.99999999988
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 1.0,
+                      "mean_width": 12065.95652173913,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 12065.95652173913
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_naive",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 9201.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8269230769230769,
+                    "mean_width": 13206.51923076923,
+                    "below": 9,
+                    "above": 0,
+                    "mean_interval_score": 39097.67307692308
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 10666.666666666666,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 10666.666666666666
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.8,
+                      "mean_width": 18402.0,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 27890.0
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.6521739130434783,
+                      "mean_width": 14727.347826086956,
+                      "below": 8,
+                      "above": 0,
+                      "mean_interval_score": 71201.26086956523
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 28423.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 36855.846153846156,
+                    "below": 3,
+                    "above": 0,
+                    "mean_interval_score": 53964.30769230767
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 29904.791666666668,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 29904.791666666668
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 1.0,
+                      "mean_width": 54384.4,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 54384.4
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8695652173913043,
+                      "mean_width": 40298.565217391304,
+                      "below": 3,
+                      "above": 0,
+                      "mean_interval_score": 78978.56521739127
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "damped_growth",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 1631.5610305865048,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.7884615384615384,
+                    "mean_width": 2940.2884615384614,
+                    "below": 6,
+                    "above": 5,
+                    "mean_interval_score": 13213.557692307695
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 0.9583333333333334,
+                      "mean_width": 2741.25,
+                      "below": 0,
+                      "above": 1,
+                      "mean_interval_score": 2909.1666666666665
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 3264.2,
+                      "below": 3,
+                      "above": 2,
+                      "mean_interval_score": 102300.20000000001
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.782608695652174,
+                      "mean_width": 3077.5652173913045,
+                      "below": 3,
+                      "above": 2,
+                      "mean_interval_score": 4599.304347826087
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 8955.873149490722,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 12606.538461538461,
+                    "below": 2,
+                    "above": 1,
+                    "mean_interval_score": 28027.30769230768
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 10756.75,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 10756.75
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.4,
+                      "mean_width": 17913.0,
+                      "below": 2,
+                      "above": 1,
+                      "mean_interval_score": 178288.99999999985
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 1.0,
+                      "mean_width": 13383.173913043478,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 13383.173913043478
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_autoreg",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 3058.1324777879054,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.7884615384615384,
+                    "mean_width": 4940.173076923077,
+                    "below": 8,
+                    "above": 3,
+                    "mean_interval_score": 21346.13461538462
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 4425.416666666667,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 4425.416666666667
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 6117.0,
+                      "below": 2,
+                      "above": 3,
+                      "mean_interval_score": 121651.00000000003
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.7391304347826086,
+                      "mean_width": 5221.478260869565,
+                      "below": 6,
+                      "above": 0,
+                      "mean_interval_score": 17197.13043478261
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 9883.463210858194,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9038461538461539,
+                    "mean_width": 13826.23076923077,
+                    "below": 4,
+                    "above": 1,
+                    "mean_interval_score": 40802.38461538459
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 11635.416666666666,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 11635.416666666666
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.4,
+                      "mean_width": 19768.0,
+                      "below": 2,
+                      "above": 1,
+                      "mean_interval_score": 223935.99999999983
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9130434782608695,
+                      "mean_width": 14820.608695652174,
+                      "below": 2,
+                      "above": 0,
+                      "mean_interval_score": 31425.826086956506
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "horizon": 2,
+          "calibration_n": 102,
+          "quantile_ranks": [
+            {
+              "level": 80,
+              "rank": 83
+            },
+            {
+              "level": 95,
+              "rank": 98
+            }
+          ],
+          "models": [
+            {
+              "model": "last_value",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 4903.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8269230769230769,
+                    "mean_width": 7443.4807692307695,
+                    "below": 5,
+                    "above": 4,
+                    "mean_interval_score": 22267.903846153848
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 0.9583333333333334,
+                      "mean_width": 6262.541666666667,
+                      "below": 0,
+                      "above": 1,
+                      "mean_interval_score": 6683.791666666667
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 9806.0,
+                      "below": 2,
+                      "above": 3,
+                      "mean_interval_score": 144334.00000000003
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8695652173913043,
+                      "mean_width": 8162.173913043478,
+                      "below": 3,
+                      "above": 0,
+                      "mean_interval_score": 11993.478260869566
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 15885.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 20977.25,
+                    "below": 1,
+                    "above": 2,
+                    "mean_interval_score": 38611.09615384614
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 17257.791666666668,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 17257.791666666668
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.4,
+                      "mean_width": 29133.0,
+                      "below": 1,
+                      "above": 2,
+                      "mean_interval_score": 212524.99999999985
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 1.0,
+                      "mean_width": 23085.434782608696,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 23085.434782608696
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_naive",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 9201.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8269230769230769,
+                    "mean_width": 13206.51923076923,
+                    "below": 9,
+                    "above": 0,
+                    "mean_interval_score": 39097.67307692308
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 10666.666666666666,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 10666.666666666666
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.8,
+                      "mean_width": 18402.0,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 27890.0
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.6521739130434783,
+                      "mean_width": 14727.347826086956,
+                      "below": 8,
+                      "above": 0,
+                      "mean_interval_score": 71201.26086956523
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 28423.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 36855.846153846156,
+                    "below": 3,
+                    "above": 0,
+                    "mean_interval_score": 53964.30769230767
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 29904.791666666668,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 29904.791666666668
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 1.0,
+                      "mean_width": 54384.4,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 54384.4
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8695652173913043,
+                      "mean_width": 40298.565217391304,
+                      "below": 3,
+                      "above": 0,
+                      "mean_interval_score": 78978.56521739127
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "damped_growth",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 3253.0240097874066,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.7884615384615384,
+                    "mean_width": 5179.903846153846,
+                    "below": 5,
+                    "above": 6,
+                    "mean_interval_score": 27282.788461538465
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 0.9583333333333334,
+                      "mean_width": 4571.625,
+                      "below": 0,
+                      "above": 1,
+                      "mean_interval_score": 4737.458333333333
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 6507.0,
+                      "below": 2,
+                      "above": 3,
+                      "mean_interval_score": 192507.00000000003
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.782608695652174,
+                      "mean_width": 5526.130434782609,
+                      "below": 3,
+                      "above": 2,
+                      "mean_interval_score": 14890.043478260872
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 17521.796615131352,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9230769230769231,
+                    "mean_width": 22547.153846153848,
+                    "below": 3,
+                    "above": 1,
+                    "mean_interval_score": 49550.230769230744
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 19107.083333333332,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 19107.083333333332
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.4,
+                      "mean_width": 33363.2,
+                      "below": 2,
+                      "above": 1,
+                      "mean_interval_score": 305403.1999999998
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9565217391304348,
+                      "mean_width": 23785.478260869564,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 25696.782608695652
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_autoreg",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 3921.794113444903,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.7692307692307693,
+                    "mean_width": 6119.346153846154,
+                    "below": 9,
+                    "above": 3,
+                    "mean_interval_score": 30774.730769230773
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 5379.916666666667,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 5379.916666666667
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 7844.2,
+                      "below": 2,
+                      "above": 3,
+                      "mean_interval_score": 145170.2
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.6956521739130435,
+                      "mean_width": 6515.95652173913,
+                      "below": 7,
+                      "above": 0,
+                      "mean_interval_score": 32405.086956521744
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 13358.275157078737,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9038461538461539,
+                    "mean_width": 18123.884615384617,
+                    "below": 3,
+                    "above": 2,
+                    "mean_interval_score": 61363.88461538458
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 15030.291666666666,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 15030.291666666666
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.4,
+                      "mean_width": 26260.8,
+                      "below": 1,
+                      "above": 2,
+                      "mean_interval_score": 257636.7999999998
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9130434782608695,
+                      "mean_width": 19583.08695652174,
+                      "below": 2,
+                      "above": 0,
+                      "mean_interval_score": 67043.95652173909
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "horizon": 3,
+          "calibration_n": 102,
+          "quantile_ranks": [
+            {
+              "level": 80,
+              "rank": 83
+            },
+            {
+              "level": 95,
+              "rank": 98
+            }
+          ],
+          "models": [
+            {
+              "model": "last_value",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 6391.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8076923076923077,
+                    "mean_width": 9402.153846153846,
+                    "below": 5,
+                    "above": 5,
+                    "mean_interval_score": 28859.461538461543
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 0.9583333333333334,
+                      "mean_width": 7609.5,
+                      "below": 0,
+                      "above": 1,
+                      "mean_interval_score": 8094.083333333333
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 12548.0,
+                      "below": 1,
+                      "above": 4,
+                      "mean_interval_score": 156390.00000000003
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8260869565217391,
+                      "mean_width": 10588.869565217392,
+                      "below": 4,
+                      "above": 0,
+                      "mean_interval_score": 22803.652173913044
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 21868.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 27525.153846153848,
+                    "below": 1,
+                    "above": 2,
+                    "mean_interval_score": 44061.30769230767
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 23086.5,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 23086.5
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.6,
+                      "mean_width": 35214.2,
+                      "below": 0,
+                      "above": 2,
+                      "mean_interval_score": 176662.19999999987
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9565217391304348,
+                      "mean_width": 30485.260869565216,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 37121.78260869565
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_naive",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 9201.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8269230769230769,
+                    "mean_width": 13206.51923076923,
+                    "below": 9,
+                    "above": 0,
+                    "mean_interval_score": 39097.67307692308
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 10666.666666666666,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 10666.666666666666
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.8,
+                      "mean_width": 18402.0,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 27890.0
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.6521739130434783,
+                      "mean_width": 14727.347826086956,
+                      "below": 8,
+                      "above": 0,
+                      "mean_interval_score": 71201.26086956523
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 28423.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 36855.846153846156,
+                    "below": 3,
+                    "above": 0,
+                    "mean_interval_score": 53964.30769230767
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 29904.791666666668,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 29904.791666666668
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 1.0,
+                      "mean_width": 54384.4,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 54384.4
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8695652173913043,
+                      "mean_width": 40298.565217391304,
+                      "below": 3,
+                      "above": 0,
+                      "mean_interval_score": 78978.56521739127
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "damped_growth",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 4667.31882433869,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8076923076923077,
+                    "mean_width": 7077.2692307692305,
+                    "below": 5,
+                    "above": 5,
+                    "mean_interval_score": 37061.69230769231
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 0.9583333333333334,
+                      "mean_width": 6003.5,
+                      "below": 0,
+                      "above": 1,
+                      "mean_interval_score": 6267.25
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.2,
+                      "mean_width": 9335.6,
+                      "below": 1,
+                      "above": 3,
+                      "mean_interval_score": 179269.60000000003
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.782608695652174,
+                      "mean_width": 7706.782608695652,
+                      "below": 4,
+                      "above": 1,
+                      "mean_interval_score": 38280.26086956522
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 23154.556539863137,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9230769230769231,
+                    "mean_width": 28579.05769230769,
+                    "below": 2,
+                    "above": 2,
+                    "mean_interval_score": 67722.13461538458
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 24539.458333333332,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 24539.458333333332
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.4,
+                      "mean_width": 40173.8,
+                      "below": 1,
+                      "above": 2,
+                      "mean_interval_score": 213149.7999999998
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9565217391304348,
+                      "mean_width": 30273.695652173912,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 81167.60869565213
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_autoreg",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 4294.257810610205,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.7307692307692307,
+                    "mean_width": 6638.807692307692,
+                    "below": 11,
+                    "above": 3,
+                    "mean_interval_score": 39545.53846153847
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 5770.166666666667,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 5770.166666666667
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.2,
+                      "mean_width": 8589.6,
+                      "below": 1,
+                      "above": 3,
+                      "mean_interval_score": 136791.60000000003
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.5652173913043478,
+                      "mean_width": 7121.130434782609,
+                      "below": 10,
+                      "above": 0,
+                      "mean_interval_score": 53648.95652173914
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 14896.37834463357,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8846153846153846,
+                    "mean_width": 20054.846153846152,
+                    "below": 4,
+                    "above": 2,
+                    "mean_interval_score": 83629.46153846149
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 16507.958333333332,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 16507.958333333332
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.4,
+                      "mean_width": 28741.8,
+                      "below": 1,
+                      "above": 2,
+                      "mean_interval_score": 232829.7999999998
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8695652173913043,
+                      "mean_width": 21867.478260869564,
+                      "below": 3,
+                      "above": 0,
+                      "mean_interval_score": 121234.43478260862
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "horizon": 4,
+          "calibration_n": 102,
+          "quantile_ranks": [
+            {
+              "level": 80,
+              "rank": 83
+            },
+            {
+              "level": 95,
+              "rank": 98
+            }
+          ],
+          "models": [
+            {
+              "model": "last_value",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 10062.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8653846153846154,
+                    "mean_width": 14038.961538461539,
+                    "below": 3,
+                    "above": 4,
+                    "mean_interval_score": 32187.807692307695
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 11195.208333333334,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 11195.208333333334
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.2,
+                      "mean_width": 17337.2,
+                      "below": 0,
+                      "above": 4,
+                      "mean_interval_score": 144003.2
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8695652173913043,
+                      "mean_width": 16289.347826086956,
+                      "below": 3,
+                      "above": 0,
+                      "mean_interval_score": 29785.434782608696
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 24203.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 30004.23076923077,
+                    "below": 1,
+                    "above": 2,
+                    "mean_interval_score": 46528.846153846134
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 25336.208333333332,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 25336.208333333332
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.6,
+                      "mean_width": 33891.8,
+                      "below": 0,
+                      "above": 2,
+                      "mean_interval_score": 185291.79999999987
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9565217391304348,
+                      "mean_width": 34030.086956521736,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 38477.043478260865
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_naive",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 9201.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8269230769230769,
+                    "mean_width": 13206.51923076923,
+                    "below": 9,
+                    "above": 0,
+                    "mean_interval_score": 39097.67307692308
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 10666.666666666666,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 10666.666666666666
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.8,
+                      "mean_width": 18402.0,
+                      "below": 1,
+                      "above": 0,
+                      "mean_interval_score": 27890.0
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.6521739130434783,
+                      "mean_width": 14727.347826086956,
+                      "below": 8,
+                      "above": 0,
+                      "mean_interval_score": 71201.26086956523
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 28423.0,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9423076923076923,
+                    "mean_width": 36855.846153846156,
+                    "below": 3,
+                    "above": 0,
+                    "mean_interval_score": 53964.30769230767
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 29904.791666666668,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 29904.791666666668
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 1.0,
+                      "mean_width": 54384.4,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 54384.4
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8695652173913043,
+                      "mean_width": 40298.565217391304,
+                      "below": 3,
+                      "above": 0,
+                      "mean_interval_score": 78978.56521739127
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "damped_growth",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 5472.421989643321,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.7884615384615384,
+                    "mean_width": 8127.884615384615,
+                    "below": 6,
+                    "above": 5,
+                    "mean_interval_score": 46218.461538461546
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 0.9583333333333334,
+                      "mean_width": 6692.583333333333,
+                      "below": 0,
+                      "above": 1,
+                      "mean_interval_score": 7200.916666666667
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.0,
+                      "mean_width": 10945.8,
+                      "below": 1,
+                      "above": 4,
+                      "mean_interval_score": 155839.80000000002
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.782608695652174,
+                      "mean_width": 9013.0,
+                      "below": 5,
+                      "above": 0,
+                      "mean_interval_score": 63101.69565217393
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 26118.43608998187,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.9230769230769231,
+                    "mean_width": 31765.46153846154,
+                    "below": 2,
+                    "above": 2,
+                    "mean_interval_score": 81367.76923076919
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 27338.583333333332,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 27338.583333333332
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.6,
+                      "mean_width": 41228.4,
+                      "below": 0,
+                      "above": 2,
+                      "mean_interval_score": 80388.39999999997
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.9130434782608695,
+                      "mean_width": 34327.65217391304,
+                      "below": 2,
+                      "above": 0,
+                      "mean_interval_score": 137958.95652173905
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "model": "seasonal_autoreg",
+              "bands": [
+                {
+                  "level": 80,
+                  "radius": 6409.660839034486,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.7692307692307693,
+                    "mean_width": 9490.23076923077,
+                    "below": 9,
+                    "above": 3,
+                    "mean_interval_score": 44897.923076923085
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 7986.916666666667,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 7986.916666666667
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.2,
+                      "mean_width": 12820.4,
+                      "below": 1,
+                      "above": 3,
+                      "mean_interval_score": 112528.40000000002
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.6521739130434783,
+                      "mean_width": 10334.95652173913,
+                      "below": 8,
+                      "above": 0,
+                      "mean_interval_score": 68711.47826086958
+                    }
+                  ]
+                },
+                {
+                  "level": 95,
+                  "radius": 16684.909548233554,
+                  "metrics": {
+                    "n": 52,
+                    "coverage": 0.8846153846153846,
+                    "mean_width": 22252.576923076922,
+                    "below": 4,
+                    "above": 2,
+                    "mean_interval_score": 95199.49999999993
+                  },
+                  "by_phase": [
+                    {
+                      "phase": "before",
+                      "n": 24,
+                      "coverage": 1.0,
+                      "mean_width": 18262.125,
+                      "below": 0,
+                      "above": 0,
+                      "mean_interval_score": 18262.125
+                    },
+                    {
+                      "phase": "peak",
+                      "n": 5,
+                      "coverage": 0.6,
+                      "mean_width": 31096.0,
+                      "below": 0,
+                      "above": 2,
+                      "mean_interval_score": 152535.99999999988
+                    },
+                    {
+                      "phase": "after",
+                      "n": 23,
+                      "coverage": 0.8260869565217391,
+                      "mean_width": 24494.043478260868,
+                      "below": 4,
+                      "above": 0,
+                      "mean_interval_score": 163017.52173913032
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   },
   "limitations": [
     "Retrospective evaluation uses a pinned revised dataset, not historical release vintages.",
@@ -7601,6 +9086,6 @@
     "Origins assume observations are available at week end; publication delays are not replayed.",
     "Horizon/weekly errors overlap and are correlated; this is one held-out season.",
     "These are reported influenza admissions, not unique patients or all-cause facility demand.",
-    "Point forecasts have no estimated uncertainty intervals and are not an operational planning service."
+    "Residual bands are a retrospective experiment with no guaranteed coverage; this is not an operational planning service."
   ]
 }

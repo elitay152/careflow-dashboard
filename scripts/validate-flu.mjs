@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import intervalProtocol from "./flu-interval-protocol.json" with { type: "json" };
 import { open } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
@@ -127,6 +128,24 @@ function metrics(rows, models, where) {
   }
 }
 
+function checkComputed(a, b, path) {
+  if (typeof b === "number") {
+    if (
+      typeof a !== "number" ||
+      !Number.isFinite(a) ||
+      Math.abs(a - b) > 1e-8 * Math.max(1, Math.abs(b))
+    )
+      fail(path);
+  } else if (Array.isArray(b)) {
+    array(a, path, b.length);
+    if (a.length !== b.length) fail(path);
+    b.forEach((v, i) => checkComputed(a[i], v, `${path}.${i}`));
+  } else if (b && typeof b === "object") {
+    keys(a, Object.keys(b), path);
+    for (const k of Object.keys(b)) checkComputed(a[k], b[k], `${path}.${k}`);
+  } else if (a !== b) fail(path);
+}
+
 function checkPeakDiagnostics(rows, diagnostics) {
   const observed = rows.filter((r) => r.horizon === 1);
   const peak = observed.reduce((a, b) => (b.actual > a.actual ? b : a));
@@ -185,24 +204,100 @@ function checkPeakDiagnostics(rows, diagnostics) {
       };
     }),
   };
-  function check(a, b, path) {
-    if (typeof b === "number") {
-      if (
-        typeof a !== "number" ||
-        !Number.isFinite(a) ||
-        Math.abs(a - b) > 1e-8 * Math.max(1, Math.abs(b))
-      )
-        fail(path);
-    } else if (Array.isArray(b)) {
-      array(a, path, b.length);
-      if (a.length !== b.length) fail(path);
-      b.forEach((v, i) => check(a[i], v, `${path}.${i}`));
-    } else if (b && typeof b === "object") {
-      keys(a, Object.keys(b), path);
-      for (const k of Object.keys(b)) check(a[k], b[k], `${path}.${k}`);
-    } else if (a !== b) fail(path);
-  }
-  check(diagnostics, expected, "holdout.peak_diagnostics");
+  checkComputed(diagnostics, expected, "holdout.peak_diagnostics");
+}
+
+function checkIntervals(e) {
+  const interval = e.intervals;
+  keys(interval, ["protocol", "protocol_sha256", "by_horizon"], "intervals");
+  equal(
+    sorted(interval.protocol),
+    sorted(intervalProtocol),
+    "intervals.protocol",
+  );
+  if (interval.protocol_sha256 !== hash(intervalProtocol))
+    fail("intervals.protocol_sha256");
+  const { start, end } = e.holdout.peak_diagnostics.peak_window;
+  const scores = (rows, model, radius, level) => {
+    let below = 0,
+      above = 0,
+      width = 0,
+      score = 0;
+    for (const r of rows) {
+      const lower = Math.max(0, Math.floor(r[model] - radius));
+      const upper = Math.ceil(r[model] + radius);
+      below += Number(r.actual < lower);
+      above += Number(r.actual > upper);
+      width += upper - lower;
+      score +=
+        upper -
+        lower +
+        (2 / (1 - level / 100)) *
+          (Math.max(0, lower - r.actual) + Math.max(0, r.actual - upper));
+    }
+    const n = rows.length;
+    return {
+      n,
+      coverage: n ? (n - below - above) / n : null,
+      mean_width: n ? width / n : null,
+      below,
+      above,
+      mean_interval_score: n ? score / n : null,
+    };
+  };
+  const expected = [1, 2, 3, 4].map((horizon) => {
+    const calibration = e.validation.predictions.filter(
+      (r) =>
+        r.horizon === horizon &&
+        r.week >= intervalProtocol.calibration_start &&
+        r.week <= intervalProtocol.calibration_end,
+    );
+    if (calibration.length !== 102) fail("intervals.calibration_n");
+    const n = calibration.length;
+    const ranks = intervalProtocol.levels.map((level) => ({
+      level,
+      rank: Math.ceil(((n + 1) * level) / 100),
+    }));
+    const part = e.holdout.predictions.filter((r) => r.horizon === horizon);
+    return {
+      horizon,
+      calibration_n: n,
+      quantile_ranks: ranks,
+      models: fluModels.map((model) => {
+        const residuals = calibration
+          .map((r) => Math.abs(r.actual - r[model]))
+          .sort((a, b) => a - b);
+        return {
+          model,
+          bands: ranks.map(({ level, rank }) => {
+            const radius = residuals[rank - 1];
+            return {
+              level,
+              radius,
+              metrics: scores(part, model, radius, level),
+              by_phase: ["before", "peak", "after"].map((phase) => ({
+                phase,
+                ...scores(
+                  part.filter(
+                    (r) =>
+                      (r.week < start
+                        ? "before"
+                        : r.week > end
+                          ? "after"
+                          : "peak") === phase,
+                  ),
+                  model,
+                  radius,
+                  level,
+                ),
+              })),
+            };
+          }),
+        };
+      }),
+    };
+  });
+  checkComputed(interval.by_horizon, expected, "intervals.by_horizon");
 }
 
 export function validateFlu(data) {
@@ -393,7 +488,14 @@ export function validateFlu(data) {
     fail("input.hash");
   keys(
     e,
-    ["selected_model", "validation", "holdout", "publication", "forecast"],
+    [
+      "selected_model",
+      "validation",
+      "holdout",
+      "publication",
+      "forecast",
+      "intervals",
+    ],
     "evaluation",
   );
   keys(e.validation, ["seasons", "metrics", "predictions"], "validation");
@@ -446,6 +548,7 @@ export function validateFlu(data) {
   checkRows(e.holdout.predictions, [p.holdout], "holdout.predictions");
   metrics(e.holdout.predictions, e.holdout.metrics, "holdout.metrics");
   checkPeakDiagnostics(e.holdout.predictions, e.holdout.peak_diagnostics);
+  checkIntervals(e);
   const selectedMae = e.holdout.metrics.find((m) => m.model === selected).mae;
   const publish = ["last_value", "seasonal_naive"].every(
     (m) => selectedMae < e.holdout.metrics.find((x) => x.model === m).mae,
