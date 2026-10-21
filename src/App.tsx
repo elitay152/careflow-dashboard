@@ -62,6 +62,12 @@ const month = (value: string) =>
     timeZone: "UTC",
   }).format(new Date(value));
 
+const duration = (minutes: number | null) => {
+  if (minutes === null) return "Unavailable";
+  const days = minutes >= 1440;
+  return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(minutes / (days ? 1440 : 60))} ${days ? "days" : "h"}`;
+};
+
 const nav = [
   {
     id: "overview",
@@ -107,11 +113,11 @@ const nav = [
     id: "forecasting",
     label: "Forecasting",
     icon: FlaskConical,
-    eyebrow: "THE NEXT EXPERIMENT",
+    eyebrow: "HELD-OUT EVIDENCE",
     title: "Forecasts start",
     accent: "with a fair test.",
     description:
-      "A transparent experiment plan for simulated encounter counts. Results will appear only after held-out evaluation.",
+      "Compare simulated encounter forecasts against a seasonal baseline on data kept out of model selection.",
   },
   {
     id: "health",
@@ -607,11 +613,13 @@ function Cohort() {
 type Measure =
   | "encounter_count"
   | "unique_patients"
-  | "average_duration_minutes";
+  | "average_duration_minutes"
+  | "median_duration_minutes";
 function Analytics() {
   const [measure, setMeasure] = useState<Measure>("encounter_count");
   const [showTable, setShowTable] = useState(false);
   const [range, setRange] = useState("60");
+  const [granularity, setGranularity] = useState("monthly");
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartStyle, setChartStyle] = useState("line");
   const [conditionView, setConditionView] = useState("clinical");
@@ -619,6 +627,7 @@ function Analytics() {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const groups: Record<string, string> = {
     clinical: "Clinical conditions & findings",
+    chronic: "Selected chronic-condition subset",
     social_context: "Social context",
     history: "Medical history",
     care_context: "Care context",
@@ -628,7 +637,10 @@ function Analytics() {
   const [showAllConditions, setShowAllConditions] = useState(false);
   const filteredConditions = current.conditions.filter(
     (row) =>
-      (conditionView === "all" || row.group === conditionView) &&
+      (conditionView === "all" ||
+        (conditionView === "chronic"
+          ? row.chronic_subset
+          : row.group === conditionView)) &&
       `${row.condition_name} ${row.code}`
         .toLowerCase()
         .includes(conditionSearch.toLowerCase()),
@@ -636,8 +648,17 @@ function Analytics() {
   const conditions = showAllConditions
     ? filteredConditions
     : filteredConditions.slice(0, 10);
-  const allRows = current.monthly_utilization;
-  const rows = range === "all" ? allRows : allRows.slice(-Number(range));
+  const allRows =
+    granularity === "annual"
+      ? current.annual_utilization
+      : current.monthly_utilization;
+  const rows =
+    range === "all"
+      ? allRows
+      : allRows.slice(-Number(range) / (granularity === "annual" ? 12 : 1));
+  const summary = current.utilization_summary;
+  const periodLabel = (value: string) =>
+    granularity === "annual" ? value.slice(0, 4) : month(value);
   const max = Math.max(1, ...rows.map((row) => row[measure] ?? 0));
   const chartWidth = 850,
     chartHeight = 225,
@@ -646,12 +667,24 @@ function Analytics() {
   const monthIndex = (date: string) =>
     Number(date.slice(0, 4)) * 12 + Number(date.slice(5, 7));
   const firstMonth = rows.length ? monthIndex(rows[0].encounter_month) : 0;
+  const step = granularity === "annual" ? 12 : 1;
   const span = rows.length
-    ? monthIndex(rows[rows.length - 1].encounter_month) - firstMonth + 1
-    : 1;
+    ? monthIndex(rows[rows.length - 1].encounter_month) - firstMonth + step
+    : step;
   const xAt = (date: string) =>
-    left + ((monthIndex(date) - firstMonth + 0.5) * 775) / span;
-  const barWidth = Math.min(60, (720 / span) * 0.65);
+    left + ((monthIndex(date) - firstMonth + step / 2) * 775) / span;
+  const isDuration = measure.endsWith("duration_minutes");
+  const durationDivisor = isDuration && max >= 2880 ? 1440 : 60;
+  const durationUnit = durationDivisor === 1440 ? "days" : "h";
+  const axisValue = (value: number) =>
+    isDuration ? number(value / durationDivisor) : number(Math.round(value));
+  const measureValue = (value: number | null) =>
+    value === null
+      ? "Unavailable"
+      : isDuration
+        ? duration(value)
+        : number(value);
+  const barWidth = Math.min(60, (720 / (span / step)) * 0.65);
   const latest = rows[rows.length - 1];
   const selected =
     rows.find((row) => row.encounter_month === selectedMonth) ?? latest;
@@ -665,7 +698,7 @@ function Analytics() {
       !previous ||
       previous[measure] === null ||
       monthIndex(row.encounter_month) - monthIndex(previous.encounter_month) !==
-        1
+        step
     )
       segments.push(`M${point}`);
     else segments[segments.length - 1] += ` L${point}`;
@@ -691,7 +724,7 @@ function Analytics() {
       (xAt(selected.encounter_month) / chartWidth) *
       svg.getBoundingClientRect().width;
     container.scrollTo({ left: position - container.clientWidth / 2 });
-  }, [range, selected?.encounter_month]);
+  }, [range, granularity, selected?.encounter_month]);
   return (
     <>
       <Note>
@@ -701,39 +734,57 @@ function Analytics() {
       </Note>
       <div className="metrics-grid three analytics-summary">
         <Metric
-          label="Finished encounters in view"
-          value={number(
-            rows.reduce((sum, row) => sum + row.encounter_count, 0),
-          )}
-          note={`${rows.length} observed months · ${rows.length ? month(rows[0].encounter_month) : "No data"} to ${latest ? month(latest.encounter_month) : "—"}`}
-          icon={Activity}
-        />
-        <Metric
-          label="Patients in latest month"
-          value={latest ? number(latest.unique_patients) : "—"}
+          label="Patients seen · latest 12 months"
+          value={summary ? number(summary.unique_patients) : "—"}
           note={
-            latest
-              ? `Distinct people in ${month(latest.encounter_month)}`
-              : "No observed month"
+            summary
+              ? `${number((summary.cohort_share ?? 0) * 100)}% of the loaded cohort; includes deceased patients`
+              : "No encounter window"
           }
           icon={Users}
+        />
+        <Metric
+          label="Encounters per seen patient"
+          value={
+            summary?.encounters_per_seen_patient == null
+              ? "—"
+              : number(summary.encounters_per_seen_patient)
+          }
+          note="Finished encounters ÷ distinct patients seen in that window"
+          icon={Activity}
           tone="blue"
         />
         <Metric
-          label="Mean duration in latest month"
+          label="Median encounter duration"
           value={
-            latest?.average_duration_minutes == null
+            summary?.median_duration_minutes == null
               ? "—"
-              : `${number(latest.average_duration_minutes)} min`
+              : duration(summary.median_duration_minutes)
           }
-          note="Elapsed encounter time; not hospital length of stay"
+          note={
+            summary
+              ? `Mean ${duration(summary.average_duration_minutes)} · ${number(summary.measured_duration_count)} timed encounters`
+              : "No measured durations"
+          }
           icon={Clock3}
           tone="gold"
         />
       </div>
+      {summary && (
+        <p className="metric-definition">
+          KPI window: {month(summary.start_month)}–
+          {month(current.monthly_utilization.at(-1)!.encounter_month)}. These
+          cards stay fixed when the chart range changes. Elapsed encounter time
+          is not hospital length of stay.
+        </p>
+      )}
       <Panel
         title="Encounter activity over time"
-        subtitle="Finished encounters grouped by UTC start month"
+        subtitle={
+          granularity === "annual"
+            ? "Calendar-year counts and distinct patients; not historical population rates"
+            : "Finished encounters grouped by UTC start month"
+        }
         action={
           <label className="select-field">
             <span className="sr-only">Time range</span>
@@ -741,14 +792,50 @@ function Analytics() {
               value={range}
               onChange={(event) => setRange(event.target.value)}
             >
-              <option value="12">Last 12 recorded months</option>
-              <option value="60">Last 60 recorded months</option>
-              <option value="120">Last 120 recorded months</option>
-              <option value="all">All recorded months</option>
+              <option value="12">
+                {granularity === "annual"
+                  ? "Latest year"
+                  : "Last 12 recorded months"}
+              </option>
+              <option value="60">
+                {granularity === "annual"
+                  ? "Last 5 recorded years"
+                  : "Last 60 recorded months"}
+              </option>
+              <option value="120">
+                {granularity === "annual"
+                  ? "Last 10 recorded years"
+                  : "Last 120 recorded months"}
+              </option>
+              <option value="all">
+                {granularity === "annual"
+                  ? "All recorded years"
+                  : "All recorded months"}
+              </option>
             </select>
           </label>
         }
       >
+        <div className="chart-toolbar">
+          <div className="segmented" aria-label="Time grouping">
+            {["monthly", "annual"].map((value) => (
+              <button
+                key={value}
+                aria-pressed={granularity === value}
+                onClick={() => {
+                  setGranularity(value);
+                  setSelectedMonth(null);
+                }}
+              >
+                {value === "monthly" ? "Monthly" : "Annual"}
+              </button>
+            ))}
+          </div>
+          <span className="chart-unit">
+            {isDuration ? `Duration axis: ${durationUnit}` : "Count"} · annual
+            patients are counted distinctly
+          </span>
+        </div>
         <div className="chart-toolbar">
           <div className="segmented" aria-label="Utilization metric">
             {(
@@ -756,6 +843,7 @@ function Analytics() {
                 ["encounter_count", "Encounters"],
                 ["unique_patients", "Distinct patients"],
                 ["average_duration_minutes", "Mean duration"],
+                ["median_duration_minutes", "Median duration"],
               ] as const
             ).map(([value, label]) => (
               <button
@@ -789,7 +877,7 @@ function Analytics() {
           <svg
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
             role="img"
-            aria-label={`${measure.replaceAll("_", " ")} across ${rows.length} recorded months`}
+            aria-label={`${measure.replaceAll("_minutes", "").replaceAll("_", " ")} across ${rows.length} recorded ${granularity === "annual" ? "years" : "months"}`}
           >
             {[0, 1, 2, 3].map((tick) => (
               <g key={tick}>
@@ -807,11 +895,7 @@ function Analytics() {
                   textAnchor="end"
                   className="axis-label"
                 >
-                  {number(
-                    measure === "average_duration_minutes"
-                      ? (max * (3 - tick)) / 3
-                      : Math.round((max * (3 - tick)) / 3),
-                  )}
+                  {axisValue((max * (3 - tick)) / 3)}
                 </text>
               </g>
             ))}
@@ -841,8 +925,8 @@ function Analytics() {
                       rx="5"
                     >
                       <title>
-                        {month(row.encounter_month)}:{" "}
-                        {value === null ? "Unavailable" : number(value)}
+                        {periodLabel(row.encounter_month)}:{" "}
+                        {measureValue(value)}
                       </title>
                     </rect>
                   ) : (
@@ -854,7 +938,8 @@ function Analytics() {
                         fill={row === selected ? "#203f35" : "#347a67"}
                       >
                         <title>
-                          {month(row.encounter_month)}: {number(value)}
+                          {periodLabel(row.encounter_month)}:{" "}
+                          {measureValue(value)}
                         </title>
                       </circle>
                     )
@@ -867,7 +952,7 @@ function Analytics() {
                       textAnchor="middle"
                       className="axis-label"
                     >
-                      {month(row.encounter_month)}
+                      {periodLabel(row.encounter_month)}
                     </text>
                   )}
                   {rows.length < 8 && (
@@ -877,7 +962,7 @@ function Analytics() {
                       textAnchor="middle"
                       className="value-label"
                     >
-                      {value === null ? "N/A" : number(value)}
+                      {measureValue(value)}
                     </text>
                   )}
                 </g>
@@ -888,27 +973,30 @@ function Analytics() {
         {selected && (
           <div className="month-inspector">
             <div>
-              <span>Explore an observed month</span>
-              <strong>{month(selected.encounter_month)}</strong>
+              <span>
+                Explore an observed{" "}
+                {granularity === "annual" ? "year" : "month"}
+              </span>
+              <strong>{periodLabel(selected.encounter_month)}</strong>
               <p>
                 {number(selected.encounter_count)} encounters ·{" "}
                 {number(selected.unique_patients)} distinct patients
               </p>
               <p>
-                Mean duration:{" "}
-                {selected.average_duration_minutes === null
-                  ? "Unavailable"
-                  : `${number(selected.average_duration_minutes)} min`}
+                Mean {duration(selected.average_duration_minutes)} · median{" "}
+                {duration(selected.median_duration_minutes)}
               </p>
             </div>
             <label>
-              <span className="sr-only">Explore month</span>
+              <span className="sr-only">
+                Explore {granularity === "annual" ? "year" : "month"}
+              </span>
               <input
                 type="range"
                 min="0"
                 max={Math.max(0, rows.length - 1)}
                 value={selectedIndex}
-                aria-valuetext={month(selected.encounter_month)}
+                aria-valuetext={periodLabel(selected.encounter_month)}
                 onChange={(event) =>
                   setSelectedMonth(
                     rows[Number(event.target.value)].encounter_month,
@@ -920,8 +1008,9 @@ function Analytics() {
         )}
         <div className="panel-foot split">
           <span>
-            {rows.length} recorded month{rows.length !== 1 ? "s" : ""}. Missing
-            months are not filled with zero.
+            {rows.length} recorded{" "}
+            {granularity === "annual" ? "years" : "months"}. Missing periods are
+            not filled with zero; distinct patient counts must not be summed.
           </span>
           <button
             className="text-link"
@@ -942,10 +1031,12 @@ function Analytics() {
             <table>
               <thead>
                 <tr>
-                  <th>Month (UTC)</th>
+                  <th>{granularity === "annual" ? "Year" : "Month"} (UTC)</th>
                   <th>Finished encounters</th>
                   <th>Distinct patients</th>
-                  <th>Mean minutes</th>
+                  <th>Mean duration</th>
+                  <th>Median duration</th>
+                  <th>Timed encounters</th>
                 </tr>
               </thead>
               <tbody>
@@ -954,11 +1045,9 @@ function Analytics() {
                     <td>{row.encounter_month}</td>
                     <td>{number(row.encounter_count)}</td>
                     <td>{number(row.unique_patients)}</td>
-                    <td>
-                      {row.average_duration_minutes === null
-                        ? "Unavailable"
-                        : number(row.average_duration_minutes)}
-                    </td>
+                    <td>{duration(row.average_duration_minutes)}</td>
+                    <td>{duration(row.median_duration_minutes)}</td>
+                    <td>{number(row.measured_duration_count)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -971,6 +1060,18 @@ function Analytics() {
           title={groups[conditionView]}
           subtitle="Distinct affected patients ÷ all loaded patients"
         >
+          {conditionView === "chronic" && (
+            <Note>
+              <strong>
+                {number(current.chronic_summary.affected_patients)} of{" "}
+                {number(current.chronic_summary.total_patients)} loaded patients
+              </strong>{" "}
+              have at least one active, confirmed concept in the explicit{" "}
+              {current.chronic_summary.mapped_codes}-code subset. This is a
+              distinct union, not a sum of the bars. It is not an exhaustive or
+              validated chronic-disease registry.
+            </Note>
+          )}
           <div className="condition-controls">
             <label>
               Concept group
@@ -1291,102 +1392,369 @@ function Agent() {
   );
 }
 
+type ForecastModel = "seasonal_naive" | "seasonal_mean" | "seasonal_trend";
+type ForecastMetrics = {
+  model: ForecastModel;
+  mae: number;
+  rmse: number;
+  wape: number | null;
+};
+type ForecastSnapshot = {
+  status: string;
+  reason: string;
+  predictions: { encounter_month: string; value: number }[] | null;
+  held_out_metrics: ForecastMetrics[] | null;
+  evaluation: {
+    evaluated_at: string;
+    protocol: string;
+    input_sha256: string;
+    training_start: string;
+    training_end: string;
+    test_start: string;
+    test_end: string;
+    training_months: number;
+    model_window_months: number;
+    selected_model: ForecastModel;
+    selected_beats_baseline: boolean;
+    folds: { training_end: string; test_start: string; test_end: string }[];
+    validation_metrics: ForecastMetrics[];
+    test_predictions: {
+      encounter_month: string;
+      actual: number;
+      seasonal_naive: number;
+      seasonal_mean: number;
+      seasonal_trend: number;
+    }[];
+  } | null;
+};
 function Forecasting() {
+  const [showValues, setShowValues] = useState(false);
+  const forecast = snapshot.forecast as ForecastSnapshot;
+  const e = forecast.evaluation;
+  const names: Record<ForecastModel, string> = {
+    seasonal_naive: "Seasonal naive",
+    seasonal_mean: "Seasonal mean",
+    seasonal_trend: "Seasonal trend",
+  };
+  if (!e || !forecast.held_out_metrics)
+    return (
+      <Note>
+        <strong>Not evaluated.</strong> {forecast.reason}
+      </Note>
+    );
+  const metrics = forecast.held_out_metrics;
+  const baseline = metrics[0];
+  const selected = metrics.find((row) => row.model === e.selected_model)!;
+  const rows = e.test_predictions;
+  const max = Math.max(
+    1,
+    ...rows.flatMap((row) => [
+      row.actual,
+      row.seasonal_naive,
+      row[e.selected_model],
+    ]),
+  );
+  const x = (i: number) => 50 + (i * 730) / 11;
+  const y = (value: number) => 200 - (value / max) * 160;
+  const series: {
+    field: "actual" | ForecastModel;
+    label: string;
+    color: string;
+    dashed: boolean;
+  }[] = [
+    { field: "actual", label: "Observed", color: "#347a67", dashed: false },
+    {
+      field: "seasonal_naive",
+      label: "Seasonal naive",
+      color: "#798a95",
+      dashed: true,
+    },
+    {
+      field: e.selected_model,
+      label: names[e.selected_model],
+      color: "#a07030",
+      dashed: true,
+    },
+  ].filter(
+    (row, index, array) =>
+      array.findIndex((r) => r.field === row.field) === index,
+  ) as typeof series;
   return (
     <>
-      <Note tone="amber">
-        <strong>Experiment not evaluated.</strong> No forecast, confidence band,
-        or accuracy score has been published.
+      <Note>
+        <strong>Held-out evaluation on synthetic data.</strong>{" "}
+        {month(e.test_start)}–{month(e.test_end)} was reserved for testing. The
+        model was chosen on earlier validation years. These are experimental
+        simulated encounter counts, not real healthcare demand.
       </Note>
-      <div className="forecast-layout">
-        <Panel className="forecast-empty">
-          <div className="empty-chart-grid" aria-hidden="true">
-            <span>
-              <Icon icon={FlaskConical} size={34} />
+      <div className="metrics-grid three analytics-summary">
+        <Metric
+          label="Seasonal naive · held-out MAE"
+          value={number(baseline.mae)}
+          note="Mean absolute error in encounters per month"
+          icon={BarChart3}
+        />
+        <Metric
+          label={`${names[e.selected_model]} · held-out MAE`}
+          value={number(selected.mae)}
+          note="Model selected using earlier validation folds"
+          icon={FlaskConical}
+          tone="gold"
+        />
+        <Metric
+          label="Selected model · held-out WAPE"
+          value={
+            selected.wape === null ? "—" : `${number(selected.wape * 100)}%`
+          }
+          note="Absolute errors ÷ observed encounter total; lower is better"
+          icon={Activity}
+          tone="blue"
+        />
+      </div>
+      <Panel
+        title={
+          e.selected_beats_baseline
+            ? "Selected model clears the baseline"
+            : "The simpler baseline wins the held-out year"
+        }
+        subtitle={forecast.reason}
+      >
+        <div className="forecast-legend">
+          {series.map((s) => (
+            <span key={s.field}>
+              <i style={{ background: s.color }} />
+              {s.label}
             </span>
+          ))}
+        </div>
+        <div
+          className="utilization-chart"
+          role="region"
+          aria-label="Held-out comparison chart"
+          tabIndex={0}
+        >
+          <svg
+            viewBox="0 0 850 250"
+            role="img"
+            aria-label="Held-out encounters: observed versus model estimates"
+          >
+            {[0, 1, 2, 3].map((tick) => (
+              <g key={tick}>
+                <line
+                  x1="50"
+                  x2="790"
+                  y1={40 + (tick * 160) / 3}
+                  y2={40 + (tick * 160) / 3}
+                  stroke="#e7eeea"
+                  strokeDasharray="4 5"
+                />
+                <text
+                  x="38"
+                  y={44 + (tick * 160) / 3}
+                  textAnchor="end"
+                  className="axis-label"
+                >
+                  {number(Math.round((max * (3 - tick)) / 3))}
+                </text>
+              </g>
+            ))}
+            {series.map((s) => (
+              <path
+                key={s.field}
+                d={rows
+                  .map((row, i) => `${i ? "L" : "M"}${x(i)},${y(row[s.field])}`)
+                  .join(" ")}
+                fill="none"
+                stroke={s.color}
+                strokeWidth="2.5"
+                strokeDasharray={s.dashed ? "6 4" : undefined}
+              />
+            ))}
+            {rows.map((row, i) => (
+              <g key={row.encounter_month}>
+                <circle cx={x(i)} cy={y(row.actual)} r="3" fill="#347a67">
+                  <title>
+                    {month(row.encounter_month)}: {row.actual} observed
+                    encounters
+                  </title>
+                </circle>
+                {i % 2 === 0 && (
+                  <text
+                    x={x(i)}
+                    y="228"
+                    textAnchor="middle"
+                    className="axis-label"
+                  >
+                    {month(row.encounter_month)}
+                  </text>
+                )}
+              </g>
+            ))}
+          </svg>
+        </div>
+        <div className="panel-foot split">
+          <span>
+            Test estimates use pre-holdout data only. No uncertainty intervals
+            were estimated.
+          </span>
+          <button
+            className="text-link"
+            onClick={() => setShowValues(!showValues)}
+            aria-expanded={showValues}
+          >
+            {showValues ? "Hide" : "View"} held-out values
+          </button>
+        </div>
+        {showValues && (
+          <div
+            className="table-scroll"
+            role="region"
+            aria-label="Held-out monthly values"
+            tabIndex={0}
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Observed</th>
+                  <th>Seasonal naive</th>
+                  <th>{names[e.selected_model]}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={row.encounter_month}>
+                    <td>{row.encounter_month}</td>
+                    <td>{number(row.actual)}</td>
+                    <td>{number(row.seasonal_naive)}</td>
+                    <td>{number(row[e.selected_model])}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <Badge tone="neutral">Research plan</Badge>
-          <h2>No forecast published yet.</h2>
-          <p>
-            The target is monthly finished encounter counts in simulated data. A
-            held-out result must come before a forecast line.
-          </p>
-          <div className="forecast-scores">
-            <div>
-              <span>Held-out MAE</span>
-              <strong>—</strong>
-              <small>Not evaluated</small>
-            </div>
-            <div>
-              <span>Held-out WAPE</span>
-              <strong>—</strong>
-              <small>Not evaluated</small>
-            </div>
+        )}
+      </Panel>
+      <div className="forecast-result-grid">
+        <Panel
+          title="Every model, the same holdout"
+          subtitle="Selection used validation MAE, not these test results"
+        >
+          <div
+            className="table-scroll"
+            role="region"
+            aria-label="Model comparison metrics"
+            tabIndex={0}
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Validation MAE</th>
+                  <th>Test MAE</th>
+                  <th>Test RMSE</th>
+                  <th>Test WAPE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {metrics.map((row) => (
+                  <tr key={row.model}>
+                    <td>
+                      {names[row.model]}
+                      {row.model === e.selected_model ? " (selected)" : ""}
+                    </td>
+                    <td>
+                      {number(
+                        e.validation_metrics.find((v) => v.model === row.model)!
+                          .mae,
+                      )}
+                    </td>
+                    <td>{number(row.mae)}</td>
+                    <td>{number(row.rmse)}</td>
+                    <td>
+                      {row.wape === null ? "—" : `${number(row.wape * 100)}%`}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </Panel>
         <Panel
-          title="A test worth running"
-          subtitle="Proposed evaluation protocol"
+          title="Reproducible evaluation"
+          subtitle="Rolling-origin protocol v1"
         >
-          <ol className="experiment-steps">
+          <ul className="evaluation-notes">
             <li>
-              <span>01</span>
-              <div>
-                <h3>Check the data first</h3>
-                <p>
-                  Confirm cohort size, time coverage, and whether absent months
-                  mean zero or missing.
-                </p>
-              </div>
+              Training: {month(e.training_start)}–{month(e.training_end)} (
+              {e.training_months} months available).
             </li>
             <li>
-              <span>02</span>
-              <div>
-                <h3>Hold out the future</h3>
-                <p>
-                  Reserve the last time window. Fit and tune only on earlier
-                  observations.
-                </p>
-              </div>
+              Three 12-month validation folds precede the test year. Each model
+              uses at most the latest {e.model_window_months} training months.
             </li>
             <li>
-              <span>03</span>
-              <div>
-                <h3>Earn the complexity</h3>
-                <p>
-                  Compare against last-value and, if history permits, seasonal
-                  naive baselines.
-                </p>
-              </div>
+              Seasonal naive repeats last year's month; seasonal mean averages
+              matching months across five years; seasonal trend fits a linear
+              trend with month effects.
             </li>
             <li>
-              <span>04</span>
-              <div>
-                <h3>Publish the evidence</h3>
-                <p>
-                  Report MAE, WAPE where defined, the exact split, and
-                  limitations of simulated data.
-                </p>
-              </div>
+              Only the latest 120 consecutive observed months are used. Missing
+              months cause evaluation to be withheld.
             </li>
-          </ol>
+            <li>
+              Selection and settings were fixed before test scoring. Forecast
+              export is gated on the selected model beating seasonal naive on
+              test MAE.
+            </li>
+            <li>
+              Evaluated {utc(e.evaluated_at)}. This retrospective cohort has
+              changing historical coverage and includes deceased patients.
+              Simulated patterns need not generalize.
+            </li>
+          </ul>
+          <p className="forecast-hash">
+            Aggregate input SHA-256 <code>{e.input_sha256}</code>
+          </p>
         </Panel>
       </div>
-      <div className="cohort-callout">
-        <span className="callout-icon">
-          <Icon icon={Users} size={24} />
-        </span>
-        <div>
-          <h3>A larger cohort is a separate milestone.</h3>
-          <p>
-            Expansion toward 1,000 Synthea patients starts with storage and
-            runtime checks. No larger cohort is claimed here.
-          </p>
-        </div>
-        <a className="text-link" href="#cohort">
-          View validated cohort <Icon icon={ArrowRight} size={16} />
-        </a>
-      </div>
+      {forecast.predictions ? (
+        <Panel
+          title="Simulation horizon after the dataset cutoff"
+          subtitle="Conditional research forecast; not a forecast of current real-world demand"
+        >
+          <div
+            className="table-scroll"
+            role="region"
+            aria-label="Future simulated counts"
+            tabIndex={0}
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Expected encounters</th>
+                </tr>
+              </thead>
+              <tbody>
+                {forecast.predictions.map((row) => (
+                  <tr key={row.encounter_month}>
+                    <td>{row.encounter_month}</td>
+                    <td>{number(row.value)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Panel>
+      ) : (
+        <Note tone="amber">
+          <strong>Future predictions withheld.</strong> The selected model did
+          not improve on the seasonal baseline in the held-out year. The
+          evaluation remains visible; no future curve or accuracy claim is
+          published.
+        </Note>
+      )}
     </>
   );
 }

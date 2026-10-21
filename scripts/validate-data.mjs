@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { open } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
@@ -136,10 +137,12 @@ function condition(row, location, population, grouped = false) {
       "affected_patients",
       "total_patients",
       "prevalence_fraction",
-      ...(grouped ? ["group"] : []),
+      ...(grouped ? ["group", "chronic_subset"] : []),
     ],
     location,
   );
+  if (grouped && typeof row.chronic_subset !== "boolean")
+    fail(`${location}.chronic_subset`);
   if (
     grouped &&
     ![
@@ -172,6 +175,187 @@ function medication(row, location) {
   integer(row.request_count, location);
 }
 
+function shiftMonth(value, offset) {
+  const date = new Date(`${value}T00:00:00Z`);
+  date.setUTCMonth(date.getUTCMonth() + offset);
+  return date.toISOString().slice(0, 10);
+}
+function near(actual, expected, location) {
+  if (expected === null) {
+    if (actual !== null) fail(location);
+    return;
+  }
+  numeric(actual, location);
+  if (Math.abs(actual - expected) > 1e-6 * Math.max(1, Math.abs(expected)))
+    fail(location);
+}
+function durationEvidence(row, location) {
+  integer(row.measured_duration_count, location);
+  if (row.measured_duration_count > row.encounter_count) fail(location);
+  for (const key of ["average_duration_minutes", "median_duration_minutes"]) {
+    if (row.measured_duration_count === 0) {
+      if (row[key] !== null) fail(location);
+    } else numeric(row[key], location);
+  }
+}
+const FORECAST_MODELS = ["seasonal_naive", "seasonal_mean", "seasonal_trend"];
+function forecastMetrics(rows, location) {
+  array(rows, location, 3);
+  if (rows.length !== 3) fail(location);
+  rows.forEach((row, index) => {
+    keys(row, ["model", "mae", "rmse", "wape"], location);
+    if (row.model !== FORECAST_MODELS[index]) fail(location);
+    numeric(row.mae, location);
+    numeric(row.rmse, location);
+    if (row.rmse + 1e-6 < row.mae) fail(location);
+    if (row.wape !== null) numeric(row.wape, location);
+  });
+}
+function validateForecast(forecast, monthly, exportedAt) {
+  keys(
+    forecast,
+    ["status", "predictions", "held_out_metrics", "evaluation", "reason"],
+    "forecast",
+  );
+  string(forecast.reason, "forecast.reason", 1000);
+  if (forecast.status === "not_evaluated") {
+    if (
+      forecast.predictions !== null ||
+      forecast.held_out_metrics !== null ||
+      forecast.evaluation !== null
+    )
+      fail("forecast");
+    return;
+  }
+  if (forecast.status !== "evaluated") fail("forecast");
+  forecastMetrics(forecast.held_out_metrics, "forecast.metrics");
+  const e = forecast.evaluation;
+  keys(
+    e,
+    [
+      "protocol",
+      "evaluated_at",
+      "input_sha256",
+      "training_start",
+      "training_end",
+      "test_start",
+      "test_end",
+      "training_months",
+      "model_window_months",
+      "folds",
+      "validation_metrics",
+      "selected_model",
+      "selected_beats_baseline",
+      "test_predictions",
+    ],
+    "forecast.evaluation",
+  );
+  if (
+    e.protocol !== "rolling_origin_v1" ||
+    e.training_months !== 108 ||
+    e.model_window_months !== 60 ||
+    typeof e.selected_beats_baseline !== "boolean"
+  )
+    fail("forecast.protocol");
+  timestamp(e.evaluated_at, "forecast.evaluated_at");
+  if (Date.parse(e.evaluated_at) > Date.parse(exportedAt))
+    fail("forecast.evaluated_at");
+  const series = monthly.slice(-120);
+  if (
+    series.length !== 120 ||
+    series.some(
+      (r, i) => r.encounter_month !== shiftMonth(series[0].encounter_month, i),
+    )
+  )
+    fail("forecast.series");
+  const digest = createHash("sha256")
+    .update(
+      JSON.stringify(
+        series.map((r) => ({
+          count: r.encounter_count,
+          month: r.encounter_month,
+        })),
+      ),
+    )
+    .digest("hex");
+  if (
+    e.input_sha256 !== digest ||
+    e.training_start !== series[0].encounter_month ||
+    e.training_end !== series[107].encounter_month ||
+    e.test_start !== series[108].encounter_month ||
+    e.test_end !== series[119].encounter_month
+  )
+    fail("forecast.split");
+  array(e.folds, "forecast.folds", 3);
+  if (e.folds.length !== 3) fail("forecast.folds");
+  e.folds.forEach((fold, i) => {
+    keys(fold, ["training_end", "test_start", "test_end"], "forecast.folds");
+    const stop = 72 + i * 12;
+    if (
+      fold.training_end !== series[stop - 1].encounter_month ||
+      fold.test_start !== series[stop].encounter_month ||
+      fold.test_end !== series[stop + 11].encounter_month
+    )
+      fail("forecast.folds");
+  });
+  forecastMetrics(e.validation_metrics, "forecast.validation_metrics");
+  const winner = e.validation_metrics.reduce((best, row) =>
+    row.mae < best.mae ? row : best,
+  );
+  if (e.selected_model !== winner.model) fail("forecast.selection");
+  array(e.test_predictions, "forecast.test_predictions", 12);
+  if (e.test_predictions.length !== 12) fail("forecast.test_predictions");
+  e.test_predictions.forEach((row, i) => {
+    keys(
+      row,
+      ["encounter_month", "actual", ...FORECAST_MODELS],
+      "forecast.test_predictions",
+    );
+    if (
+      row.encounter_month !== series[108 + i].encounter_month ||
+      row.actual !== series[108 + i].encounter_count
+    )
+      fail("forecast.actual");
+    FORECAST_MODELS.forEach((model) =>
+      numeric(row[model], "forecast.prediction"),
+    );
+    if (row.seasonal_naive !== series[96 + i].encounter_count)
+      fail("forecast.baseline");
+  });
+  FORECAST_MODELS.forEach((model, i) => {
+    const errors = e.test_predictions.map((r) => Math.abs(r.actual - r[model]));
+    const absolute = errors.reduce((s, v) => s + v, 0);
+    const actual = e.test_predictions.reduce((s, r) => s + r.actual, 0);
+    const metric = forecast.held_out_metrics[i];
+    near(metric.mae, absolute / 12, "forecast.mae");
+    near(
+      metric.rmse,
+      Math.sqrt(errors.reduce((s, v) => s + v * v, 0) / 12),
+      "forecast.rmse",
+    );
+    near(metric.wape, actual ? absolute / actual : null, "forecast.wape");
+  });
+  const selected = forecast.held_out_metrics.find(
+    (r) => r.model === e.selected_model,
+  );
+  const beats =
+    e.selected_model !== "seasonal_naive" &&
+    selected.mae < forecast.held_out_metrics[0].mae;
+  if (e.selected_beats_baseline !== beats) fail("forecast.gate");
+  if (!beats) {
+    if (forecast.predictions !== null) fail("forecast.publication");
+  } else {
+    array(forecast.predictions, "forecast.predictions", 12);
+    if (forecast.predictions.length !== 12) fail("forecast.predictions");
+    forecast.predictions.forEach((row, i) => {
+      keys(row, ["encounter_month", "value"], "forecast.predictions");
+      if (row.encounter_month !== shiftMonth(e.test_end, i + 1))
+        fail("forecast.predictions");
+      numeric(row.value, "forecast.predictions");
+    });
+  }
+}
+
 export function validateData(data) {
   keys(
     data,
@@ -186,7 +370,7 @@ export function validateData(data) {
     ],
     "root",
   );
-  if (data.schema_version !== 2 || data.synthetic_only !== true) fail("root");
+  if (data.schema_version !== 3 || data.synthetic_only !== true) fail("root");
   timestamp(data.exported_at, "exported_at");
   const current = data.current;
   keys(
@@ -198,6 +382,9 @@ export function validateData(data) {
       "source_loaded_at",
       "counts",
       "monthly_utilization",
+      "annual_utilization",
+      "utilization_summary",
+      "chronic_summary",
       "conditions",
       "medication_status",
       "quality",
@@ -223,6 +410,8 @@ export function validateData(data) {
         "encounter_count",
         "unique_patients",
         "average_duration_minutes",
+        "median_duration_minutes",
+        "measured_duration_count",
       ],
       "monthly_utilization",
     );
@@ -237,8 +426,132 @@ export function validateData(data) {
       row.unique_patients > row.encounter_count
     )
       fail("monthly_utilization");
+    durationEvidence(row, "monthly_utilization");
     previous = row.encounter_month;
   }
+  array(current.annual_utilization, "annual_utilization", 200);
+  previous = "";
+  for (const row of current.annual_utilization) {
+    keys(
+      row,
+      [
+        "encounter_month",
+        "encounter_count",
+        "unique_patients",
+        "average_duration_minutes",
+        "median_duration_minutes",
+        "measured_duration_count",
+      ],
+      "annual_utilization",
+    );
+    month(row.encounter_month, "annual_utilization");
+    if (
+      !row.encounter_month.endsWith("-01-01") ||
+      row.encounter_month <= previous
+    )
+      fail("annual_utilization");
+    previous = row.encounter_month;
+    integer(row.encounter_count, "annual_utilization");
+    integer(row.unique_patients, "annual_utilization");
+    if (
+      row.unique_patients > current.counts.patients ||
+      row.unique_patients > row.encounter_count
+    )
+      fail("annual_utilization");
+    durationEvidence(row, "annual_utilization");
+    const months = current.monthly_utilization.filter(
+      (m) => m.encounter_month.slice(0, 4) === row.encounter_month.slice(0, 4),
+    );
+    if (
+      !months.length ||
+      months.reduce((sum, m) => sum + m.encounter_count, 0) !==
+        row.encounter_count ||
+      months.reduce((sum, m) => sum + m.measured_duration_count, 0) !==
+        row.measured_duration_count ||
+      row.unique_patients < Math.max(...months.map((m) => m.unique_patients))
+    )
+      fail("annual_utilization");
+  }
+  if (
+    new Set(
+      current.monthly_utilization.map((m) => m.encounter_month.slice(0, 4)),
+    ).size !== current.annual_utilization.length
+  )
+    fail("annual_utilization");
+  const summary = current.utilization_summary;
+  if (summary === null) {
+    if (current.monthly_utilization.length) fail("utilization_summary");
+  } else {
+    keys(
+      summary,
+      [
+        "encounter_count",
+        "unique_patients",
+        "measured_duration_count",
+        "median_duration_minutes",
+        "average_duration_minutes",
+        "start_month",
+        "end_month_exclusive",
+        "encounters_per_seen_patient",
+        "cohort_share",
+      ],
+      "utilization_summary",
+    );
+    const last = current.monthly_utilization.at(-1)?.encounter_month;
+    if (
+      !last ||
+      summary.start_month !== shiftMonth(last, -11) ||
+      summary.end_month_exclusive !== shiftMonth(last, 1)
+    )
+      fail("utilization_summary");
+    integer(summary.encounter_count, "utilization_summary");
+    integer(summary.unique_patients, "utilization_summary");
+    durationEvidence(summary, "utilization_summary");
+    const window = current.monthly_utilization.filter(
+      (r) =>
+        r.encounter_month >= summary.start_month &&
+        r.encounter_month < summary.end_month_exclusive,
+    );
+    if (
+      summary.encounter_count !==
+        window.reduce((s, r) => s + r.encounter_count, 0) ||
+      summary.measured_duration_count !==
+        window.reduce((s, r) => s + r.measured_duration_count, 0) ||
+      summary.unique_patients > current.counts.patients ||
+      summary.unique_patients > summary.encounter_count ||
+      summary.unique_patients <
+        Math.max(...window.map((r) => r.unique_patients))
+    )
+      fail("utilization_summary");
+    near(
+      summary.encounters_per_seen_patient,
+      summary.unique_patients
+        ? summary.encounter_count / summary.unique_patients
+        : null,
+      "utilization_summary.ratio",
+    );
+    near(
+      summary.cohort_share,
+      current.counts.patients
+        ? summary.unique_patients / current.counts.patients
+        : null,
+      "utilization_summary.share",
+    );
+  }
+  keys(
+    current.chronic_summary,
+    ["affected_patients", "total_patients", "mapped_codes"],
+    "chronic_summary",
+  );
+  Object.values(current.chronic_summary).forEach((value) =>
+    integer(value, "chronic_summary"),
+  );
+  if (
+    current.chronic_summary.total_patients !== current.counts.patients ||
+    current.chronic_summary.affected_patients > current.counts.patients ||
+    current.chronic_summary.mapped_codes !== 19
+  )
+    fail("chronic_summary");
   array(current.conditions, "conditions");
   current.conditions.forEach((row) =>
     condition(row, "conditions", current.counts.patients, true),
@@ -429,17 +742,11 @@ export function validateData(data) {
       citation.limitations.forEach((value) => string(value, "limitations"));
     }
   }
-  keys(
+  validateForecast(
     data.forecast,
-    ["status", "predictions", "held_out_metrics"],
-    "forecast",
+    current.monthly_utilization,
+    data.exported_at,
   );
-  if (
-    data.forecast.status !== "not_evaluated" ||
-    data.forecast.predictions !== null ||
-    data.forecast.held_out_metrics !== null
-  )
-    fail("forecast");
   return data;
 }
 
