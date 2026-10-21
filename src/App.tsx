@@ -32,6 +32,8 @@ import {
 import snapshot from "../public/data/careflow.json";
 import CohortExplorer from "./CohortExplorer";
 import RegionalDemand from "./RegionalDemand";
+import FluForecast, { type FluSnapshot } from "./FluForecast";
+import fluSnapshot from "../public/data/flusight.json";
 import RiskOverview, { type RiskSummary } from "./RiskOverview";
 
 const current = snapshot.current;
@@ -120,10 +122,10 @@ const nav = [
     label: "Forecasting",
     icon: FlaskConical,
     eyebrow: "EXPERIMENTAL FORECASTING",
-    title: "Monthly encounter forecasts",
+    title: "Hospital demand forecasting",
     accent: "",
     description:
-      "Explore monthly finished encounters by facility, care setting, or provider ZIP area. This forecasts visits, not unique patients; one patient can have multiple encounters.",
+      "Explore observed U.S. influenza admissions and separate demand experiments from the synthetic cohort.",
   },
   {
     id: "risk",
@@ -1555,10 +1557,17 @@ type ForecastSnapshot = {
   } | null;
 };
 function Forecasting() {
-  const [view, setView] = useState("regional");
+  const [view, setView] = useState("flu");
   return (
     <>
       <div className="segmented demand-view" aria-label="Forecast view">
+        <button
+          className={view === "flu" ? "active" : ""}
+          aria-pressed={view === "flu"}
+          onClick={() => setView("flu")}
+        >
+          Observed flu admissions
+        </button>
         <button
           className={view === "regional" ? "active" : ""}
           aria-pressed={view === "regional"}
@@ -1574,7 +1583,9 @@ function Forecasting() {
           Whole cohort benchmark
         </button>
       </div>
-      {view === "regional" ? (
+      {view === "flu" ? (
+        <FluForecast data={fluSnapshot as unknown as FluSnapshot} />
+      ) : view === "regional" ? (
         <RegionalDemand data={snapshot.demand} />
       ) : (
         <CohortForecasting />
@@ -1640,7 +1651,8 @@ function CohortForecasting() {
   return (
     <>
       <Note>
-        <strong>Development benchmark on synthetic data.</strong>{" "}
+        <strong>Development benchmark on synthetic data.</strong> This forecasts
+        visits, not unique patients; one patient can have multiple encounters.
         {month(e.test_start)}–{month(e.test_end)} has already been inspected.
         Models are ranked on three earlier validation windows; this final year
         is a development comparison, not an untouched test. These simulated
@@ -2230,8 +2242,8 @@ export default function App() {
           <div className="synthetic-seal">
             <Icon icon={ShieldCheck} size={19} />
             <div>
-              <strong>100% synthetic data</strong>
-              <span>Built to learn. Safe to explore.</span>
+              <strong>Synthetic FHIR + public flu data</strong>
+              <span>Sources are labeled by page.</span>
             </div>
           </div>
           <External href={source} className="sidebar-github">
@@ -2297,7 +2309,7 @@ export default function App() {
                 />
               </span>
               <span>FHIR → SQL → AI</span>
-              <small>Synthetic data. Documented boundaries.</small>
+              <small>Documented sources. Clear boundaries.</small>
             </div>
           </div>
           {page === "overview" ? (
@@ -2318,7 +2330,7 @@ export default function App() {
           <footer className="page-footer">
             <span>
               <HeartPulse size={15} aria-hidden="true" />
-              Synthetic healthcare, real engineering.
+              Healthcare data, clear evidence.
             </span>
             <span>
               Portfolio research · Not clinical evidence

@@ -2,7 +2,8 @@
 
 A React/TypeScript portfolio website for the
 [Careflow healthcare data platform](https://github.com/elitay152/Careflow).
-It renders aggregate synthetic data exported from PostgreSQL. The public browser
+It renders aggregate synthetic data exported from PostgreSQL and a separate
+observed public influenza admissions benchmark. The public browser
 has no database connection, model credentials, or live agent endpoint.
 
 **Website:** https://elitay152.github.io/careflow-dashboard/
@@ -30,11 +31,11 @@ support the GitHub Pages repository path.
 | Simulated cohort | Aggregate inventory of six persisted FHIR resource types, including selected clinical Observations and provider organizations. |
 | Analytics | Latest-12-month KPIs, monthly/annual trends, duration statistics, clinical/contextual groups, and medication request statuses. |
 | Analytics agent | Three cited baseline answers replayed from the export; other inputs are declined. |
-| Forecasting | Facility/ZIP demand histories, guided ambulatory examples, an editable appointment-capacity scenario, and model development benchmarks. |
+| Forecasting | Observed U.S. influenza admissions and a frozen holdout benchmark, plus separate synthetic facility/ZIP histories and capacity experiments. |
 | Inpatient risk study | Adult 90-day mixed-setting inpatient-episode experiment with readiness, patient/time splits, baselines, and aggregate calibration. |
 | Pipeline health | Source-load, build, and export timestamps, quality checks, quarantines, and downloadable evidence. |
 
-The snapshot contains 1,194 synthetic patients and a reference catalog of 852
+The synthetic snapshot contains 1,194 synthetic patients and a reference catalog of 852
 provider organizations. Provider names are reference data; patient histories and
 facility assignments are simulated. Metrics describe recorded
 simulation data, not real healthcare demand or historical population rates.
@@ -117,3 +118,31 @@ evidence integrity, CSP, and the real Pages subpath. Run logs and traces stay lo
 
 - [GitHub Pages deployment](docs/deployment.md)
 - [Security boundaries](docs/security-audit.md)
+
+## Public influenza forecasting
+
+The default forecasting view uses observed CDC/NHSN FluSight national admissions,
+not the Synthea cohort. Its separate `public/data/flusight.json` contract contains
+weekly aggregate observations, fixed-protocol evaluation, provenance, and the
+full source repository MIT notice. The synthetic `careflow.json` contract and its
+`synthetic_only` declaration apply only to the synthetic cohort.
+
+```bash
+npm run flu:refresh
+# Reuse the pinned local source without a download:
+npm run flu:refresh -- --offline
+```
+
+The backend checkout and its Python environment must be available alongside this
+repo (or pass `--backend-root PATH`). Refresh validates the pinned source, runs
+the benchmark, atomically copies the aggregate artifact, and builds the website.
+It needs no database or model credentials. Deployment follows the usual review
+and Pages workflow; reloading the browser does not fetch new observations. The
+source revision and evaluation settings remain fixed until explicitly revised.
+
+The validation-selected seasonal autoregression loses to persistence on the
+reserved 2025/26 season, so future projections are withheld. The page exposes
+observed counts, held-out predictions by horizon, and all four candidates. This
+retrospective revised-data evaluation assumes week-end availability; it does not
+replay release delays or establish real-time planning performance. See the
+[backend protocol and attribution](https://github.com/elitay152/Careflow/blob/main/docs/flusight.md).

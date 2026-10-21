@@ -489,12 +489,23 @@ test("unverified build evidence remains valid only with null outcome fields", ()
   assert.doesNotThrow(() => validateData(candidate));
 });
 
+const fluSnapshot = JSON.parse(
+  await readFile(
+    new URL("../public/data/flusight.json", import.meta.url),
+    "utf8",
+  ),
+);
+
 async function fixture(t) {
   const root = await mkdtemp(join(tmpdir(), "careflow-security-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   for (const directory of ["public/data", "dist/data", "dist/assets"])
     await mkdir(join(root, directory), { recursive: true });
   for (const stage of ["public", "dist"]) {
+    await writeFile(
+      join(root, stage, "data/flusight.json"),
+      JSON.stringify(fluSnapshot),
+    );
     await writeFile(
       join(root, stage, "data/careflow.json"),
       JSON.stringify(snapshot),

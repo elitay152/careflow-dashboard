@@ -3,9 +3,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readSnapshot } from "./validate-data.mjs";
 
-export async function syncData(source, destination) {
+export async function syncData(source, destination, read = readSnapshot) {
   // Publish the exact bytes that were validated, not a second read of source.
-  const bytes = await readSnapshot(source);
+  const bytes = await read(source);
   const target =
     destination instanceof URL ? fileURLToPath(destination) : destination;
   await mkdir(dirname(target), { recursive: true });

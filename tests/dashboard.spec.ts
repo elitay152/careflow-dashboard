@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import data from "../public/data/careflow.json" with { type: "json" };
+import flu from "../public/data/flusight.json" with { type: "json" };
 
 for (const route of [
   "overview",
@@ -202,7 +203,7 @@ test("forecasting shows evaluated holdout results and honors the publication gat
     .getByRole("button", { name: "Whole cohort benchmark", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Monthly encounter forecasts" }),
+    page.getByRole("heading", { name: "Hospital demand forecasting" }),
   ).toBeVisible();
   await expect(
     page.getByText(/This forecasts visits, not unique patients/),
@@ -401,6 +402,9 @@ test("facility demand separates care settings and withholds sparse comparisons",
   page,
 }) => {
   await page.goto("./#forecasting");
+  await page
+    .getByRole("button", { name: "Facilities & ZIP areas", exact: true })
+    .click();
   await expect(page.getByLabel("Demand grouping")).toHaveValue("facility");
   await expect(
     page
@@ -462,6 +466,9 @@ test("capacity scenarios replay recorded demand and keep assumptions separate", 
   page,
 }) => {
   await page.goto("./#forecasting");
+  await page
+    .getByRole("button", { name: "Facilities & ZIP areas", exact: true })
+    .click();
   const planner = page.locator(".capacity-panel");
   await expect(planner).toContainText("not a forecast");
   await expect(
@@ -544,4 +551,54 @@ test("hospitalization evaluation shows honest splits and aggregate model compari
       /No individual feature rows, predictions, or model files are published/,
     ),
   ).toBeVisible();
+});
+
+test("public flu forecasts keep observed data separate and expose the frozen benchmark", async ({
+  page,
+}) => {
+  await page.goto("./#forecasting");
+  await expect(
+    page.getByRole("button", { name: "Observed flu admissions", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    page.getByText("Observed public data · United States.", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: /1-week flu admission holdout/ }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("region", { name: "Flu model comparison" })
+      .locator("tbody tr"),
+  ).toHaveCount(4);
+  await page.getByLabel("Flu forecast horizon").selectOption("4");
+  await page.getByLabel("Flu comparison model").selectOption("last_value");
+  await expect(
+    page.getByRole("img", { name: /4-week flu admission holdout/ }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Show weekly forecast values" })
+    .click();
+  await expect(
+    page
+      .getByRole("region", { name: "Weekly flu forecast values" })
+      .locator("tbody tr"),
+  ).toHaveCount(52);
+  if (flu.evaluation.forecast === null)
+    await expect(
+      page.getByText("Future projection withheld.", { exact: true }),
+    ).toBeVisible();
+  await page
+    .getByText("Protocol, source, and reuse notice", { exact: true })
+    .click();
+  await expect(
+    page.getByRole("link", { name: "Pinned source CSV" }),
+  ).toHaveAttribute("href", flu.source.data_url);
+  await page
+    .getByRole("button", { name: "Facilities & ZIP areas", exact: true })
+    .click();
+  await expect(page.getByLabel("Demand grouping")).toBeVisible();
+  await expect(
+    page.getByText("Observed public data · United States.", { exact: true }),
+  ).toHaveCount(0);
 });

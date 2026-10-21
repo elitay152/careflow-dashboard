@@ -1,6 +1,7 @@
 # Security boundaries
 
-The website is a public, read-only view of aggregate synthetic data. Computation,
+The website is a public, read-only view of aggregate synthetic data and a separate
+public national influenza admissions series. Computation,
 database access, model credentials, and spending controls belong in Careflow.
 
 ## Data and release controls
@@ -33,7 +34,9 @@ See [deployment](deployment.md).
 
 Export authors and repository maintainers remain trusted. Schema validation and
 `synthetic_only` cannot prove data is synthetic or de-identified; review source
-and exports before publishing. No real patient data is supported.
+and exports before publishing. The `synthetic_only` field applies to the synthetic cohort contract; public flu
+observations use a separate pinned-source contract. No patient-level real data
+is supported.
 
 Meta CSP cannot set `frame-ancestors` or prove hosting response headers. GitHub
 Pages does not support custom response headers via `_headers`. A public live
