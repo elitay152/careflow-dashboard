@@ -17,7 +17,7 @@ for (const route of [
     const external: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("request", (request) => {
-      if (!request.url().startsWith("http://127.0.0.1:4173"))
+      if (new URL(request.url()).origin !== "http://127.0.0.1:4173")
         external.push(request.url());
     });
     await page.goto(`/#${route}`);
@@ -133,4 +133,69 @@ test("forecasting has no invented predictions or accuracy", async ({
   await expect(page.getByText("Not evaluated", { exact: true })).toHaveCount(2);
   expect(data.forecast.predictions).toBeNull();
   expect(data.forecast.held_out_metrics).toBeNull();
+});
+
+test("CSP blocks inline script and off-origin connections", async ({
+  page,
+}) => {
+  const outbound: string[] = [];
+  page.on("request", (request) => {
+    if (new URL(request.url()).origin !== "http://127.0.0.1:4173")
+      outbound.push(request.url());
+  });
+  await page.goto("/#overview");
+  const result = await page.evaluate(async () => {
+    const violations: string[] = [];
+    document.addEventListener("securitypolicyviolation", (event) =>
+      violations.push(event.effectiveDirective),
+    );
+    const marker = "careflowAuditInlineExecuted";
+    const script = document.createElement("script");
+    script.textContent = `window.${marker} = true`;
+    document.head.append(script);
+    let connectionBlocked = false;
+    try {
+      await fetch("https://audit.invalid/blocked");
+    } catch {
+      connectionBlocked = true;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return {
+      inlineExecuted: Reflect.get(window, marker) === true,
+      connectionBlocked,
+      violations,
+    };
+  });
+  expect(result.inlineExecuted).toBe(false);
+  expect(result.connectionBlocked).toBe(true);
+  expect(result.violations).toContain("script-src-elem");
+  expect(result.violations).toContain("connect-src");
+  expect(outbound).toEqual([]);
+});
+
+test("hostile form text stays inert and never contacts a model", async ({
+  page,
+}) => {
+  const requests: string[] = [];
+  page.on("request", (request) => requests.push(request.url()));
+  await page.goto("/#agent");
+  await page
+    .getByRole("textbox", { name: "Analytics question" })
+    .fill(
+      '<img src="https://audit.invalid/track" onerror="window.auditExecuted=true">',
+    );
+  await page.getByRole("button", { name: "Ask baseline example" }).click();
+  await expect(page.locator(".answer-panel")).toHaveCount(0);
+  expect(
+    await page.evaluate(() => Reflect.get(window, "auditExecuted")),
+  ).toBeUndefined();
+  expect(
+    requests.every((url) => new URL(url).origin === "http://127.0.0.1:4173"),
+  ).toBe(true);
+  expect(
+    await page.evaluate(() => ({
+      local: localStorage.length,
+      session: sessionStorage.length,
+    })),
+  ).toEqual({ local: 0, session: 0 });
 });
