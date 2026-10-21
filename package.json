@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/validate-data.mjs && tsc --noEmit && vite build",
+    "build": "node scripts/validate-data.mjs && node scripts/check-artifacts.mjs --public && tsc --noEmit && vite build && node scripts/check-artifacts.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "playwright test",
     "data:sync": "node scripts/sync-data.mjs",
-    "data:check": "node scripts/validate-data.mjs"
+    "data:check": "node scripts/validate-data.mjs",
+    "test:security": "node --test tests/security.test.mjs"
   },
   "engines": {
     "node": ">=22.12"

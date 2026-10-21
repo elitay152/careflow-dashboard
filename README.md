@@ -1,5 +1,7 @@
 # Careflow — synthetic healthcare, real engineering
 
+[Website security audit](docs/security-audit.md): findings, fixes, validation and hosting limits.
+
 A lightweight, responsive portfolio website for the
 [Careflow data platform](https://github.com/elitay152/Careflow). React,
 TypeScript and Vite render a reviewed aggregate JSON export. There is no
@@ -41,9 +43,8 @@ or update any evidence timestamp. All data is synthetic, not clinical evidence.
 
 ## Refresh from Careflow
 
-Careflow's `feature/dashboard-export` branch adds the `export-public` command.
-It is based on the security audit branch until that audit is merged. See the
-backend's [export documentation](https://github.com/elitay152/Careflow/blob/feature/dashboard-export/docs/public-dashboard.md).
+Careflow's merged `export-public` command produces this contract. See the
+backend's [export documentation](https://github.com/elitay152/Careflow/blob/main/docs/public-dashboard.md).
 
 In the backend checkout, after a successful synthetic demo pipeline:
 
@@ -82,6 +83,7 @@ condition groups can overlap; medication requests do not imply dispensing.
 
 ```bash
 npm audit
+npm run test:security
 npm run build
 npx playwright install chromium
 npm test
@@ -93,14 +95,19 @@ For an existing Chromium installation:
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm test
 ```
 
-The 22 desktop/mobile browser tests cover all pages, keyboard-accessible tables,
+The 26 desktop/mobile browser tests cover all pages, keyboard-accessible tables,
 navigation/history, resource filtering, baseline replay and unsupported inputs,
 exact current values, dataset separation, evidence download, and honest forecast
 empty states. Each page is checked with axe's WCAG A/AA rules and for horizontal
 overflow, JavaScript errors and unexpected outbound requests. These automated
 checks do not replace a complete accessibility audit.
 
-CI uses `npm ci`, advisory checks, the production build and Playwright. Actions
+Additional browser cases verify CSP enforcement and inert hostile agent input.
+`npm run test:security` exercises strict snapshot validation, atomic sync and the
+public/build artifact allowlists. Builds reject unexpected files, symlinks and
+source maps before a release can be accepted.
+
+CI uses `npm ci`, advisory checks, 27 Node security tests, tracked-file secret checks, the production build and Playwright. Actions
 are pinned to commit SHAs with read-only repository permissions. It does not
 deploy the site or run paid evaluations. Hosted CI results must be checked on
 GitHub; local tests alone do not establish a hosted pass.
