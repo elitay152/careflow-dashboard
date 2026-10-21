@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { test } from "node:test";
 import {
   mkdtemp,
@@ -19,6 +20,26 @@ const snapshot = JSON.parse(
     "utf8",
   ),
 );
+
+test("refresh requires synthetic confirmation and preserves the snapshot on backend failure", async () => {
+  const script = new URL("../scripts/refresh-data.mjs", import.meta.url);
+  const destination = new URL("../public/data/careflow.json", import.meta.url);
+  const before = await readFile(destination);
+  const unconfirmed = spawnSync(process.execPath, [script.pathname], { encoding: "utf8" });
+  assert.notEqual(unconfirmed.status, 0);
+  assert.match(unconfirmed.stderr, /confirm-synthetic/);
+  const backend = await mkdtemp(join(tmpdir(), "careflow-refresh-"));
+  try {
+    await mkdir(join(backend, "scripts"));
+    await writeFile(join(backend, "scripts/refresh_public.sh"), "exit 42\n");
+    const failed = spawnSync(process.execPath, [script.pathname, "--confirm-synthetic", "--backend-root", backend], { encoding: "utf8" });
+    assert.notEqual(failed.status, 0);
+    assert.match(failed.stderr, /required command failed/);
+    assert.deepEqual(await readFile(destination), before);
+  } finally {
+    await rm(backend, { recursive: true, force: true });
+  }
+});
 
 test("the shipped aggregate snapshot satisfies the strict contract", () => {
   assert.equal(validateData(snapshot), snapshot);

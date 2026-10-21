@@ -91,7 +91,7 @@ const nav = [
     title: "Numbers with context.",
     accent: "Definitions included.",
     description:
-      "Explore the current demo warehouse through aggregate utilization, conditions, and medication requests.",
+      "Explore the current cohort warehouse through aggregate utilization, conditions, and medication requests.",
   },
   {
     id: "agent",
@@ -248,27 +248,26 @@ function External({
 }
 
 function Overview() {
-  const resources = Object.values(archive.resources).reduce(
-    (sum, value) => sum + value,
-    0,
-  );
+  const loaded = current.counts.patients + current.counts.encounters
+    + current.counts.conditions + current.counts.medications;
+  const quality = current.quality;
   const domains = [
     {
       label: "Encounters",
-      value: archive.counts.encounters,
+      value: current.counts.encounters,
       color: "var(--teal)",
     },
     {
       label: "Medication requests",
-      value: archive.counts.medications,
+      value: current.counts.medications,
       color: "var(--mint)",
     },
     {
       label: "Conditions",
-      value: archive.counts.conditions,
+      value: current.counts.conditions,
       color: "var(--blue)",
     },
-    { label: "Patients", value: archive.counts.patients, color: "var(--gold)" },
+    { label: "Patients", value: current.counts.patients, color: "var(--gold)" },
   ];
   return (
     <>
@@ -277,42 +276,42 @@ function Overview() {
           <Icon icon={Database} />
           <span>Validated Synthea cohort</span>
           <span className="divider" />
-          <span>{archive.label}</span>
+          <span>{current.label}</span>
         </div>
-        <span>Archived evidence · {utc(archive.recorded_on, false)}</span>
+        <span>Exported · {utc(snapshot.exported_at)}</span>
       </div>
       <div className="metrics-grid">
         <Metric
           label="Simulated patients"
-          value={number(archive.counts.patients)}
+          value={number(current.counts.patients)}
           note="Fictional people. No real patient data."
           icon={Users}
         />
         <Metric
           label="Supported records loaded"
-          value={number(archive.accepted)}
-          note={`From ${number(resources)} source resources`}
+          value={number(loaded)}
+          note="Across four persisted FHIR resource types"
           icon={Layers}
           tone="blue"
         />
         <Metric
           label="Data quality checks"
-          value={`${archive.dbt_tests_passed} / ${archive.dbt_tests_passed}`}
-          note="All checks passed in the archived run"
+          value={quality.status === "unverified" ? "—" : `${quality.checks_passed} / ${quality.checks_total}`}
+          note="From the current warehouse build"
           icon={ShieldCheck}
         />
         <Metric
           label="Quarantined records"
-          value={number(archive.counts.quarantine)}
-          note="After medication-reference handling fix"
+          value={number(current.counts.quarantine)}
+          note="Rejected records retained for inspection"
           icon={CheckCircle2}
           tone="gold"
         />
       </div>
       <div className="overview-grid">
         <Panel
-          title="Four domains. Reconciled to source."
-          subtitle="Loaded rows in the validated Synthea cohort"
+          title="Four healthcare data domains"
+          subtitle="Loaded rows in the current PostgreSQL cohort"
           action={
             <a href="#cohort" className="text-link">
               Explore cohort <Icon icon={ArrowUpRight} size={15} />
@@ -339,43 +338,42 @@ function Overview() {
           </div>
           <div className="panel-foot">
             <span className="mini-dot" />
-            {number(archive.ignored)} other resources counted outside the
-            persisted subset.
+            Only the four supported resource types are persisted.
           </div>
         </Panel>
         <Panel
           className="trust-panel"
           title="Trust is in the details"
-          subtitle="What the validation actually checked"
+          subtitle="Evidence attached to this aggregate snapshot"
         >
           <div className="trust-mark">
             <ShieldCheck size={46} strokeWidth={1.3} />
             <div>
               <strong>Source → warehouse</strong>
-              <span>Independently reconciled</span>
+              <span>Recorded build evidence</span>
             </div>
           </div>
           <ul className="checklist">
             <li>
               <Icon icon={Check} />
-              All supported resource IDs accounted for
+              Aggregate-only public export
             </li>
             <li>
               <Icon icon={Check} />
-              Zero orphan patient references
+              Source and build timestamps included
             </li>
             <li>
               <Icon icon={Check} />
-              Duplicate-safe, unchanged reruns
+              No database credentials in the browser
             </li>
             <li>
               <Icon icon={Check} />
-              10 models + 32 dbt quality checks
+              {quality.models_passed ?? "—"} models + {quality.checks_passed ?? "—"} passed dbt checks
             </li>
           </ul>
-          <External href={archive.evidence_url}>
-            Read the machine-readable evidence
-          </External>
+          <a className="text-link" href={`${import.meta.env.BASE_URL}data/careflow.json`} download>
+            Download current aggregate evidence
+          </a>
         </Panel>
       </div>
       <Panel
@@ -441,12 +439,12 @@ function Overview() {
           <h3>Two datasets. Clearly separated.</h3>
           <p>
             The 108-patient validation is archived evidence. Interactive
-            analytics use the current {current.counts.patients}-patient demo
+            analytics use the current {number(current.counts.patients)}-patient cohort
             export.
           </p>
         </div>
         <a className="button secondary" href="#analytics">
-          Open demo analytics <Icon icon={ArrowRight} size={16} />
+          Open current analytics <Icon icon={ArrowRight} size={16} />
         </a>
       </div>
     </>
@@ -456,7 +454,12 @@ function Overview() {
 function Cohort() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
-  const resources = Object.entries(archive.resources).sort(
+  const resources = Object.entries({
+    Patient: current.counts.patients,
+    Encounter: current.counts.encounters,
+    Condition: current.counts.conditions,
+    MedicationRequest: current.counts.medications,
+  }).sort(
     (a, b) => b[1] - a[1],
   );
   const filtered = resources.filter(
@@ -467,28 +470,27 @@ function Cohort() {
   return (
     <>
       <Note>
-        <strong>Archived validation, not a live population.</strong> Synthea
-        3.3.0, seed 42. These counts come from the documented{" "}
-        {utc(archive.recorded_on, false)} run.
+        <strong>Current synthetic cohort.</strong> {current.label}. These are loaded
+        PostgreSQL rows exported {utc(snapshot.exported_at)}, not a live population.
       </Note>
       <div className="metrics-grid three">
         <Metric
           label="Synthetic patients"
-          value={number(archive.counts.patients)}
+          value={number(current.counts.patients)}
           note="No real-world patient information"
           icon={Users}
         />
         <Metric
-          label="Source resources"
+          label="Supported records loaded"
           value={number(resources.reduce((sum, [, value]) => sum + value, 0))}
-          note={`Across ${archive.input_files} JSON bundles`}
+          note={`Across ${current.counts.loads} loaded JSON bundles`}
           icon={FileJson}
           tone="blue"
         />
         <Metric
-          label="Supported and accepted"
-          value={number(archive.accepted)}
-          note="Four persisted FHIR resource types"
+          label="Recorded quarantines"
+          value={number(current.counts.quarantine)}
+          note="Rejected input records retained separately"
           icon={CheckCircle2}
         />
       </div>
@@ -496,7 +498,7 @@ function Cohort() {
         title="What's in the cohort?"
         subtitle="Resource-level inventory, not individual patient records"
         action={
-          <External href={archive.evidence_url}>Source evidence</External>
+          <a className="text-link" href={`${import.meta.env.BASE_URL}data/careflow.json`} download>Aggregate evidence</a>
         }
       >
         <div className="table-toolbar">
@@ -514,7 +516,7 @@ function Cohort() {
               aria-pressed={scope === "all"}
               onClick={() => setScope("all")}
             >
-              All types
+              All loaded types
             </button>
             <button
               aria-pressed={scope === "supported"}
@@ -535,7 +537,7 @@ function Cohort() {
               <tr>
                 <th scope="col">FHIR resource</th>
                 <th scope="col" className="numeric">
-                  Source records
+                  Loaded rows
                 </th>
                 <th scope="col">How Careflow handles it</th>
               </tr>
@@ -555,7 +557,7 @@ function Cohort() {
                       className={`table-tag ${supported.has(name) ? "persisted" : ""}`}
                     >
                       {supported.has(name)
-                        ? "Persisted & reconciled"
+                        ? "Persisted"
                         : name === "Medication"
                           ? "Reference lookup only"
                           : "Counted, not persisted"}
@@ -591,6 +593,9 @@ function Analytics() {
   const [measure, setMeasure] = useState<Measure>("encounter_count");
   const [showTable, setShowTable] = useState(false);
   const [range, setRange] = useState("12");
+  const [showAllConditions, setShowAllConditions] = useState(false);
+  const conditions = showAllConditions
+    ? current.conditions : current.conditions.slice(0, 10);
   const allRows = current.monthly_utilization;
   const rows = range === "all" ? allRows : allRows.slice(-Number(range));
   const max = Math.max(1, ...rows.map((row) => row[measure] ?? 0));
@@ -602,7 +607,7 @@ function Analytics() {
   return (
     <>
       <Note>
-        <strong>Current demo export:</strong> {current.label},{" "}
+        <strong>Current cohort export:</strong> {current.label},{" "}
         {current.counts.patients} patients. Exported {utc(snapshot.exported_at)}
         . These charts do not describe the archived Synthea cohort.
       </Note>
@@ -768,7 +773,7 @@ function Analytics() {
           subtitle="Distinct affected patients ÷ all loaded patients"
         >
           <div className="condition-list">
-            {current.conditions.map((row) => (
+            {conditions.map((row) => (
               <div className="condition" key={`${row.code_system}-${row.code}`}>
                 <div>
                   <strong>{row.condition_name}</strong>
@@ -785,9 +790,15 @@ function Analytics() {
             ))}
           </div>
           <div className="panel-foot">
-            Current recorded snapshot. Condition groups can overlap; counts must
+            Showing {conditions.length} of {current.conditions.length} coded
+            groups. Condition groups can overlap; counts must
             not be added.
           </div>
+          {current.conditions.length > 10 && (
+            <button className="button secondary" onClick={() => setShowAllConditions(!showAllConditions)}>
+              {showAllConditions ? "Show top 10 conditions" : `Show all ${current.conditions.length} conditions`}
+            </button>
+          )}
         </Panel>
         <Panel
           title="Medication requests"
@@ -866,7 +877,7 @@ function Agent() {
             </h3>
             <p>
               Choose an example to explore a real response exported from the
-              current demo warehouse.
+              current cohort warehouse.
             </p>
           </div>
           <div className="example-questions">
@@ -901,7 +912,7 @@ function Agent() {
           </form>
           <p className="agent-disclosure">
             Exported responses · no live API · no model calls ·{" "}
-            {current.counts.patients}-patient demo
+            {current.counts.patients}-patient cohort
           </p>
         </section>
         <aside className="agent-boundaries">
@@ -1117,7 +1128,7 @@ function Health() {
           <Icon icon={Clock3} />
           <strong>Recorded evidence</strong>
           <span className="divider" />
-          <span>Current hand-authored demo</span>
+          <span>{current.label}</span>
         </div>
         <Badge tone={state ? "green" : "amber"}>
           {state ? "dbt checks passed" : quality.status}
@@ -1145,7 +1156,7 @@ function Health() {
         <Metric
           label="Current quarantines"
           value={String(current.counts.quarantine)}
-          note="Demo contains intentional invalid input"
+          note="Rejected records in the current source schema"
           icon={FileJson}
           tone="gold"
         />
@@ -1188,9 +1199,8 @@ function Health() {
       </Panel>
       {current.counts.quarantine > 0 && (
         <Note tone="amber">
-          <strong>Quarantine is visible, not hidden.</strong> The extended demo
-          intentionally includes an invalid birth date. Inspect Careflow before
-          interpreting any additional rejections.
+          <strong>Quarantined input needs review.</strong> Inspect the rejection
+          reasons in Careflow before interpreting this cohort.
         </Note>
       )}
       <div className="overview-grid">

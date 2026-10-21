@@ -4,8 +4,9 @@
 
 A lightweight, responsive portfolio website for the
 [Careflow data platform](https://github.com/elitay152/Careflow). React,
-TypeScript and Vite render a reviewed aggregate JSON export. There is no
-database connection, API key, model request or ingestion logic in this repo.
+TypeScript and Vite render a reviewed aggregate JSON export. The public site has no
+database connection, API key, model request or ingestion logic. A local refresh
+command invokes the separate backend to prepare a new aggregate snapshot.
 
 ![Careflow portfolio overview](docs/screenshots/overview-desktop.png)
 
@@ -32,43 +33,55 @@ validated static build; pull requests never deploy.
 
 | Page | Scope |
 | --- | --- |
-| Overview | Archived, documented Synthea results: 108 patients, 14,202 supported records, 32 passed checks and zero quarantines. |
-| Simulated cohort | Searchable aggregate inventory of source FHIR resource types, with the persisted subset clearly marked. No patient-level records. |
-| Analytics | The current three-patient hand-authored demo export. Metric switching, exact monthly values, condition prevalence and medication statuses. |
+| Overview | Current PostgreSQL aggregate counts and matching dbt evidence: the shipped snapshot has 1,194 patients and 230,785 supported records. |
+| Simulated cohort | Searchable inventory of the four loaded FHIR resource types. No patient-level records. |
+| Analytics | The current larger Synthea cohort export. Metric switching, exact monthly values, condition prevalence and medication statuses. |
 | Analytics agent | Replay of three baseline responses exported by Careflow, with source definitions and caveats. Free-form inputs outside those examples are declined; there is no live API connection. |
 | Forecasting | Explicitly unevaluated research plan. No invented predictions, intervals or accuracy metrics. |
-| Pipeline health | Actual source-load, dbt invocation and snapshot timestamps; the demo's intentional quarantine remains visible. No uptime or active-schedule claims. |
+| Pipeline health | Actual source-load, dbt invocation and snapshot timestamps; current quarantine counts remain visible. No uptime or active-schedule claims. |
 
-The archived Synthea cohort and current demo are separate datasets. The larger
+The older 108-patient validation remains separate historical evidence on Pipeline health. The larger
 source dataset is not committed here. Reloading a page does not rerun a pipeline
 or update any evidence timestamp. All data is synthetic, not clinical evidence.
 
 ## Refresh from Careflow
 
-Careflow's merged `export-public` command produces this contract. See the
-backend's [export documentation](https://github.com/elitay152/Careflow/blob/main/docs/public-dashboard.md).
-
-In the backend checkout, after a successful synthetic demo pipeline:
+From this website checkout, with both updated repositories available and the
+local PostgreSQL database running:
 
 ```bash
-set -a
-. ./.env
-set +a
-.venv/bin/careflow export-public --confirm-synthetic \
-  --dbt-artifacts warehouse/target \
-  --archive docs/validation-results.json --archive-date 2026-10-20 \
-  --output data/public/careflow.json
+npm run data:refresh -- --confirm-synthetic
 ```
 
-Then in this repo:
+This rebuilds/tests the warehouse, exports aggregates and matching dbt evidence,
+validates and atomically copies the JSON, then builds the website. It defaults to
+`../Careflow`, raw schema `synthea_p1000_seed43`, analytics schema
+`synthea_p1000_seed43_analytics`, and the seed-43 cohort label. For another cohort:
 
 ```bash
-# Defaults to ../Careflow/data/public/careflow.json:
-npm run data:sync
-# Or supply an explicit existing aggregate export:
-npm run data:sync -- /path/to/Careflow/data/public/careflow.json
-npm run build
+npm run data:refresh -- --confirm-synthetic \
+  --backend-root /path/to/Careflow \
+  --raw-schema my_cohort --analytics-schema my_cohort_analytics \
+  --label "My synthetic cohort"
 ```
+
+Careflow must have its Python analytics dependencies installed and a local `.env`
+or exported `DATABASE_URL`. Database credentials stay in the backend process.
+Stop concurrent ingestion and warehouse jobs during refresh. Refresh commands
+share a lock in the backend checkout; this does not lock other pipeline commands.
+A failed dbt build or invalid export stops the refresh before snapshot replacement.
+The command reads existing database data; it does not generate or ingest patients,
+provision cloud resources, or call a model.
+
+Preview locally with `npm run dev`. To update the public site, review and commit
+`public/data/careflow.json` on a review branch and merge it after checks pass;
+the existing main-branch GitHub Pages workflow then deploys the updated build.
+There is no background polling or automatic publishing from the local command.
+A browser reload alone does not query PostgreSQL or change refresh timestamps.
+
+If an aggregate export is already available, `npm run data:sync -- /path/to/careflow.json`
+still copies it without connecting to PostgreSQL; follow with `npm run build`.
+See the backend's [export documentation](https://github.com/elitay152/Careflow/blob/main/docs/public-dashboard.md).
 
 Review the aggregate JSON before committing it. The copy script checks the
 version and expected contract; it does not de-identify a dataset or prove it is
