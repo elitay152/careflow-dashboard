@@ -1,4 +1,6 @@
 import { useState } from "react";
+import CapacityPlanner from "./CapacityPlanner";
+import { capacityExamples } from "./capacity";
 
 type Metrics = {
   model: string;
@@ -87,7 +89,18 @@ export default function RegionalDemand({
       (a, b) =>
         b.annual_count - a.annual_count || a.label.localeCompare(b.label),
     );
-  const selected = groups.find((g) => g.key === chosen) ?? groups[0];
+  const examples = capacityExamples(data.groups);
+  const suggested =
+    scope === "facility" && setting === "ambulatory"
+      ? examples[0]?.group
+      : undefined;
+  const selected =
+    groups.find((g) => g.key === chosen) ??
+    groups.find((g) => g.key === suggested?.key) ??
+    groups[0];
+  const recentIndices = data.months
+    .map((m, i) => (m >= annualStart.toISOString().slice(0, 10) ? i : -1))
+    .filter((i) => i >= 0);
   const evaluation = selected?.forecast?.evaluation;
   const metrics = selected?.forecast?.held_out_metrics;
   const chosenMetric = metrics?.find(
@@ -178,6 +191,31 @@ export default function RegionalDemand({
             </select>
           </label>
         </div>
+        {scope === "facility" &&
+          setting === "ambulatory" &&
+          examples.length > 0 && (
+            <div
+              className="demand-examples"
+              role="group"
+              aria-label="Example ambulatory histories"
+            >
+              {examples.map(({ title, group }) => (
+                <button
+                  key={title}
+                  aria-pressed={selected?.key === group.key}
+                  onClick={() => setChosen(group.key)}
+                >
+                  <strong>{title}</strong>
+                  <span>{group.label}</span>
+                  <small>
+                    {group.annual_count} encounters in the latest year ·{" "}
+                    {group.counts.slice(-24, -12).reduce((s, n) => s + n, 0)} in
+                    the prior year
+                  </small>
+                </button>
+              ))}
+            </div>
+          )}
         {!selected ? (
           <p className="empty-message">
             No recorded encounters for this setting in the latest 12 months.
@@ -413,6 +451,13 @@ export default function RegionalDemand({
           </>
         )}
       </section>
+      {selected && setting === "ambulatory" && (
+        <CapacityPlanner
+          months={recentIndices.map((i) => data.months[i])}
+          counts={recentIndices.map((i) => selected.counts[i])}
+          label={selected.label}
+        />
+      )}
       <p className="note demand-note">
         <strong>Coverage and next steps.</strong> {number(data.facility_count)}{" "}
         provider organizations are loaded; {number(matched)}% of latest-year
