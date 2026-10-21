@@ -86,13 +86,13 @@ test("agent replays cited baseline answers and declines unsupported text", async
 }) => {
   await page.goto("./#agent");
   await page
-    .getByRole("button", { name: "Monthly encounters in 2025-01", exact: true })
+    .getByRole("button", { name: data.assistant.examples[0].question, exact: true })
     .click();
   await expect(page.locator(".answer-panel")).toContainText(
     data.assistant.examples[0].answer,
   );
   await expect(page.locator(".answer-panel")).toContainText(
-    "analytics.mart_monthly_utilization",
+    `${data.current.analytics_schema}.mart_monthly_utilization`,
   );
   await page
     .getByRole("textbox", { name: "Analytics question" })
@@ -111,10 +111,16 @@ test("current metrics and archived evidence remain separate", async ({
 }) => {
   await page.goto("./#analytics");
   await expect(
-    page.locator(".note").filter({ hasText: "Current demo export:" }),
+    page.locator(".note").filter({ hasText: "Current cohort export:" }),
   ).toContainText(`${data.current.counts.patients} patients`);
+  await expect(page.locator(".condition-list .condition")).toHaveCount(Math.min(10, data.current.conditions.length));
+  if (data.current.conditions.length > 10) {
+    await page.getByRole("button", { name: `Show all ${data.current.conditions.length} conditions` }).click();
+    await expect(page.locator(".condition-list .condition")).toHaveCount(data.current.conditions.length);
+    await page.getByRole("button", { name: "Show top 10 conditions" }).click();
+  }
   await page.getByRole("button", { name: "View exact values" }).click();
-  await expect(page.locator("table tbody")).toContainText("2025-01-01");
+  await expect(page.locator("table tbody")).toContainText(data.current.monthly_utilization.at(-1)!.encounter_month);
   await page.getByRole("button", { name: "Mean duration" }).click();
   await expect(page.getByRole("img")).toHaveAttribute(
     "aria-label",
