@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "dataset_kind": "observed_public_aggregate",
-  "generated_at": "2026-10-21T19:32:08.796712+00:00",
+  "generated_at": "2026-10-21T20:16:55.933205+00:00",
   "source": {
     "name": "CDC/NHSN via FluSight",
     "repository": "https://github.com/cdcepi/FluSight-forecast-hub",
@@ -12,7 +12,7 @@
     "license_url": "https://github.com/cdcepi/FluSight-forecast-hub/blob/ff95b0fd9883aa15f4ce3f6e46830973f905ffd1/LICENSE",
     "license_notice": "MIT License\n\nCopyright (c) 2022 Consortium of Infectious Disease Modeling Hubs\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
     "attribution": "Observed laboratory-confirmed influenza hospital admissions reported to CDC/NHSN, distributed by the CDC FluSight Forecast Hub. No source model forecasts are used. No CDC endorsement is implied.",
-    "verified_at": "2026-10-21T19:32:08.796712+00:00",
+    "verified_at": "2026-10-21T20:16:55.933205+00:00",
     "quality": {
       "rows": 13038,
       "locations": 53,
@@ -7042,7 +7042,552 @@
           "damped_growth": 842.590456799238,
           "seasonal_autoreg": 603.5208144861755
         }
-      ]
+      ],
+      "peak_diagnostics": {
+        "method": "descriptive_peak_window_v1",
+        "observed_peak": {
+          "week": "2026-01-03",
+          "count": 42500
+        },
+        "peak_window": {
+          "start": "2025-12-20",
+          "end": "2026-01-17"
+        },
+        "by_horizon": [
+          {
+            "horizon": 1,
+            "models": [
+              {
+                "model": "last_value",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 464.1666666666667,
+                    "bias": -415.8333333333333,
+                    "error_share": 0.12995951889312754
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 10826.8,
+                    "bias": -1719.2,
+                    "error_share": 0.631528599260374
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 888.9130434782609,
+                    "bias": 825.1739130434783,
+                    "error_share": 0.23851188184649844
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-10",
+                  "count": 42500.0,
+                  "lag_weeks": 1,
+                  "count_error": 0.0
+                }
+              },
+              {
+                "model": "seasonal_naive",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 603.6666666666666,
+                    "bias": -560.5,
+                    "error_share": 0.05156936307138128
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 6508.2,
+                    "bias": -163.4,
+                    "error_share": 0.11582817805810453
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 10170.130434782608,
+                    "bias": 10170.130434782608,
+                    "error_share": 0.8326024588705142
+                  }
+                ],
+                "peak": {
+                  "week": "2026-02-07",
+                  "count": 55544.0,
+                  "lag_weeks": 5,
+                  "count_error": 13044.0
+                }
+              },
+              {
+                "model": "damped_growth",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 270.34186611113483,
+                    "bias": -235.96998233359014,
+                    "error_share": 0.08108444881968364
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 11535.73274595296,
+                    "bias": 3840.0689044363635,
+                    "error_share": 0.7208222938330201
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 689.1739249936747,
+                    "bias": 82.36128501964028,
+                    "error_share": 0.19809325734729633
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-10",
+                  "count": 51909.83862456538,
+                  "lag_weeks": 1,
+                  "count_error": 9409.838624565382
+                }
+              },
+              {
+                "model": "seasonal_autoreg",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 383.67594067581194,
+                    "bias": -290.88300188801236,
+                    "error_share": 0.06515199954198551
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 14611.806036881439,
+                    "bias": 508.1517324079312,
+                    "error_share": 0.5169229850508932
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 2568.139380480406,
+                    "bias": 2471.011424934879,
+                    "error_share": 0.41792501540712124
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-10",
+                  "count": 43756.262214773225,
+                  "lag_weeks": 1,
+                  "count_error": 1256.2622147732254
+                }
+              }
+            ]
+          },
+          {
+            "horizon": 2,
+            "models": [
+              {
+                "model": "last_value",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 758.25,
+                    "bias": -669.5,
+                    "error_share": 0.11406829806438672
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 18355.8,
+                    "bias": -6211.0,
+                    "error_share": 0.5752870825393641
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 2154.7391304347825,
+                    "bias": 2091.0,
+                    "error_share": 0.3106446193962491
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-17",
+                  "count": 42500.0,
+                  "lag_weeks": 2,
+                  "count_error": 0.0
+                }
+              },
+              {
+                "model": "seasonal_naive",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 603.6666666666666,
+                    "bias": -560.5,
+                    "error_share": 0.05156936307138128
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 6508.2,
+                    "bias": -163.4,
+                    "error_share": 0.11582817805810453
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 10170.130434782608,
+                    "bias": 10170.130434782608,
+                    "error_share": 0.8326024588705142
+                  }
+                ],
+                "peak": {
+                  "week": "2026-02-07",
+                  "count": 55544.0,
+                  "lag_weeks": 5,
+                  "count_error": 13044.0
+                }
+              },
+              {
+                "model": "damped_growth",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 509.05981728658224,
+                    "bias": -457.6731719721081,
+                    "error_share": 0.07231087433756683
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 21853.548368448148,
+                    "bias": 4158.486224546017,
+                    "error_share": 0.6467188531676892
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 2063.9966252873487,
+                    "bias": 1078.9757103424788,
+                    "error_share": 0.28097027249474416
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-17",
+                  "count": 60916.93344822903,
+                  "lag_weeks": 2,
+                  "count_error": 18416.93344822903
+                }
+              },
+              {
+                "model": "seasonal_autoreg",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 491.316295037963,
+                    "bias": -370.6208758780587,
+                    "error_share": 0.058040852723812694
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 17654.771559631863,
+                    "bias": -1457.9827881596132,
+                    "error_share": 0.4345037022289504
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 4482.380358697136,
+                    "bias": 4355.608305615821,
+                    "error_share": 0.5074554450472369
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-17",
+                  "count": 50932.062310967034,
+                  "lag_weeks": 2,
+                  "count_error": 8432.062310967034
+                }
+              }
+            ]
+          },
+          {
+            "horizon": 3,
+            "models": [
+              {
+                "model": "last_value",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 969.375,
+                    "bias": -823.7916666666666,
+                    "error_share": 0.10728020584519188
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 20775.2,
+                    "bias": -13666.8,
+                    "error_share": 0.47899585911778
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 3900.913043478261,
+                    "bias": 3900.913043478261,
+                    "error_share": 0.41372393503702815
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-24",
+                  "count": 42500.0,
+                  "lag_weeks": 3,
+                  "count_error": 0.0
+                }
+              },
+              {
+                "model": "seasonal_naive",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 603.6666666666666,
+                    "bias": -560.5,
+                    "error_share": 0.05156936307138128
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 6508.2,
+                    "bias": -163.4,
+                    "error_share": 0.11582817805810453
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 10170.130434782608,
+                    "bias": 10170.130434782608,
+                    "error_share": 0.8326024588705142
+                  }
+                ],
+                "peak": {
+                  "week": "2026-02-07",
+                  "count": 55544.0,
+                  "lag_weeks": 5,
+                  "count_error": 13044.0
+                }
+              },
+              {
+                "model": "damped_growth",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 749.7183057234915,
+                    "bias": -657.9723767237114,
+                    "error_share": 0.07436496343753954
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 21606.582829249375,
+                    "bias": -3303.7504015518257,
+                    "error_share": 0.4464934612331758
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 5040.539337495322,
+                    "bias": 3788.8273579015217,
+                    "error_share": 0.47914157532928475
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-24",
+                  "count": 69235.4601786844,
+                  "lag_weeks": 3,
+                  "count_error": 26735.4601786844
+                }
+              },
+              {
+                "model": "seasonal_autoreg",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 586.6189113766824,
+                    "bias": -431.145306023134,
+                    "error_share": 0.055506972701019675
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 16295.554618007915,
+                    "bias": -5993.344235791698,
+                    "error_share": 0.3212324360656237
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 6873.241294553677,
+                    "bias": 6726.495542512921,
+                    "error_share": 0.6232605912333565
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-24",
+                  "count": 57594.389110080934,
+                  "lag_weeks": 3,
+                  "count_error": 15094.389110080934
+                }
+              }
+            ]
+          },
+          {
+            "horizon": 4,
+            "models": [
+              {
+                "model": "last_value",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 1112.4166666666667,
+                    "bias": -909.0833333333334,
+                    "error_share": 0.10356853297954466
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 20981.4,
+                    "bias": -20451.0,
+                    "error_share": 0.40696172332328606
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 5485.913043478261,
+                    "bias": 5485.913043478261,
+                    "error_share": 0.4894697436971693
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-31",
+                  "count": 42500.0,
+                  "lag_weeks": 4,
+                  "count_error": 0.0
+                }
+              },
+              {
+                "model": "seasonal_naive",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 603.6666666666666,
+                    "bias": -560.5,
+                    "error_share": 0.05156936307138128
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 6508.2,
+                    "bias": -163.4,
+                    "error_share": 0.11582817805810453
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 10170.130434782608,
+                    "bias": 10170.130434782608,
+                    "error_share": 0.8326024588705142
+                  }
+                ],
+                "peak": {
+                  "week": "2026-02-07",
+                  "count": 55544.0,
+                  "lag_weeks": 5,
+                  "count_error": 13044.0
+                }
+              },
+              {
+                "model": "damped_growth",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 937.6707663725897,
+                    "bias": -822.71194926451,
+                    "error_share": 0.07399790246544195
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 19962.154117547387,
+                    "bias": -12653.519539089388,
+                    "error_share": 0.3281974482154027
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 7904.486478559492,
+                    "bias": 6833.838956039819,
+                    "error_share": 0.5978046493191552
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-31",
+                  "count": 76700.9863020044,
+                  "lag_weeks": 4,
+                  "count_error": 34200.9863020044
+                }
+              },
+              {
+                "model": "seasonal_autoreg",
+                "phases": [
+                  {
+                    "phase": "before",
+                    "n": 24,
+                    "mae": 653.7880297082048,
+                    "bias": -465.5985293524336,
+                    "error_share": 0.0514046431801396
+                  },
+                  {
+                    "phase": "peak",
+                    "n": 5,
+                    "mae": 16245.571352577617,
+                    "bias": -10305.239478177758,
+                    "error_share": 0.26610873883232794
+                  },
+                  {
+                    "phase": "after",
+                    "n": 23,
+                    "mae": 9057.57965084592,
+                    "bias": 8899.10355714227,
+                    "error_share": 0.6824866179875325
+                  }
+                ],
+                "peak": {
+                  "week": "2026-01-31",
+                  "count": 63457.922525708535,
+                  "lag_weeks": 4,
+                  "count_error": 20957.922525708535
+                }
+              }
+            ]
+          }
+        ]
+      }
     },
     "publication": {
       "status": "withheld",

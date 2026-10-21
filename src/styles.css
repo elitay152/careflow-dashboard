@@ -3363,3 +3363,27 @@ input::placeholder {
     gap: 0.6rem;
   }
 }
+
+.flu-error-share {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 7rem;
+}
+.flu-error-track {
+  display: block;
+  height: 0.4rem;
+  background: #e1e9e3;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.flu-error-track > span {
+  display: block;
+  height: 100%;
+  background: #9b5f32;
+}
+
+.flu-chart-legend .flu-peak-window {
+  background: #f5e6c9;
+  border: 1px solid #a77937;
+  height: 0.65rem;
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FluPeakErrors, { type PeakDiagnostics } from "./FluPeakErrors";
 
 export type FluModel =
   | "last_value"
@@ -41,6 +42,7 @@ export type FluSnapshot = {
       forecasts: number;
       predictions: Prediction[];
       metrics: ModelScores[];
+      peak_diagnostics: PeakDiagnostics;
     };
     publication: { status: string; reason: string };
     forecast: { week: string; horizon: number; prediction: number }[] | null;
@@ -88,6 +90,7 @@ function Chart({
   label,
   model,
   baseline = false,
+  peakWindow,
 }: {
   rows: {
     week: string;
@@ -98,6 +101,7 @@ function Chart({
   label: string;
   model?: string;
   baseline?: boolean;
+  peakWindow?: { start: string; end: string };
 }) {
   const max = Math.max(
     1,
@@ -109,6 +113,12 @@ function Chart({
   );
   const x = (i: number) => 64 + (i * 780) / Math.max(1, rows.length - 1),
     y = (n: number) => 250 - (n * 216) / max;
+  const shaded = rows.flatMap((r, i) =>
+    peakWindow && r.week >= peakWindow.start && r.week <= peakWindow.end
+      ? [i]
+      : [],
+  );
+  const step = 780 / Math.max(1, rows.length - 1);
   const path = (key: "actual" | "prediction" | "baseline") =>
     rows.map((r, i) => `${i ? "L" : "M"}${x(i)},${y(r[key] ?? 0)}`).join(" ");
   const ticks = [
@@ -123,6 +133,12 @@ function Chart({
   return (
     <>
       <div className="flu-chart-legend">
+        {peakWindow && (
+          <span>
+            <i className="flu-peak-window" />
+            Observed peak ±2 weeks
+          </span>
+        )}
         <span>
           <i className="flu-observed" />
           Observed admissions
@@ -147,6 +163,22 @@ function Chart({
         aria-label={label}
       >
         <title>{label}</title>
+        {shaded.length > 0 && (
+          <rect
+            x={Math.max(64, x(shaded[0]) - step / 2)}
+            y="34"
+            width={
+              Math.min(844, x(shaded.at(-1)!) + step / 2) -
+              Math.max(64, x(shaded[0]) - step / 2)
+            }
+            height="216"
+            fill="#f5e6c9"
+          >
+            <title>
+              Observed peak window: two weeks before and after the peak
+            </title>
+          </rect>
+        )}
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <g key={f}>
             <line
@@ -157,7 +189,10 @@ function Chart({
               stroke="#e0e8e3"
             />
             <text x="54" y={y(max * f) + 4} textAnchor="end">
-              {new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 0 }).format(max * f)}
+              {new Intl.NumberFormat("en-US", {
+                notation: "compact",
+                maximumFractionDigits: 0,
+              }).format(max * f)}
             </text>
           </g>
         ))}
@@ -318,6 +353,7 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
             prediction: r[model],
             baseline: r.last_value,
           }))}
+          peakWindow={e.holdout.peak_diagnostics.peak_window}
           model={names[model]}
           baseline={baseline && model !== "last_value"}
           label={`${horizon}-week flu admission holdout: observed counts and ${names[model]}`}
@@ -380,6 +416,12 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
           </div>
         )}
       </section>
+      <FluPeakErrors
+        data={e.holdout.peak_diagnostics}
+        model={model}
+        horizon={horizon}
+        name={names[model]}
+      />
       <section className="panel flu-panel" aria-labelledby="flu-models-title">
         <div className="panel-heading">
           <div>
