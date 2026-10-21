@@ -145,7 +145,11 @@ reserved 2025/26 season, so future projections are withheld. The page exposes
 observed counts, held-out predictions by horizon, and all four candidates. A
 shaded peak window and interactive error breakdown show MAE, signed error, error
 shares, and peak timing for the chosen model and horizon. These diagnostics are
-retrospective and preserve the frozen evaluation and publication decision. This
+retrospective and preserve the frozen evaluation and publication decision. The
+80%/95% prediction-band control adds fixed earlier-season residual ranges and
+reports achieved coverage, width, and misses. These nominal levels are not
+guaranteed; interval calibration stops before the first holdout forecast origin
+and never updates from holdout outcomes. This
 retrospective revised-data evaluation assumes week-end availability; it does not
 replay release delays or establish real-time planning performance. See the
 [backend protocol and attribution](https://github.com/elitay152/Careflow/blob/main/docs/flusight.md).

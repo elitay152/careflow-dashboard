@@ -1,4 +1,8 @@
 import { useState } from "react";
+import FluIntervals, {
+  intervalBounds,
+  type IntervalEvidence,
+} from "./FluIntervals";
 import FluPeakErrors, { type PeakDiagnostics } from "./FluPeakErrors";
 
 export type FluModel =
@@ -36,6 +40,7 @@ export type FluSnapshot = {
   history: { week: string; count: number }[];
   evaluation: {
     selected_model: FluModel;
+    intervals: IntervalEvidence;
     validation: { metrics: ModelScores[] };
     holdout: {
       targets: number;
@@ -91,23 +96,28 @@ function Chart({
   model,
   baseline = false,
   peakWindow,
+  intervalLabel,
 }: {
   rows: {
     week: string;
     actual: number;
     prediction?: number;
+    lower?: number;
+    upper?: number;
     baseline?: number;
   }[];
   label: string;
   model?: string;
   baseline?: boolean;
   peakWindow?: { start: string; end: string };
+  intervalLabel?: string;
 }) {
   const max = Math.max(
     1,
     ...rows.flatMap((r) => [
       r.actual,
       r.prediction ?? 0,
+      r.upper ?? 0,
       baseline ? (r.baseline ?? 0) : 0,
     ]),
   );
@@ -133,6 +143,12 @@ function Chart({
   return (
     <>
       <div className="flu-chart-legend">
+        {intervalLabel && (
+          <span>
+            <i className="flu-interval-band" />
+            {intervalLabel}
+          </span>
+        )}
         {peakWindow && (
           <span>
             <i className="flu-peak-window" />
@@ -178,6 +194,20 @@ function Chart({
               Observed peak window: two weeks before and after the peak
             </title>
           </rect>
+        )}
+        {intervalLabel && (
+          <path
+            d={`${rows.map((r, i) => `${i ? "L" : "M"}${x(i)},${y(r.upper!)}`).join(" ")} ${rows
+              .map((_, i) => {
+                const j = rows.length - 1 - i;
+                return `L${x(j)},${y(rows[j].lower!)}`;
+              })
+              .join(" ")} Z`}
+            fill="#317b6b"
+            fillOpacity="0.15"
+          >
+            <title>{intervalLabel}; calibrated on earlier seasons</title>
+          </path>
         )}
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <g key={f}>
@@ -257,7 +287,15 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
   const [horizon, setHorizon] = useState(1),
     [model, setModel] = useState<FluModel>(selected),
     [baseline, setBaseline] = useState(true),
-    [values, setValues] = useState(false);
+    [values, setValues] = useState(false),
+    [intervalLevel, setIntervalLevel] = useState("80");
+  const band =
+    intervalLevel === "none"
+      ? undefined
+      : e.intervals.by_horizon
+          .find((h) => h.horizon === horizon)!
+          .models.find((m) => m.model === model)!
+          .bands.find((b) => b.level === Number(intervalLevel))!;
   const selectedScores = e.holdout.metrics.find((m) => m.model === selected)!;
   const persistence = e.holdout.metrics.find((m) => m.model === "last_value")!;
   const rows = e.holdout.predictions.filter((r) => r.horizon === horizon);
@@ -337,6 +375,18 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
               ))}
             </select>
           </label>
+          <label>
+            Prediction band
+            <select
+              aria-label="Flu prediction band"
+              value={intervalLevel}
+              onChange={(event) => setIntervalLevel(event.target.value)}
+            >
+              <option value="80">Nominal 80%</option>
+              <option value="95">Nominal 95%</option>
+              <option value="none">Hide band</option>
+            </select>
+          </label>
           <label className="flu-checkbox">
             <input
               type="checkbox"
@@ -352,7 +402,11 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
             actual: r.actual,
             prediction: r[model],
             baseline: r.last_value,
+            ...(band ? intervalBounds(r[model], band.radius) : {}),
           }))}
+          intervalLabel={
+            band ? `Nominal ${band.level}% prediction band` : undefined
+          }
           peakWindow={e.holdout.peak_diagnostics.peak_window}
           model={names[model]}
           baseline={baseline && model !== "last_value"}
@@ -400,6 +454,12 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
                   <th scope="col">Observed</th>
                   <th scope="col">{names[model]}</th>
                   <th scope="col">Absolute error</th>
+                  {band && (
+                    <>
+                      <th scope="col">Lower bound</th>
+                      <th scope="col">Upper bound</th>
+                    </>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -409,6 +469,16 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
                     <td>{number(r.actual)}</td>
                     <td>{number(r[model])}</td>
                     <td>{number(Math.abs(r.actual - r[model]))}</td>
+                    {band && (
+                      <>
+                        <td>
+                          {number(intervalBounds(r[model], band.radius).lower)}
+                        </td>
+                        <td>
+                          {number(intervalBounds(r[model], band.radius).upper)}
+                        </td>
+                      </>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -416,6 +486,15 @@ export default function FluForecast({ data }: { data: FluSnapshot }) {
           </div>
         )}
       </section>
+      {band && (
+        <FluIntervals
+          data={e.intervals}
+          horizon={horizon}
+          model={model}
+          band={band}
+          name={names[model]}
+        />
+      )}
       <FluPeakErrors
         data={e.holdout.peak_diagnostics}
         model={model}

@@ -657,3 +657,85 @@ test("flu peak analysis follows model and horizon without changing the frozen re
     page.getByText("Future projection withheld.", { exact: true }),
   ).toBeVisible();
 });
+
+test("flu intervals expose calibrated bounds, coverage and width without changing the projection gate", async ({
+  page,
+}) => {
+  await page.goto("./#forecasting");
+  const section = page.getByRole("region", {
+    name: "How often did the range hold?",
+    exact: true,
+  });
+  const fmt = (n: number) =>
+    new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(n);
+  for (const [horizon, model, level] of [
+    [1, "seasonal_autoreg", 80],
+    [1, "seasonal_autoreg", 95],
+    [4, "last_value", 95],
+  ] as const) {
+    await page.getByLabel("Flu forecast horizon").selectOption(String(horizon));
+    await page.getByLabel("Flu comparison model").selectOption(model);
+    await page.getByLabel("Flu prediction band").selectOption(String(level));
+    const band = flu.evaluation.intervals.by_horizon
+      .find((h) => h.horizon === horizon)!
+      .models.find((m) => m.model === model)!
+      .bands.find((b) => b.level === level)!;
+    const metrics = band.metrics;
+    await expect(section).toContainText(
+      `${metrics.n - metrics.below - metrics.above} of ${metrics.n} weeks`,
+    );
+    await expect(section).toContainText(
+      `${fmt(metrics.mean_width!)} admissions`,
+    );
+    await expect(
+      page
+        .getByRole("region", {
+          name: "Flu interval coverage by peak period",
+          exact: true,
+        })
+        .locator("tbody tr"),
+    ).toHaveCount(3);
+    if (
+      await page
+        .getByRole("button", { name: "Show weekly forecast values" })
+        .count()
+    )
+      await page
+        .getByRole("button", { name: "Show weekly forecast values" })
+        .click();
+    const first = flu.evaluation.holdout.predictions.find(
+      (r) => r.horizon === horizon,
+    )!;
+    const cells = page
+      .getByRole("region", { name: "Weekly flu forecast values" })
+      .locator("tbody tr")
+      .first()
+      .locator("td");
+    await expect(cells).toHaveCount(6);
+    await expect(cells.nth(4)).toHaveText(
+      fmt(Math.max(0, Math.floor(first[model] - band.radius))),
+    );
+    await expect(cells.nth(5)).toHaveText(
+      fmt(Math.ceil(first[model] + band.radius)),
+    );
+  }
+  await section
+    .getByText("How the bands are calibrated", { exact: true })
+    .click();
+  await expect(section).toContainText(
+    "102 earlier weekly absolute prediction errors",
+  );
+  await expect(section).toContainText("not a fresh independent test");
+  await expect(
+    page.getByText("Future projection withheld.", { exact: true }),
+  ).toBeVisible();
+  await page.getByLabel("Flu prediction band").selectOption("none");
+  await expect(section).toHaveCount(0);
+  await expect(
+    page
+      .getByRole("region", { name: "Weekly flu forecast values" })
+      .locator("tbody tr")
+      .first()
+      .locator("td"),
+  ).toHaveCount(4);
+});

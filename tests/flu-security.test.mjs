@@ -15,6 +15,55 @@ test("public flu evidence has reproducible source, arithmetic and publication ch
   assert.equal(validateFlu(snapshot), snapshot));
 const mutations = [
   [
+    "interval calibration moved into holdout",
+    (d) => {
+      d.evaluation.intervals.protocol.calibration_end = "2025-07-05";
+    },
+  ],
+  [
+    "forged interval protocol checksum",
+    (d) => {
+      d.evaluation.intervals.protocol_sha256 = "0".repeat(64);
+    },
+  ],
+  [
+    "retuned interval radius",
+    (d) => {
+      d.evaluation.intervals.by_horizon[0].models[0].bands[0].radius += 1;
+    },
+  ],
+  [
+    "fabricated interval coverage",
+    (d) => {
+      d.evaluation.intervals.by_horizon[0].models[0].bands[0].metrics.coverage = 1;
+    },
+  ],
+  [
+    "fabricated interval width",
+    (d) => {
+      d.evaluation.intervals.by_horizon[0].models[0].bands[0].metrics.mean_width = 0;
+    },
+  ],
+  [
+    "forged peak-period interval score",
+    (d) => {
+      d.evaluation.intervals.by_horizon[0].models[0].bands[0].by_phase[1].mean_interval_score = 0;
+    },
+  ],
+  [
+    "private interval fields",
+    (d) => {
+      d.evaluation.intervals.by_horizon[0].patient_rows = [];
+    },
+  ],
+  [
+    "fabricated interval calibration count",
+    (d) => {
+      d.evaluation.intervals.by_horizon[0].calibration_n = 105;
+    },
+  ],
+
+  [
     "forged peak timing",
     (d) => {
       d.evaluation.holdout.peak_diagnostics.by_horizon[0].models[0].peak.lag_weeks += 1;

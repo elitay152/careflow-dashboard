@@ -3387,3 +3387,9 @@ input::placeholder {
   border: 1px solid #a77937;
   height: 0.65rem;
 }
+
+.flu-chart-legend .flu-interval-band {
+  background: #d3e4df;
+  border: 1px solid #317b6b;
+  height: 0.65rem;
+}
