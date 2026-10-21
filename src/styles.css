@@ -2895,3 +2895,69 @@ input::placeholder {
   border-color: #347a67;
   background: #edf5ee;
 }
+
+.demand-view {
+  margin-bottom: 22px;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.demand-panel {
+  padding-bottom: 22px;
+}
+.demand-filters {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 2fr;
+  gap: 16px;
+  padding: 0 23px;
+}
+.demand-filters label {
+  display: grid;
+  gap: 8px;
+  font-size: 11px;
+  color: #617054;
+  min-width: 0;
+}
+.demand-filters select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid #dee8dd;
+  border-radius: 6px;
+  background: white;
+  color: #244b40;
+}
+.demand-kpis {
+  margin: 22px 23px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.demand-chart-title {
+  padding: 0 23px;
+  font-size: 15px;
+}
+.demand-panel > .kpi-caption,
+.demand-panel > .forecast-legend,
+.demand-panel > .text-link {
+  margin: 14px 23px;
+}
+.demand-panel > .note {
+  margin: 18px 23px;
+}
+.demand-panel .utilization-chart {
+  margin: 16px 23px;
+}
+@media (max-width: 700px) {
+  .demand-filters {
+    grid-template-columns: 1fr;
+  }
+  .demand-kpis {
+    grid-template-columns: 1fr;
+  }
+  .demand-view button {
+    white-space: normal;
+  }
+}
+
+.demand-note {
+  display: block;
+}

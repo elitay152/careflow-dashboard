@@ -63,7 +63,7 @@ test("an explicit unevaluated forecast keeps all evidence and predictions null",
   assert.equal(validateData(data), data);
 });
 
-test("a consistent improvement gate allows a bounded future artifact", () => {
+test("development benchmarks cannot publish future predictions even after improvement", () => {
   const data = structuredClone(snapshot);
   const f = data.forecast,
     e = f.evaluation;
@@ -75,20 +75,103 @@ test("a consistent improvement gate allows a bounded future artifact", () => {
     rmse: 0,
     wape: 0,
   };
+  e.folds.forEach((fold) =>
+    fold.predictions.forEach((row) => {
+      row.seasonal_mean = row.actual;
+    }),
+  );
   e.test_predictions.forEach((row) => {
     row.seasonal_mean = row.actual;
   });
   f.held_out_metrics[1] = { model: "seasonal_mean", mae: 0, rmse: 0, wape: 0 };
-  f.predictions = Array.from({ length: 12 }, (_, i) => {
-    const date = new Date(`${e.test_end}T00:00:00Z`);
-    date.setUTCMonth(date.getUTCMonth() + i + 1);
-    return { encounter_month: date.toISOString().slice(0, 10), value: 10 };
-  });
   assert.equal(validateData(data), data);
-  f.predictions[0].encounter_month = e.test_end;
-  assert.throws(() => validateData(data));
+  f.predictions = [{ encounter_month: "2025-01-01", value: 10 }];
+  assert.throws(() => validateData(data), /forecast.publication/);
 });
 const mutations = [
+  [
+    "private fields in a demand group",
+    (d) => {
+      d.demand.groups[0].patient_ids = ["audit-sentinel"];
+    },
+  ],
+  [
+    "a nested facility label",
+    (d) => {
+      d.demand.groups[0].label = { private_notes: "audit-sentinel" };
+    },
+  ],
+  [
+    "an invalid demand scope",
+    (d) => {
+      d.demand.groups[0].scope = "patient";
+    },
+  ],
+  [
+    "duplicated demand groups",
+    (d) => {
+      d.demand.groups.push({ ...d.demand.groups[0] });
+    },
+  ],
+  [
+    "fabricated demand volume",
+    (d) => {
+      d.demand.groups[0].annual_count += 1;
+    },
+  ],
+  [
+    "a sparse group incorrectly scored",
+    (d) => {
+      const g = d.demand.groups.find((g) => !g.eligible);
+      g.eligible = true;
+    },
+  ],
+  [
+    "changed regional coverage",
+    (d) => {
+      d.demand.coverage.annual_matched_provider_encounters -= 1;
+    },
+  ],
+  [
+    "a changed demand calendar",
+    (d) => {
+      d.demand.months[0] = "2000-01-01";
+    },
+  ],
+  [
+    "future regional predictions",
+    (d) => {
+      d.demand.groups.find((g) => g.eligible).forecast.predictions = [
+        { encounter_month: "2025-01-01", value: 100 },
+      ];
+    },
+  ],
+
+  [
+    "uninspected-test claim on development data",
+    (d) => {
+      d.forecast.evaluation.benchmark_status = "untouched";
+    },
+  ],
+  [
+    "fabricated historical validation score",
+    (d) => {
+      d.forecast.evaluation.validation_metrics[0].mae += 1;
+    },
+  ],
+  [
+    "changed historical validation actual",
+    (d) => {
+      d.forecast.evaluation.folds[0].predictions[0].actual += 1;
+    },
+  ],
+  [
+    "private fields in historical predictions",
+    (d) => {
+      d.forecast.evaluation.folds[0].predictions[0].patient_id =
+        "audit-sentinel";
+    },
+  ],
   [
     "private forecast evaluation metadata",
     (d) => {

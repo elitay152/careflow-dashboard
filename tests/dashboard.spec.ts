@@ -67,7 +67,7 @@ test("navigation and browser history work", async ({ page }, testInfo) => {
 test("cohort filters show only persisted resource types", async ({ page }) => {
   await page.goto("./#cohort");
   await page.getByRole("button", { name: "Persisted subset" }).click();
-  await expect(page.locator("tbody tr")).toHaveCount(4);
+  await expect(page.locator("tbody tr")).toHaveCount(5);
   await page
     .getByRole("textbox", { name: "Search resource types" })
     .fill("Medication");
@@ -197,6 +197,15 @@ test("forecasting shows evaluated holdout results and honors the publication gat
   page,
 }) => {
   await page.goto("./#forecasting");
+  await page
+    .getByRole("button", { name: "Whole cohort benchmark", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Monthly encounter forecasts" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/This forecasts visits, not unique patients/),
+  ).toBeVisible();
   if (data.forecast.status === "not_evaluated") {
     await expect(
       page.getByText("Not evaluated.", { exact: true }),
@@ -209,7 +218,7 @@ test("forecasting shows evaluated holdout results and honors the publication gat
     page.getByRole("heading", {
       name: passed
         ? "Selected model clears the baseline"
-        : "The simpler baseline wins the held-out year",
+        : "The baseline is at least as good on the benchmark",
     }),
   ).toBeVisible();
   if (!passed) {
@@ -219,20 +228,28 @@ test("forecasting shows evaluated holdout results and honors the publication gat
     expect(data.forecast.predictions).toBeNull();
   }
 
-  expect(data.forecast.held_out_metrics).toHaveLength(3);
+  expect(data.forecast.held_out_metrics).toHaveLength(5);
   await expect(
     page
       .getByRole("region", { name: "Model comparison metrics" })
       .locator("tbody tr"),
-  ).toHaveCount(3);
-  await page.getByRole("button", { name: "View held-out values" }).click();
+  ).toHaveCount(5);
   await expect(
     page
-      .getByRole("region", { name: "Held-out monthly values" })
+      .getByRole("region", { name: "Historical validation windows" })
+      .locator("tbody tr"),
+  ).toHaveCount(5);
+  await expect(
+    page.getByText("Development benchmark on synthetic data.", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "View benchmark values" }).click();
+  await expect(
+    page
+      .getByRole("region", { name: "Benchmark monthly values" })
       .locator("tbody tr"),
   ).toHaveCount(12);
   await expect(
-    page.getByRole("region", { name: "Held-out monthly values" }),
+    page.getByRole("region", { name: "Benchmark monthly values" }),
   ).toContainText(data.forecast.evaluation!.test_start);
 });
 
@@ -377,4 +394,65 @@ test("segment filters combine and aggregate popouts remain accessible", async ({
     .click();
   await expect(dialog).toContainText("includes deceased patients");
   await page.keyboard.press("Escape");
+});
+
+test("facility demand separates care settings and withholds sparse comparisons", async ({
+  page,
+}) => {
+  await page.goto("./#forecasting");
+  await expect(page.getByLabel("Demand grouping")).toHaveValue("facility");
+  await expect(
+    page
+      .getByRole("region", { name: "Location model comparison" })
+      .locator("tbody tr"),
+  ).toHaveCount(5);
+  await page.getByLabel("Demand care setting").selectOption("inpatient");
+  const top = data
+    .demand!.groups.filter(
+      (g) => g.scope === "facility" && g.care_setting === "inpatient",
+    )
+    .sort(
+      (a, b) =>
+        b.annual_count - a.annual_count || a.label.localeCompare(b.label),
+    )[0];
+  await expect(page.getByLabel("Demand location")).toHaveValue(top.key);
+  await expect(
+    page.getByText("Not enough recorded activity for model comparison.", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Location model comparison" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText("Hospitalization prediction is not trained.", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "View recorded demand values" })
+    .click();
+  await expect(
+    page
+      .getByRole("region", { name: "Recorded location demand values" })
+      .locator("tbody tr"),
+  ).toHaveCount(data.demand!.months.length);
+  await page.getByLabel("Demand grouping").selectOption("zip_area");
+  await page.getByLabel("Demand care setting").selectOption("ambulatory");
+  await expect(
+    page
+      .getByRole("region", { name: "Location model comparison" })
+      .locator("tbody tr"),
+  ).toHaveCount(5);
+  const option = await page.getByLabel("Demand location").inputValue();
+  const group = data.demand!.groups.find(
+    (g) =>
+      g.key === option &&
+      g.scope === "zip_area" &&
+      g.care_setting === "ambulatory",
+  )!;
+  const rows = page
+    .getByRole("region", { name: "Recorded location demand values" })
+    .locator("tbody tr");
+  await expect(rows.last()).toContainText(String(group.counts.at(-1)));
 });

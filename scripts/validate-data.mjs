@@ -198,10 +198,16 @@ function durationEvidence(row, location) {
     } else numeric(row[key], location);
   }
 }
-const FORECAST_MODELS = ["seasonal_naive", "seasonal_mean", "seasonal_trend"];
+const FORECAST_MODELS = [
+  "seasonal_naive",
+  "seasonal_mean",
+  "seasonal_trend",
+  "damped_trend",
+  "poisson_seasonal",
+];
 function forecastMetrics(rows, location) {
-  array(rows, location, 3);
-  if (rows.length !== 3) fail(location);
+  array(rows, location, FORECAST_MODELS.length);
+  if (rows.length !== FORECAST_MODELS.length) fail(location);
   rows.forEach((row, index) => {
     keys(row, ["model", "mae", "rmse", "wape"], location);
     if (row.model !== FORECAST_MODELS[index]) fail(location);
@@ -234,6 +240,7 @@ function validateForecast(forecast, monthly, exportedAt) {
     e,
     [
       "protocol",
+      "benchmark_status",
       "evaluated_at",
       "input_sha256",
       "training_start",
@@ -251,7 +258,8 @@ function validateForecast(forecast, monthly, exportedAt) {
     "forecast.evaluation",
   );
   if (
-    e.protocol !== "rolling_origin_v1" ||
+    e.protocol !== "rolling_origin_v2" ||
+    e.benchmark_status !== "development" ||
     e.training_months !== 108 ||
     e.model_window_months !== 60 ||
     typeof e.selected_beats_baseline !== "boolean"
@@ -289,7 +297,11 @@ function validateForecast(forecast, monthly, exportedAt) {
   array(e.folds, "forecast.folds", 3);
   if (e.folds.length !== 3) fail("forecast.folds");
   e.folds.forEach((fold, i) => {
-    keys(fold, ["training_end", "test_start", "test_end"], "forecast.folds");
+    keys(
+      fold,
+      ["training_end", "test_start", "test_end", "predictions"],
+      "forecast.folds",
+    );
     const stop = 72 + i * 12;
     if (
       fold.training_end !== series[stop - 1].encounter_month ||
@@ -297,8 +309,53 @@ function validateForecast(forecast, monthly, exportedAt) {
       fold.test_end !== series[stop + 11].encounter_month
     )
       fail("forecast.folds");
+    array(fold.predictions, "forecast.fold.predictions", 12);
+    if (fold.predictions.length !== 12) fail("forecast.fold.predictions");
+    fold.predictions.forEach((row, j) => {
+      keys(
+        row,
+        ["encounter_month", "actual", ...FORECAST_MODELS],
+        "forecast.fold.prediction",
+      );
+      if (
+        row.encounter_month !== series[stop + j].encounter_month ||
+        row.actual !== series[stop + j].encounter_count
+      )
+        fail("forecast.fold.actual");
+      FORECAST_MODELS.forEach((model) =>
+        numeric(row[model], "forecast.fold.prediction"),
+      );
+      if (row.seasonal_naive !== series[stop + j - 12].encounter_count)
+        fail("forecast.fold.baseline");
+    });
   });
   forecastMetrics(e.validation_metrics, "forecast.validation_metrics");
+  FORECAST_MODELS.forEach((model, i) => {
+    const rows = e.folds.flatMap((fold) => fold.predictions);
+    const absolute = rows.reduce(
+      (sum, row) => sum + Math.abs(row.actual - row[model]),
+      0,
+    );
+    const total = rows.reduce((sum, row) => sum + row.actual, 0);
+    near(
+      e.validation_metrics[i].mae,
+      absolute / rows.length,
+      "forecast.validation.mae",
+    );
+    near(
+      e.validation_metrics[i].rmse,
+      Math.sqrt(
+        rows.reduce((sum, row) => sum + (row.actual - row[model]) ** 2, 0) /
+          rows.length,
+      ),
+      "forecast.validation.rmse",
+    );
+    near(
+      e.validation_metrics[i].wape,
+      total ? absolute / total : null,
+      "forecast.validation.wape",
+    );
+  });
   const winner = e.validation_metrics.reduce((best, row) =>
     row.mae < best.mae ? row : best,
   );
@@ -342,18 +399,7 @@ function validateForecast(forecast, monthly, exportedAt) {
     e.selected_model !== "seasonal_naive" &&
     selected.mae < forecast.held_out_metrics[0].mae;
   if (e.selected_beats_baseline !== beats) fail("forecast.gate");
-  if (!beats) {
-    if (forecast.predictions !== null) fail("forecast.publication");
-  } else {
-    array(forecast.predictions, "forecast.predictions", 12);
-    if (forecast.predictions.length !== 12) fail("forecast.predictions");
-    forecast.predictions.forEach((row, i) => {
-      keys(row, ["encounter_month", "value"], "forecast.predictions");
-      if (row.encounter_month !== shiftMonth(e.test_end, i + 1))
-        fail("forecast.predictions");
-      numeric(row.value, "forecast.predictions");
-    });
-  }
+  if (forecast.predictions !== null) fail("forecast.publication");
 }
 
 const SEGMENT_DIMENSIONS = {
@@ -457,6 +503,157 @@ function validateSegments(segments, current) {
     fail("segments.clinical");
 }
 
+function validateDemand(demand, monthly, exportedAt, totalPatients) {
+  if (!monthly.length) {
+    if (demand !== null) fail("demand");
+    return;
+  }
+  keys(
+    demand,
+    ["months", "facility_count", "coverage", "hospitalization", "groups"],
+    "demand",
+  );
+  const source = monthly.slice(-120);
+  array(demand.months, "demand.months", 120);
+  if (
+    JSON.stringify(demand.months) !==
+    JSON.stringify(source.map((r) => r.encounter_month))
+  )
+    fail("demand.months");
+  integer(demand.facility_count, "demand.facility_count");
+  keys(
+    demand.coverage,
+    [
+      "finished_encounters",
+      "matched_provider_encounters",
+      "assigned_zip_encounters",
+      "annual_finished_encounters",
+      "annual_matched_provider_encounters",
+      "annual_assigned_zip_encounters",
+    ],
+    "demand.coverage",
+  );
+  Object.values(demand.coverage).forEach((n) => integer(n, "demand.coverage"));
+  const c = demand.coverage;
+  const annualStart = shiftMonth(source.at(-1).encounter_month, -11);
+  if (
+    c.finished_encounters !==
+      source.reduce((s, r) => s + r.encounter_count, 0) ||
+    c.annual_finished_encounters !==
+      source
+        .filter((r) => r.encounter_month >= annualStart)
+        .reduce((s, r) => s + r.encounter_count, 0) ||
+    c.matched_provider_encounters > c.finished_encounters ||
+    c.assigned_zip_encounters > c.matched_provider_encounters ||
+    c.annual_matched_provider_encounters > c.annual_finished_encounters ||
+    c.annual_assigned_zip_encounters > c.annual_matched_provider_encounters
+  )
+    fail("demand.coverage");
+  keys(
+    demand.hospitalization,
+    ["annual_encounters", "annual_patients"],
+    "demand.hospitalization",
+  );
+  Object.values(demand.hospitalization).forEach((n) =>
+    integer(n, "demand.hospitalization"),
+  );
+  if (
+    demand.hospitalization.annual_encounters > c.annual_finished_encounters ||
+    demand.hospitalization.annual_patients >
+      demand.hospitalization.annual_encounters ||
+    demand.hospitalization.annual_patients > totalPatients
+  )
+    fail("demand.hospitalization");
+  array(demand.groups, "demand.groups", 5000);
+  const observed = new Set(),
+    totals = { facility: 0, zip_area: 0 };
+  const seriesTotals = {
+    facility: source.map(() => 0),
+    zip_area: source.map(() => 0),
+  };
+  const consecutive =
+    source.length === 120 &&
+    source.every(
+      (r, i) => r.encounter_month === shiftMonth(source[0].encounter_month, i),
+    );
+  for (const group of demand.groups) {
+    keys(
+      group,
+      [
+        "scope",
+        "key",
+        "label",
+        "care_setting",
+        "counts",
+        "annual_count",
+        "eligible",
+        "forecast",
+      ],
+      "demand.group",
+    );
+    if (
+      !["facility", "zip_area"].includes(group.scope) ||
+      !["ambulatory", "emergency", "inpatient", "other"].includes(
+        group.care_setting,
+      )
+    )
+      fail("demand.group");
+    string(group.key, "demand.key", 40);
+    string(group.label, "demand.label", 200);
+    if (
+      !(
+        group.scope === "facility"
+          ? /^site_[a-f0-9]{12}$/u
+          : /^[A-Z]{2}-[0-9]{3}$/u
+      ).test(group.key)
+    )
+      fail("demand.key");
+    const signature = [group.scope, group.key, group.care_setting].join("|");
+    if (observed.has(signature)) fail("demand.duplicate");
+    observed.add(signature);
+    array(group.counts, "demand.counts", 120);
+    if (group.counts.length !== source.length) fail("demand.counts");
+    group.counts.forEach((n, i) => {
+      integer(n, "demand.count");
+      seriesTotals[group.scope][i] += n;
+    });
+    const annual = group.counts.reduce(
+      (s, n, i) => s + (source[i].encounter_month >= annualStart ? n : 0),
+      0,
+    );
+    if (!annual || group.annual_count !== annual) fail("demand.annual_count");
+    totals[group.scope] += annual;
+    const eligible =
+      consecutive &&
+      annual >= 120 &&
+      group.counts.slice(-12).filter((n) => n > 0).length >= 10 &&
+      group.counts.slice(-72, -12).filter((n) => n > 0).length >= 36;
+    if (group.eligible !== eligible) fail("demand.eligibility");
+    if (!eligible) {
+      if (group.forecast !== null) fail("demand.sparse");
+    } else {
+      if (!group.forecast || group.forecast.status !== "evaluated")
+        fail("demand.forecast");
+      validateForecast(
+        group.forecast,
+        source.map((r, i) => ({
+          encounter_month: r.encounter_month,
+          encounter_count: group.counts[i],
+        })),
+        exportedAt,
+      );
+    }
+  }
+  if (
+    totals.facility !== c.annual_matched_provider_encounters ||
+    totals.zip_area !== c.annual_assigned_zip_encounters
+  )
+    fail("demand.totals");
+  for (const scope of Object.keys(seriesTotals))
+    if (seriesTotals[scope].some((n, i) => n > source[i].encounter_count))
+      fail("demand.series_totals");
+}
+
 export function validateData(data) {
   keys(
     data,
@@ -468,10 +665,11 @@ export function validateData(data) {
       "archive",
       "assistant",
       "forecast",
+      "demand",
     ],
     "root",
   );
-  if (data.schema_version !== 4 || data.synthetic_only !== true) fail("root");
+  if (data.schema_version !== 6 || data.synthetic_only !== true) fail("root");
   timestamp(data.exported_at, "exported_at");
   const current = data.current;
   keys(
@@ -711,9 +909,9 @@ export function validateData(data) {
       fail("quality");
     if (
       quality.status === "passed" &&
-      (quality.models_passed !== 10 ||
-        quality.checks_passed !== 32 ||
-        quality.checks_total !== 32)
+      (quality.models_passed !== 11 ||
+        quality.checks_passed !== 39 ||
+        quality.checks_total !== 39)
     )
       fail("quality.passed");
   }
@@ -845,6 +1043,12 @@ export function validateData(data) {
       citation.limitations.forEach((value) => string(value, "limitations"));
     }
   }
+  validateDemand(
+    data.demand,
+    current.monthly_utilization,
+    data.exported_at,
+    current.counts.patients,
+  );
   validateForecast(
     data.forecast,
     current.monthly_utilization,
