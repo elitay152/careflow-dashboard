@@ -10,7 +10,8 @@
     "test": "playwright test",
     "data:sync": "node scripts/sync-data.mjs",
     "data:check": "node scripts/validate-data.mjs",
-    "test:security": "node --test tests/security.test.mjs"
+    "test:security": "node --test tests/security.test.mjs",
+    "test:pages": "playwright test --config playwright.pages.config.ts"
   },
   "engines": {
     "node": ">=22.12"

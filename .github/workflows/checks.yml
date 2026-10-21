@@ -1,7 +1,13 @@
-name: Website checks
-on: [push, pull_request]
+name: Website checks and Pages deployment
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: website-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   website:
     runs-on: ubuntu-latest
@@ -33,3 +39,52 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm test
+      - name: Test the GitHub Pages repository path
+        run: npm run test:pages
+      - name: Recheck release artifacts
+        run: node scripts/check-artifacts.mjs
+      - name: Upload the validated static site
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: dist
+          retention-days: 1
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: website
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - name: Skip a superseded main commit
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_main="$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)"
+          if [[ ! "$current_main" =~ ^[0-9a-f]{40}$ ]]; then
+            echo 'Could not verify the current main commit.' >&2
+            exit 1
+          fi
+          if [[ "$current_main" == "$GITHUB_SHA" ]]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'current=false' >> "$GITHUB_OUTPUT"
+            echo 'Skipping obsolete build: main has moved.'
+          fi
+      - name: Check Pages configuration
+        if: steps.source.outputs.current == 'true'
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - name: Deploy the checked build
+        if: steps.source.outputs.current == 'true'
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

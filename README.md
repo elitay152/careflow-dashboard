@@ -24,7 +24,9 @@ npm run preview
 
 The generated `dist/` directory can be served by a static host. Relative asset
 paths and hash navigation support a repository subpath without server rewrites.
-Deployment is intentionally not automatic.
+See [GitHub Pages deployment](docs/deployment.md) for the one-time settings and
+reviewed workflow. Once enabled, successful checks on `main` publish only the
+validated static build; pull requests never deploy.
 
 ## What the six pages show
 
@@ -87,6 +89,7 @@ npm run test:security
 npm run build
 npx playwright install chromium
 npm test
+npm run test:pages
 ```
 
 For an existing Chromium installation:
@@ -107,7 +110,10 @@ Additional browser cases verify CSP enforcement and inert hostile agent input.
 public/build artifact allowlists. Builds reject unexpected files, symlinks and
 source maps before a release can be accepted.
 
-CI uses `npm ci`, advisory checks, 27 Node security tests, tracked-file secret checks, the production build and Playwright. Actions
-are pinned to commit SHAs with read-only repository permissions. It does not
-deploy the site or run paid evaluations. Hosted CI results must be checked on
-GitHub; local tests alone do not establish a hosted pass.
+CI uses `npm ci`, advisory checks, 27 Node security tests, tracked-file secret
+checks, the production build and Playwright at both root and repository paths.
+Actions are pinned to commit SHAs. The check job has read-only repository
+contents access; only the separate deployment job gets Pages publishing and
+OIDC permissions. It publishes checked builds from `main` when Pages is enabled
+and runs no paid evaluations. Hosted CI/deployment results must be checked on
+GitHub; local tests alone do not establish a hosted pass or a live website.
