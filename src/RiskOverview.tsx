@@ -82,9 +82,9 @@ export default function RiskOverview({ data }: { data: RiskSummary | null }) {
   if (!data)
     return (
       <p className="note demand-note">
-        No current hospitalization-risk evaluation has been exported. Run the
-        private audit and refresh the aggregate snapshot. No individual risk
-        scores are shown.
+        No current inpatient-risk evaluation has been exported. Run the private
+        audit and refresh the aggregate snapshot. No individual risk scores are
+        shown.
       </p>
     );
   const external = Boolean(data.external) && view === "external";
@@ -106,8 +106,10 @@ export default function RiskOverview({ data }: { data: RiskSummary | null }) {
       <p className="note demand-note">
         <strong>Exploratory synthetic-data study.</strong> The target is a new
         inpatient episode starting after an adult’s snapshot and within 90 days.
-        Overlapping or touching inpatient encounters are merged. These results
-        do not establish clinical validity, and individual scores are not
+        Overlapping or touching inpatient encounters are merged. The source
+        includes mixed inpatient settings, including skilled nursing and
+        rehabilitation; admission urgency is not established. These results do
+        not establish clinical validity, and individual scores are not
         published.
       </p>
       <section
@@ -225,7 +227,7 @@ export default function RiskOverview({ data }: { data: RiskSummary | null }) {
             <div
               className="table-scroll"
               role="region"
-              aria-label="Hospitalization model comparison"
+              aria-label="Inpatient model comparison"
               tabIndex={0}
             >
               <table>

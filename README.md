@@ -31,7 +31,7 @@ support the GitHub Pages repository path.
 | Analytics | Latest-12-month KPIs, monthly/annual trends, duration statistics, clinical/contextual groups, and medication request statuses. |
 | Analytics agent | Three cited baseline answers replayed from the export; other inputs are declined. |
 | Forecasting | Facility/ZIP demand histories, guided ambulatory examples, an editable appointment-capacity scenario, and model development benchmarks. |
-| Hospitalization risk | Adult 90-day inpatient-episode experiment with readiness, patient/time splits, baselines, and aggregate calibration. |
+| Inpatient risk study | Adult 90-day mixed-setting inpatient-episode experiment with readiness, patient/time splits, baselines, and aggregate calibration. |
 | Pipeline health | Source-load, build, and export timestamps, quality checks, quarantines, and downloadable evidence. |
 
 The snapshot contains 1,194 synthetic patients and a reference catalog of 852
