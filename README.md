@@ -35,7 +35,7 @@ validated static build; pull requests never deploy.
 | --- | --- |
 | Overview | Current PostgreSQL aggregate counts and matching dbt evidence: the shipped snapshot has 1,194 patients and 230,785 supported records. |
 | Simulated cohort | Searchable inventory of the four loaded FHIR resource types. No patient-level records. |
-| Analytics | The current larger Synthea cohort export. Metric switching, exact monthly values, condition prevalence and medication statuses. |
+| Analytics | The current larger Synthea cohort export. Trend/bar switching, a month explorer, exact monthly values, grouped clinical/social concepts, and medication-status shares. |
 | Analytics agent | Replay of three baseline responses exported by Careflow, with source definitions and caveats. Free-form inputs outside those examples are declined; there is no live API connection. |
 | Forecasting | Explicitly unevaluated research plan. No invented predictions, intervals or accuracy metrics. |
 | Pipeline health | Actual source-load, dbt invocation and snapshot timestamps; current quarantine counts remain visible. No uptime or active-schedule claims. |
@@ -89,10 +89,35 @@ synthetic. Never copy `.env`, raw FHIR bundles, database credentials, API keys,
 usage ledgers or patient-level exports. Keep any future live agent credentials
 and request controls on a backend.
 
-Version 1 includes current aggregates and dbt evidence, a separate archived
+Version 2 includes current aggregates and dbt evidence, a separate archived
 validation summary, baseline example responses, and explicit null forecast
 results. Dates are displayed in UTC. Missing months are not synthesized as zero;
 condition groups can overlap; medication requests do not imply dispensing.
+
+## Clinical findings and social context
+
+![Analytics with grouped concepts and observed trends](docs/screenshots/analytics-desktop.png)
+
+The analytics view defaults to clinical conditions and findings. Education,
+employment and other social-context concepts, medical history, and care context
+have separate views. A search works within the selected view; “All recorded
+concepts” retains access to every exported group.
+
+The backend assigns groups by exact terminology code using a curated mapping
+for this synthetic cohort. Unknown codes stay unclassified. FHIR Condition does
+not mean chronic disease, and clinical findings include acute conditions and
+symptoms. These groups are a presentation aid, not a clinical ontology. Records
+and prevalence denominators are unchanged. Baseline assistant answers continue
+to query the full condition mart and disclose its broader scope.
+
+The utilization chart uses actual calendar spacing and leaves gaps in its trend
+when months or measurements are missing. The keyboard-accessible month slider
+shows observed values; the exact-values table remains available. Counts cover
+the selected window, while monthly distinct-patient counts are not summed into
+a population. Medication percentages use all exported request statuses.
+
+Version 2 requires the updated Careflow exporter and a fresh aggregate snapshot;
+old version-1 exports are rejected rather than silently guessing concept groups.
 
 ## Validation
 
@@ -111,7 +136,7 @@ For an existing Chromium installation:
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm test
 ```
 
-The 26 desktop/mobile browser tests cover all pages, keyboard-accessible tables,
+The 30 desktop/mobile browser tests per hosting path cover all pages, keyboard-accessible tables,
 navigation/history, resource filtering, baseline replay and unsupported inputs,
 exact current values, dataset separation, evidence download, and honest forecast
 empty states. Each page is checked with axe's WCAG A/AA rules and for horizontal
