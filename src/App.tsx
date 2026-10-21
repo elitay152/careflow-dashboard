@@ -344,6 +344,76 @@ function Overview() {
           </a>
         </div>
       </section>
+      <section
+        className="panel portfolio-tour"
+        aria-labelledby="portfolio-tour-heading"
+      >
+        <div className="panel-heading">
+          <div>
+            <h2 id="portfolio-tour-heading">A quick tour of Careflow</h2>
+            <p>
+              About three minutes: follow the data, check the evidence, then
+              explore the results.
+            </p>
+          </div>
+        </div>
+        <ol className="portfolio-tour-steps">
+          {[
+            {
+              href: "#cohort",
+              title: "Start with the source",
+              text: "See how Synthea creates fictional patient histories and which FHIR records the pipeline retains.",
+              action: "Explore the simulated cohort",
+              icon: FileJson,
+            },
+            {
+              href: "#health",
+              title: "Check the pipeline",
+              text: "Inspect load timestamps, quarantine counts, and the dbt evidence behind this exported snapshot.",
+              action: "Inspect pipeline evidence",
+              icon: ShieldCheck,
+            },
+            {
+              href: "#analytics",
+              title: "Explore the metrics",
+              text: "Follow encounter trends and segment patients by demographics and clinical profile. Check the definitions as you go.",
+              action: "Explore cohort analytics",
+              icon: BarChart3,
+            },
+            {
+              href: "#forecasting",
+              title: "Read the model results",
+              text: "Switch to observed public flu admissions. Compare models, peak errors, and prediction ranges—including where they fall short.",
+              action: "Review the forecasting evidence",
+              icon: FlaskConical,
+            },
+          ].map((step, index) => (
+            <li key={step.href}>
+              <a href={step.href} className="portfolio-tour-link">
+                <span className="portfolio-tour-number">
+                  0{index + 1}
+                  <Icon icon={step.icon} size={19} />
+                </span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+                <span className="portfolio-tour-action">
+                  {step.action}
+                  <Icon icon={ArrowRight} size={15} />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+        <div className="portfolio-tour-footer">
+          <span>
+            The browser reads aggregate snapshots. Pipeline work and model
+            evaluation run in the backend.
+          </span>
+          <External href={`${source}/blob/main/docs/demo.md`}>
+            Run the reproducible demo
+          </External>
+        </div>
+      </section>
       <div className="evidence-banner">
         <div>
           <Icon icon={Database} />
@@ -458,77 +528,6 @@ function Overview() {
             Download current aggregate evidence
           </a>
         </Panel>
-      </div>
-      <Panel
-        title="From source to something you can explain"
-        subtitle="A complete pipeline, with a boundary at every step"
-        action={
-          <a href="#health" className="text-link">
-            Pipeline evidence <Icon icon={ArrowUpRight} size={15} />
-          </a>
-        }
-      >
-        <div className="pipeline-flow">
-          {[
-            {
-              icon: FileJson,
-              step: "01",
-              label: "Ingest",
-              text: "Synthetic FHIR R4 bundles",
-              tags: "Validation · quarantine",
-            },
-            {
-              icon: Database,
-              step: "02",
-              label: "Load",
-              text: "Transactional PostgreSQL",
-              tags: "Provenance · safe reruns",
-            },
-            {
-              icon: Workflow,
-              step: "03",
-              label: "Transform",
-              text: "dbt models + Dagster jobs",
-              tags: "Tests · orchestration",
-            },
-            {
-              icon: Sparkles,
-              step: "04",
-              label: "Explore",
-              text: "Analytics + grounded assistant",
-              tags: "Aggregates · citations",
-            },
-          ].map((item, index) => (
-            <div className="flow-item" key={item.step}>
-              <div className="flow-top">
-                <span className="flow-icon">
-                  <Icon icon={item.icon} size={22} />
-                </span>
-                <span>{item.step}</span>
-                {index < 3 && <Icon icon={ArrowRight} className="flow-arrow" />}
-              </div>
-              <h3>{item.label}</h3>
-              <p>{item.text}</p>
-              <small>{item.tags}</small>
-            </div>
-          ))}
-        </div>
-      </Panel>
-      <div className="cohort-callout">
-        <div className="callout-icon">
-          <Icon icon={BarChart3} size={24} />
-        </div>
-        <div>
-          <h3>Explore this cohort</h3>
-          <p>
-            The analytics page shows encounter trends, duration statistics,
-            conditions, and medication requests for{" "}
-            {number(current.counts.patients)} synthetic patients.
-          </p>
-        </div>
-        <a className="button secondary" href="#analytics">
-          Open current analytics <Icon icon={ArrowRight} size={16} />
-        </a>
       </div>
     </>
   );

@@ -8,6 +8,9 @@ has no database connection, model credentials, or live agent endpoint.
 
 **Website:** https://elitay152.github.io/careflow-dashboard/
 
+Start with the overview’s four-stop tour: source → pipeline evidence → analytics
+→ forecasting. See the [three-minute walkthrough and reproducible pipeline demo](https://github.com/elitay152/Careflow/blob/main/docs/demo.md).
+
 ![Analytics](docs/screenshots/analytics-desktop.png)
 
 ## Run
@@ -27,7 +30,7 @@ support the GitHub Pages repository path.
 
 | Page | Contents |
 | --- | --- |
-| Overview | Current cohort counts and dbt evidence. |
+| Overview | Eli Taylor’s background, a four-stop project tour, current cohort counts, and dbt evidence. |
 | Simulated cohort | Aggregate inventory of six persisted FHIR resource types, including selected clinical Observations and provider organizations. |
 | Analytics | Latest-12-month KPIs, monthly/annual trends, duration statistics, clinical/contextual groups, and medication request statuses. |
 | Analytics agent | Three cited baseline answers replayed from the export; other inputs are declined. |
@@ -81,24 +84,12 @@ JSON belongs in `public/data/`; keep raw files, ledgers, keys, and dumps outside
 
 ## Small reproducible demo
 
-Start in the backend checkout:
-
-```bash
-bash scripts/bootstrap.sh
-cd ../careflow-dashboard
-npm ci
-npm run data:refresh -- --confirm-synthetic \
-  --raw-schema public --analytics-schema analytics \
-  --label "Hand-authored extended demo"
-npm run dev
-```
-
-This demonstrates ingestion, quarantine, dbt checks, and refresh with three
-fictional patients. Its short history produces an explicit unevaluated forecast.
-The command replaces the local snapshot; rerun the default refresh to select the
-retained larger cohort. For generation from scratch, use Careflow's
-[cohort validation guide](https://github.com/elitay152/Careflow/blob/main/docs/validation.md).
-Neither demo path needs a paid model or AWS service.
+The [backend demo guide](https://github.com/elitay152/Careflow/blob/main/docs/demo.md)
+contains the short walkthrough and `bash scripts/portfolio_demo.sh` command.
+It generates three fictional patients, verifies quarantine and duplicate-safe reruns,
+builds/tests dbt in fresh PostgreSQL schemas, and exports local aggregate evidence.
+It does not replace this repository's committed snapshots. To view the website
+without PostgreSQL, use `npm ci`, `npm run build`, and `npm run preview` above.
 
 ## Checks and hosting
 
