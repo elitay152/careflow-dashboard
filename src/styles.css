@@ -3076,3 +3076,90 @@ input::placeholder {
     grid-template-columns: 1fr;
   }
 }
+
+.risk-panel {
+  padding-bottom: 22px;
+}
+.risk-splits {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 23px 18px;
+}
+.risk-splits article {
+  padding: 16px;
+  border: 1px solid #dee8dd;
+  border-radius: 8px;
+  background: #f7faf5;
+}
+.risk-splits h3 {
+  font-size: 20px;
+  margin: 12px 0 8px;
+  color: #36564b;
+}
+.risk-splits p,
+.risk-splits small,
+.risk-copy {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #617054;
+}
+.risk-copy {
+  margin: 16px 23px;
+}
+.risk-controls {
+  margin: 0 23px 18px;
+}
+.risk-select {
+  display: grid;
+  gap: 8px;
+  margin: 20px 23px;
+  font-size: 12px;
+  color: #36564b;
+  max-width: 300px;
+}
+.risk-select select {
+  padding: 10px;
+  border: 1px solid #dee8dd;
+  border-radius: 6px;
+  color: #244b40;
+  background: white;
+}
+.risk-kpis {
+  margin: 0 23px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.risk-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 24px;
+  margin: 0 23px 22px;
+  padding-left: 16px;
+  font-size: 11px;
+  color: #617054;
+  line-height: 1.8;
+}
+.risk-method {
+  margin: 0 23px;
+  font-size: 11px;
+  color: #617054;
+  line-height: 1.8;
+}
+.risk-method summary {
+  cursor: pointer;
+  color: #36564b;
+  font-weight: 600;
+}
+.risk-method p {
+  margin-top: 12px;
+}
+.risk-panel .utilization-chart {
+  margin: 16px 23px;
+}
+@media (max-width: 700px) {
+  .risk-splits,
+  .risk-kpis,
+  .risk-features {
+    grid-template-columns: 1fr;
+  }
+}

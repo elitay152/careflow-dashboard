@@ -468,13 +468,14 @@ export default function RegionalDemand({
         views overlap and must not be added.
       </p>
       <p className="note demand-note">
-        <strong>Hospitalization prediction is not trained.</strong> The latest
-        year contains {number(data.hospitalization.annual_encounters)} inpatient
+        <strong>Hospitalization is a separate target.</strong> The latest year
+        contains {number(data.hospitalization.annual_encounters)} inpatient
         encounters among {number(data.hospitalization.annual_patients)}{" "}
-        patients. More independent admission events, dated features, and
-        follow-up checks are needed before building a patient risk model.
-        Reference bed counts are retained privately; this subset of patients
-        cannot establish whole-hospital occupancy.
+        patients. Patient-level risk uses dated snapshots and a separate
+        evaluation. See the <a href="#risk">hospitalization risk study</a> for
+        readiness and current results. Reference bed counts are retained
+        privately; this subset of patients cannot establish whole-hospital
+        occupancy.
       </p>
     </>
   );

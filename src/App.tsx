@@ -32,6 +32,7 @@ import {
 import snapshot from "../public/data/careflow.json";
 import CohortExplorer from "./CohortExplorer";
 import RegionalDemand from "./RegionalDemand";
+import RiskOverview, { type RiskSummary } from "./RiskOverview";
 
 const current = snapshot.current;
 const archive = snapshot.archive;
@@ -122,6 +123,16 @@ const nav = [
     accent: "",
     description:
       "Explore monthly finished encounters by facility, care setting, or provider ZIP area. This forecasts visits, not unique patients; one patient can have multiple encounters.",
+  },
+  {
+    id: "risk",
+    label: "Hospitalization risk",
+    icon: HeartPulse,
+    eyebrow: "PATIENT-LEVEL MODEL STUDY",
+    title: "Hospitalization within 90 days",
+    accent: "",
+    description:
+      "A synthetic-data experiment predicting a new inpatient episode from earlier patient history. Readiness, baselines, and evaluation are shown together.",
   },
   {
     id: "health",
@@ -2289,6 +2300,8 @@ export default function App() {
             <Agent />
           ) : page === "forecasting" ? (
             <Forecasting />
+          ) : page === "risk" ? (
+            <RiskOverview data={snapshot.risk as RiskSummary | null} />
           ) : (
             <Health />
           )}

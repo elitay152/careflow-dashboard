@@ -9,6 +9,7 @@ for (const route of [
   "agent",
   "forecasting",
   "health",
+  "risk",
 ]) {
   test(`${route} renders without errors or horizontal overflow`, async ({
     page,
@@ -425,7 +426,7 @@ test("facility demand separates care settings and withholds sparse comparisons",
     page.getByRole("region", { name: "Location model comparison" }),
   ).toHaveCount(0);
   await expect(
-    page.getByText("Hospitalization prediction is not trained.", {
+    page.getByText("Hospitalization is a separate target.", {
       exact: true,
     }),
   ).toBeVisible();
@@ -501,4 +502,46 @@ test("capacity scenarios replay recorded demand and keep assumptions separate", 
   await expect(planner.getByRole("status")).toContainText("3 of 12");
   await page.getByLabel("Demand care setting").selectOption("inpatient");
   await expect(planner).toHaveCount(0);
+});
+
+test("hospitalization evaluation shows honest splits and aggregate model comparisons", async ({
+  page,
+}) => {
+  await page.goto("./#risk");
+  await expect(
+    page.getByRole("heading", { name: "Hospitalization within 90 days" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("The selected threshold missed the positive outcomes.", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  const table = page.getByRole("region", {
+    name: "Hospitalization model comparison",
+  });
+  await expect(table.locator("tbody tr")).toHaveCount(3);
+  await expect(
+    page.getByRole("button", { name: "Independent cohort", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page
+    .getByRole("button", { name: "Internal test", exact: true })
+    .click();
+  await expect(table.locator("tbody tr").last()).toContainText("0%");
+  await page
+    .getByLabel("Risk model", { exact: true })
+    .selectOption("prevalence");
+  const bins = page.getByRole("region", { name: "Risk calibration values" });
+  await expect(bins.locator("tbody tr")).toHaveCount(5);
+  await expect(bins).toContainText("—");
+  await page
+    .getByText("Cohort rules, follow-up, and limitations", { exact: true })
+    .click();
+  await expect(
+    page.getByText(/Current condition and medication statuses are excluded/),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      /No individual feature rows, predictions, or model files are published/,
+    ),
+  ).toBeVisible();
 });
