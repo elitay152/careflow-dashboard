@@ -88,7 +88,79 @@ test("development benchmarks cannot publish future predictions even after improv
   f.predictions = [{ encounter_month: "2025-01-01", value: 10 }];
   assert.throws(() => validateData(data), /forecast.publication/);
 });
+test("risk evidence may be absent without exposing private artifacts", () => {
+  const data = structuredClone(snapshot);
+  data.risk = null;
+  assert.equal(validateData(data), data);
+});
 const mutations = [
+  [
+    "private fields in risk evidence",
+    (d) => {
+      d.risk.patient_rows = [{ patient_id: "audit-sentinel" }];
+    },
+  ],
+  [
+    "patient identifiers in risk splits",
+    (d) => {
+      d.risk.splits[0].patient_ids = ["audit-sentinel"];
+    },
+  ],
+  [
+    "an undocumented risk feature",
+    (d) => {
+      d.risk.features.push("patient_id");
+    },
+  ],
+  [
+    "stale risk evidence",
+    (d) => {
+      d.risk.source_loaded_at = "2020-01-01T00:00:00Z";
+    },
+  ],
+  [
+    "an invalid risk threshold",
+    (d) => {
+      d.risk.models[0].threshold = 2;
+    },
+  ],
+  [
+    "a fabricated risk precision",
+    (d) => {
+      d.risk.models[0].test.precision = 0;
+    },
+  ],
+  [
+    "a fabricated risk confusion count",
+    (d) => {
+      d.risk.models[0].test.true_positive += 1;
+    },
+  ],
+  [
+    "private notes in calibration",
+    (d) => {
+      d.risk.models[0].calibration[0].private_notes = "audit-sentinel";
+    },
+  ],
+  [
+    "incorrect calibration totals",
+    (d) => {
+      d.risk.models[0].calibration[0].snapshots += 1;
+    },
+  ],
+  [
+    "private independent-cohort rows",
+    (d) => {
+      d.risk.external.patient_rows = ["audit-sentinel"];
+    },
+  ],
+  [
+    "false risk readiness status",
+    (d) => {
+      d.risk.status = "insufficient_data";
+    },
+  ],
+
   [
     "private fields in a demand group",
     (d) => {

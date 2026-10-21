@@ -31,6 +31,7 @@ support the GitHub Pages repository path.
 | Analytics | Latest-12-month KPIs, monthly/annual trends, duration statistics, clinical/contextual groups, and medication request statuses. |
 | Analytics agent | Three cited baseline answers replayed from the export; other inputs are declined. |
 | Forecasting | Facility/ZIP demand histories, guided ambulatory examples, an editable appointment-capacity scenario, and model development benchmarks. |
+| Hospitalization risk | Adult 90-day inpatient-episode experiment with readiness, patient/time splits, baselines, and aggregate calibration. |
 | Pipeline health | Source-load, build, and export timestamps, quality checks, quarantines, and downloadable evidence. |
 
 The snapshot contains 1,194 synthetic patients and a reference catalog of 852
@@ -74,7 +75,7 @@ schedule, or publish. Review the snapshot change and merge it to `main` for Page
 deployment. A browser reload alone does not refresh PostgreSQL data.
 
 For an existing export, use `npm run data:sync -- /path/to/careflow.json`, then
-`npm run build`. The site requires contract version 6. Analytics includes an aggregate cohort explorer with combined demographic, clinical-profile, and encounter-frequency filters; these filters apply only to the explorer. Only reviewed aggregate
+`npm run build`. The site requires contract version 7. Analytics includes an aggregate cohort explorer with combined demographic, clinical-profile, and encounter-frequency filters; these filters apply only to the explorer. Only reviewed aggregate
 JSON belongs in `public/data/`; keep raw files, ledgers, keys, and dumps outside it.
 
 ## Small reproducible demo

@@ -654,6 +654,292 @@ function validateDemand(demand, monthly, exportedAt, totalPatients) {
       fail("demand.series_totals");
 }
 
+const RISK_FEATURES = [
+  "age_years",
+  "encounters_90d",
+  "encounters_365d",
+  "emergency_365d",
+  "inpatient_episodes_365d",
+  "days_since_completed_encounter",
+  "recorded_chronic_codes",
+  "recorded_diabetes",
+  "recorded_hypertension",
+];
+const RISK_EXCLUSIONS = [
+  "under_18",
+  "history_short",
+  "dead_at_index",
+  "unknown_death_date",
+  "hospitalized_at_index",
+  "censored",
+  "outside_split",
+];
+function validateRisk(risk, current, exportedAt) {
+  if (risk === null) return;
+  const counts = [
+    "patients",
+    "candidate_snapshots",
+    "eligible_snapshots",
+    "assigned_snapshots",
+    "raw_inpatient_encounters",
+    "inpatient_episodes",
+    "conditions",
+    "undated_conditions",
+  ];
+  keys(
+    risk,
+    [
+      "protocol",
+      "observation_end",
+      "status",
+      "blockers",
+      "evaluated_at",
+      "source_loaded_at",
+      "input_sha256",
+      ...counts,
+      "exclusions",
+      "features",
+      "splits",
+      "models",
+      "external",
+    ],
+    "risk",
+  );
+  if (
+    risk.protocol !== "admission_90d_v1" ||
+    !["evaluated", "ready_not_trained", "insufficient_data"].includes(
+      risk.status,
+    ) ||
+    JSON.stringify(risk.features) !== JSON.stringify(RISK_FEATURES)
+  )
+    fail("risk.protocol");
+  counts.forEach((k) => integer(risk[k], "risk.counts"));
+  date(risk.observation_end, "risk.observation_end");
+  timestamp(risk.evaluated_at, "risk.evaluated_at");
+  timestamp(risk.source_loaded_at, "risk.source_loaded_at");
+  if (
+    risk.source_loaded_at !== current.source_loaded_at ||
+    Date.parse(risk.source_loaded_at) > Date.parse(risk.evaluated_at) ||
+    Date.parse(risk.evaluated_at) > Date.parse(exportedAt)
+  )
+    fail("risk.evidence");
+  if (
+    typeof risk.input_sha256 !== "string" ||
+    !/^[a-f0-9]{64}$/u.test(risk.input_sha256)
+  )
+    fail("risk.hash");
+  if (
+    risk.patients !== current.counts.patients ||
+    risk.conditions !== current.counts.conditions ||
+    risk.undated_conditions > risk.conditions ||
+    risk.inpatient_episodes > risk.raw_inpatient_encounters ||
+    risk.raw_inpatient_encounters > current.counts.encounters ||
+    risk.candidate_snapshots !== risk.patients * 40
+  )
+    fail("risk.counts");
+  keys(risk.exclusions, RISK_EXCLUSIONS, "risk.exclusions");
+  Object.values(risk.exclusions).forEach((n) => integer(n, "risk.exclusions"));
+  if (
+    risk.eligible_snapshots !==
+      risk.candidate_snapshots -
+        Object.entries(risk.exclusions)
+          .filter(([k]) => k !== "outside_split")
+          .reduce((s, [, n]) => s + n, 0) ||
+    risk.assigned_snapshots !==
+      risk.eligible_snapshots - risk.exclusions.outside_split
+  )
+    fail("risk.accounting");
+  array(risk.splits, "risk.splits", 3);
+  if (risk.splits.length !== 3) fail("risk.splits");
+  const periods = [
+    ["train", "2015-01-01", "2020-10-01"],
+    ["validation", "2021-01-01", "2022-10-01"],
+    ["test", "2023-01-01", "2024-10-01"],
+  ];
+  const splitCounts = [
+      "snapshots",
+      "patients",
+      "positive_snapshots",
+      "positive_patients",
+      "negative_patients",
+    ],
+    blockers = [];
+  risk.splits.forEach((split, i) => {
+    keys(split, ["split", "start", "end", ...splitCounts], "risk.split");
+    splitCounts.forEach((k) => integer(split[k], "risk.split"));
+    if (
+      JSON.stringify([split.split, split.start, split.end]) !==
+        JSON.stringify(periods[i]) ||
+      split.positive_snapshots > split.snapshots ||
+      split.positive_patients > split.patients ||
+      split.positive_patients > split.positive_snapshots ||
+      split.negative_patients > split.patients ||
+      split.patients > split.snapshots ||
+      split.snapshots > split.patients * (i === 0 ? 24 : 8)
+    )
+      fail("risk.split");
+    if (split.positive_patients < (i === 0 ? 50 : 10))
+      blockers.push(split.split + "_positive_patients");
+    if (split.negative_patients < 50)
+      blockers.push(split.split + "_negative_patients");
+  });
+  if (risk.undated_conditions)
+    blockers.push("missing_condition_recorded_dates");
+  if (
+    JSON.stringify(blockers) !== JSON.stringify(risk.blockers) ||
+    blockers.length > 0 !== (risk.status === "insufficient_data")
+  )
+    fail("risk.readiness");
+  if (
+    risk.splits.reduce((s, r) => s + r.snapshots, 0) !==
+      risk.assigned_snapshots ||
+    risk.splits.reduce((s, r) => s + r.patients, 0) > risk.patients
+  )
+    fail("risk.splits");
+  const external = risk.external;
+  if (external !== null) {
+    keys(
+      external,
+      [
+        "patients",
+        "snapshots",
+        "positive_snapshots",
+        "positive_patients",
+        "source_loaded_at",
+        "input_sha256",
+        "observation_end",
+      ],
+      "risk.external",
+    );
+    [
+      "patients",
+      "snapshots",
+      "positive_snapshots",
+      "positive_patients",
+    ].forEach((k) => integer(external[k], "risk.external"));
+    timestamp(external.source_loaded_at, "risk.external.source_loaded_at");
+    if (
+      external.observation_end !== risk.observation_end ||
+      Date.parse(external.source_loaded_at) > Date.parse(risk.evaluated_at) ||
+      !/^[a-f0-9]{64}$/u.test(external.input_sha256) ||
+      external.positive_patients < 20 ||
+      external.positive_patients > external.patients ||
+      external.positive_patients > external.positive_snapshots ||
+      external.positive_snapshots > external.snapshots ||
+      external.snapshots > external.patients * 8
+    )
+      fail("risk.external");
+  }
+  const rate = (v, nullable = false) => {
+    if (v === null && nullable) return;
+    numeric(v, "risk.rate");
+    if (v > 1) fail("risk.rate");
+  };
+  function metrics(m, split) {
+    keys(
+      m,
+      [
+        "average_precision",
+        "brier",
+        "precision",
+        "recall",
+        "true_positive",
+        "false_positive",
+        "false_negative",
+        "true_negative",
+      ],
+      "risk.metrics",
+    );
+    [
+      "true_positive",
+      "false_positive",
+      "false_negative",
+      "true_negative",
+    ].forEach((k) => integer(m[k], "risk.confusion"));
+    ["average_precision", "brier", "recall"].forEach((k) => rate(m[k]));
+    rate(m.precision, true);
+    const tp = m.true_positive,
+      fp = m.false_positive,
+      fn = m.false_negative,
+      tn = m.true_negative;
+    if (
+      tp + fn !== split.positive_snapshots ||
+      tp + fp + fn + tn !== split.snapshots
+    )
+      fail("risk.confusion");
+    near(m.precision, tp + fp ? tp / (tp + fp) : null, "risk.precision");
+    near(m.recall, tp / (tp + fn), "risk.recall");
+  }
+  function calibration(bins, split) {
+    array(bins, "risk.calibration", 5);
+    if (bins.length !== 5) fail("risk.calibration");
+    const bounds = [0, 0.01, 0.025, 0.05, 0.1, 1];
+    bins.forEach((bin, i) => {
+      keys(
+        bin,
+        ["lower", "upper", "snapshots", "mean_risk", "observed_rate"],
+        "risk.calibration",
+      );
+      integer(bin.snapshots, "risk.calibration");
+      if (bin.lower !== bounds[i] || bin.upper !== bounds[i + 1])
+        fail("risk.calibration");
+      rate(bin.mean_risk, !bin.snapshots);
+      rate(bin.observed_rate, !bin.snapshots);
+      if (
+        !bin.snapshots &&
+        (bin.mean_risk !== null || bin.observed_rate !== null)
+      )
+        fail("risk.calibration");
+      if (
+        bin.snapshots &&
+        (bin.mean_risk < bin.lower || bin.mean_risk > bin.upper)
+      )
+        fail("risk.calibration");
+    });
+    if (bins.reduce((s, b) => s + b.snapshots, 0) !== split.snapshots)
+      fail("risk.calibration");
+    near(
+      bins.reduce((s, b) => s + (b.observed_rate ?? 0) * b.snapshots, 0),
+      split.positive_snapshots,
+      "risk.calibration.outcomes",
+    );
+  }
+  array(risk.models, "risk.models", 3);
+  if (
+    JSON.stringify(risk.models.map((m) => m.model)) !==
+    JSON.stringify(
+      risk.status === "evaluated"
+        ? ["prevalence", "prior_admission", "logistic"]
+        : [],
+    )
+  )
+    fail("risk.models");
+  for (const model of risk.models) {
+    keys(
+      model,
+      [
+        "model",
+        "threshold",
+        "validation",
+        "test",
+        "calibration",
+        "external",
+        "external_calibration",
+      ],
+      "risk.model",
+    );
+    rate(model.threshold);
+    metrics(model.validation, risk.splits[1]);
+    metrics(model.test, risk.splits[2]);
+    calibration(model.calibration, risk.splits[2]);
+    if (external) {
+      metrics(model.external, external);
+      calibration(model.external_calibration, external);
+    } else if (model.external !== null || model.external_calibration !== null)
+      fail("risk.external");
+  }
+}
+
 export function validateData(data) {
   keys(
     data,
@@ -666,10 +952,11 @@ export function validateData(data) {
       "assistant",
       "forecast",
       "demand",
+      "risk",
     ],
     "root",
   );
-  if (data.schema_version !== 6 || data.synthetic_only !== true) fail("root");
+  if (data.schema_version !== 7 || data.synthetic_only !== true) fail("root");
   timestamp(data.exported_at, "exported_at");
   const current = data.current;
   keys(
@@ -1043,6 +1330,7 @@ export function validateData(data) {
       citation.limitations.forEach((value) => string(value, "limitations"));
     }
   }
+  validateRisk(data.risk, current, data.exported_at);
   validateDemand(
     data.demand,
     current.monthly_utilization,

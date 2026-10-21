@@ -1,12 +1,12 @@
 {
-  "schema_version": 6,
+  "schema_version": 7,
   "synthetic_only": true,
-  "exported_at": "2026-10-21T16:10:34.787875+00:00",
+  "exported_at": "2026-10-21T17:59:53.354798+00:00",
   "current": {
     "label": "Synthea 3.3.0 \u00b7 seed 43 \u00b7 1,000 living-patient target",
     "raw_schema": "synthea_p1000_seed43",
     "analytics_schema": "synthea_p1000_seed43_analytics",
-    "source_loaded_at": "2026-10-21T16:00:22.036901+00:00",
+    "source_loaded_at": "2026-10-21T17:41:42.554906+00:00",
     "counts": {
       "patients": 1194,
       "encounters": 95852,
@@ -12856,11 +12856,11 @@
     ],
     "quality": {
       "status": "passed",
-      "completed_at": "2026-10-21T16:10:33.530734Z",
+      "completed_at": "2026-10-21T17:59:51.892219Z",
       "models_passed": 11,
       "checks_passed": 39,
       "checks_total": 39,
-      "invocation_id": "a75ae61c-497b-4af7-920b-de2a028bc2ab"
+      "invocation_id": "0990b9c9-7e95-46a8-be7e-d286c15376b4"
     }
   },
   "archive": {
@@ -13106,7 +13106,7 @@
     "evaluation": {
       "protocol": "rolling_origin_v2",
       "benchmark_status": "development",
-      "evaluated_at": "2026-10-21T16:10:34.787768+00:00",
+      "evaluated_at": "2026-10-21T17:59:53.354695+00:00",
       "input_sha256": "9e03e72292a09dbcf66d5940643fdd5bfc11bfae0b8d6d2b0becf048f8a4a121",
       "training_start": "2015-01-01",
       "training_end": "2023-12-01",
@@ -13791,7 +13791,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.591115+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.124342+00:00",
             "input_sha256": "a48ae91210f36fa1e0f61b8fc3cacdc52084dad2b86d4c6d9885283984b39826",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -14810,7 +14810,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.599445+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.135213+00:00",
             "input_sha256": "06d48abde40aa926d3a02b3bdd3715df32aeb8a99c620a1a763de5b5b16aaef3",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -16109,7 +16109,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.607766+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.144960+00:00",
             "input_sha256": "8da3ac9c72ddeb02ff7db064a39d1903dabf4d45f0b2f095cd77be6ba4137ca3",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -17048,7 +17048,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.616371+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.155126+00:00",
             "input_sha256": "8df87c7d2b930908a5dbbae9e11f6b62612173b26185f83f258e53808ae40bad",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -18377,7 +18377,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.624699+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.164516+00:00",
             "input_sha256": "bb84ba797b88c575f6d27fe90b829e19351cb1b8e932837caa269eb8b56c335c",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -20536,7 +20536,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.633295+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.173852+00:00",
             "input_sha256": "91d932146a42d53bf41e0ad4b89e083846a6a9500075b49cb03d1dfcccd19acc",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -21345,7 +21345,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.641714+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.183844+00:00",
             "input_sha256": "9da028d81ad8679e8f1fe066ec91791c2f4bea5c4c2fdd0a60b41753451c33fa",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -23364,7 +23364,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.650348+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.194211+00:00",
             "input_sha256": "e91db180e1ccae0ed3fe4acb3d48362c69a055af966f35441ba2b812c8d29d62",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -24023,7 +24023,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.658708+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.203602+00:00",
             "input_sha256": "8820062287731f1a0fa431e51aa8d49fa01e1fbac6a4d0ded1ac5eee27a4ea0c",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -24602,7 +24602,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.667133+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.212250+00:00",
             "input_sha256": "49b7927a92f61381fd7b4b8ac6040c3b9b24eaf47beb09234137f2b2e5010001",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -25171,7 +25171,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.675164+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.220960+00:00",
             "input_sha256": "206300d2c5cf5e51bf21be9fe974fa89bec84b606c598553ec7a006c0ca98924",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -25750,7 +25750,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.683268+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.229975+00:00",
             "input_sha256": "5e02da0b7376d0c8c9d1355f8756a7a6536f2f7b91ded298078ad903efd2cf59",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -26319,7 +26319,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.691331+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.239232+00:00",
             "input_sha256": "2a32f12e0e6fe8a574cfe6d1cc37635131941c6674436f8705b46a5191af67d4",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -26898,7 +26898,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.699393+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.248589+00:00",
             "input_sha256": "2c26d41d1b6cd86db00a79c2b7340af4ecccdb7548bd40078e1ad5fd5a4a911c",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -27477,7 +27477,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.707739+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.257668+00:00",
             "input_sha256": "7cd1a8a59a33d99f30a7891608e7fd3d787f205e0db85ae0a376b74e834a4a79",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -28056,7 +28056,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.715624+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.267009+00:00",
             "input_sha256": "a9b30b4c9c92ea01f284f67c8129eeb10bfad961afd119133c9e9b2674ff21a0",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -28645,7 +28645,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.723715+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.276101+00:00",
             "input_sha256": "23cd43c0bef66ed4a0b4832b506889007a37734e41558bd1438aa7968e4fa490",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -29224,7 +29224,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.731766+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.285486+00:00",
             "input_sha256": "b7ab922b5d5644f914ff713b35c013fe5109705d588cc0f3a3cefafec4df799f",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -29803,7 +29803,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.739698+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.294689+00:00",
             "input_sha256": "77c1f6e639bd7958c74158bb313c4004a88f9a57c050e3702442bb0a37673cff",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -30402,7 +30402,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T16:10:34.747759+00:00",
+            "evaluated_at": "2026-10-21T17:59:53.303499+00:00",
             "input_sha256": "eca06d9c374cb6e8ace1039d7a43ad502295e33a1136f86200acfbf607aae6eb",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -30936,5 +30936,409 @@
         "forecast": null
       }
     ]
+  },
+  "risk": {
+    "protocol": "admission_90d_v1",
+    "observation_end": "2025-01-01",
+    "status": "evaluated",
+    "blockers": [],
+    "evaluated_at": "2026-10-21T17:58:45.293475+00:00",
+    "source_loaded_at": "2026-10-21T17:41:42.554906+00:00",
+    "input_sha256": "8188692cb7b291b740b2287b7afb5f031021e8e07c94005ffe0975fc63c7902a",
+    "patients": 1194,
+    "candidate_snapshots": 47760,
+    "eligible_snapshots": 28924,
+    "assigned_snapshots": 13774,
+    "raw_inpatient_encounters": 1764,
+    "inpatient_episodes": 1672,
+    "conditions": 48406,
+    "undated_conditions": 0,
+    "exclusions": {
+      "under_18": 12547,
+      "history_short": 7,
+      "dead_at_index": 6199,
+      "unknown_death_date": 0,
+      "hospitalized_at_index": 42,
+      "censored": 41,
+      "outside_split": 15150
+    },
+    "features": [
+      "age_years",
+      "encounters_90d",
+      "encounters_365d",
+      "emergency_365d",
+      "inpatient_episodes_365d",
+      "days_since_completed_encounter",
+      "recorded_chronic_codes",
+      "recorded_diabetes",
+      "recorded_hypertension"
+    ],
+    "splits": [
+      {
+        "split": "train",
+        "start": "2015-01-01",
+        "end": "2020-10-01",
+        "snapshots": 11950,
+        "patients": 535,
+        "positive_snapshots": 230,
+        "positive_patients": 167,
+        "negative_patients": 532
+      },
+      {
+        "split": "validation",
+        "start": "2021-01-01",
+        "end": "2022-10-01",
+        "snapshots": 971,
+        "patients": 123,
+        "positive_snapshots": 19,
+        "positive_patients": 12,
+        "negative_patients": 122
+      },
+      {
+        "split": "test",
+        "start": "2023-01-01",
+        "end": "2024-10-01",
+        "snapshots": 853,
+        "patients": 107,
+        "positive_snapshots": 26,
+        "positive_patients": 23,
+        "negative_patients": 107
+      }
+    ],
+    "models": [
+      {
+        "model": "prevalence",
+        "threshold": 0.019246861924686193,
+        "validation": {
+          "average_precision": 0.01956745623069001,
+          "brier": 0.019184673668059087,
+          "precision": 0.01956745623069001,
+          "recall": 1.0,
+          "true_positive": 19,
+          "false_positive": 952,
+          "false_negative": 0,
+          "true_negative": 0
+        },
+        "test": {
+          "average_precision": 0.03048065650644783,
+          "brier": 0.029677784226088997,
+          "precision": 0.03048065650644783,
+          "recall": 1.0,
+          "true_positive": 26,
+          "false_positive": 827,
+          "false_negative": 0,
+          "true_negative": 0
+        },
+        "calibration": [
+          {
+            "lower": 0.0,
+            "upper": 0.01,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.01,
+            "upper": 0.025,
+            "snapshots": 853,
+            "mean_risk": 0.01924686192468619,
+            "observed_rate": 0.03048065650644783
+          },
+          {
+            "lower": 0.025,
+            "upper": 0.05,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.05,
+            "upper": 0.1,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 1.0,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          }
+        ],
+        "external": {
+          "average_precision": 0.016222293607452618,
+          "brier": 0.015968278811071837,
+          "precision": 0.016222293607452618,
+          "recall": 1.0,
+          "true_positive": 101,
+          "false_positive": 6125,
+          "false_negative": 0,
+          "true_negative": 0
+        },
+        "external_calibration": [
+          {
+            "lower": 0.0,
+            "upper": 0.01,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.01,
+            "upper": 0.025,
+            "snapshots": 6226,
+            "mean_risk": 0.019246861924686193,
+            "observed_rate": 0.016222293607452618
+          },
+          {
+            "lower": 0.025,
+            "upper": 0.05,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.05,
+            "upper": 0.1,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 1.0,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          }
+        ]
+      },
+      {
+        "model": "prior_admission",
+        "threshold": 0.04193971166448231,
+        "validation": {
+          "average_precision": 0.08150396588794334,
+          "brier": 0.018862016674348933,
+          "precision": 0.16666666666666666,
+          "recall": 0.42105263157894735,
+          "true_positive": 8,
+          "false_positive": 40,
+          "false_negative": 11,
+          "true_negative": 912
+        },
+        "test": {
+          "average_precision": 0.029924899386989414,
+          "brier": 0.029742849221417816,
+          "precision": 0.023255813953488372,
+          "recall": 0.07692307692307693,
+          "true_positive": 2,
+          "false_positive": 84,
+          "false_negative": 24,
+          "true_negative": 743
+        },
+        "calibration": [
+          {
+            "lower": 0.0,
+            "upper": 0.01,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.01,
+            "upper": 0.025,
+            "snapshots": 767,
+            "mean_risk": 0.0178715038870521,
+            "observed_rate": 0.03129074315514994
+          },
+          {
+            "lower": 0.025,
+            "upper": 0.05,
+            "snapshots": 86,
+            "mean_risk": 0.04193971166448229,
+            "observed_rate": 0.023255813953488372
+          },
+          {
+            "lower": 0.05,
+            "upper": 0.1,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 1.0,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          }
+        ],
+        "external": {
+          "average_precision": 0.01865661974467908,
+          "brier": 0.015946890788516885,
+          "precision": 0.03513513513513514,
+          "recall": 0.12871287128712872,
+          "true_positive": 13,
+          "false_positive": 357,
+          "false_negative": 88,
+          "true_negative": 5768
+        },
+        "external_calibration": [
+          {
+            "lower": 0.0,
+            "upper": 0.01,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.01,
+            "upper": 0.025,
+            "snapshots": 5856,
+            "mean_risk": 0.0178715038870521,
+            "observed_rate": 0.015027322404371584
+          },
+          {
+            "lower": 0.025,
+            "upper": 0.05,
+            "snapshots": 370,
+            "mean_risk": 0.0419397116644823,
+            "observed_rate": 0.03513513513513514
+          },
+          {
+            "lower": 0.05,
+            "upper": 0.1,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 1.0,
+            "snapshots": 0,
+            "mean_risk": null,
+            "observed_rate": null
+          }
+        ]
+      },
+      {
+        "model": "logistic",
+        "threshold": 0.32368988212979694,
+        "validation": {
+          "average_precision": 0.41665089463106425,
+          "brier": 0.012942948009291211,
+          "precision": 1.0,
+          "recall": 0.3684210526315789,
+          "true_positive": 7,
+          "false_positive": 0,
+          "false_negative": 12,
+          "true_negative": 952
+        },
+        "test": {
+          "average_precision": 0.039278794993029505,
+          "brier": 0.03238290753797261,
+          "precision": 0.0,
+          "recall": 0.0,
+          "true_positive": 0,
+          "false_positive": 6,
+          "false_negative": 26,
+          "true_negative": 821
+        },
+        "calibration": [
+          {
+            "lower": 0.0,
+            "upper": 0.01,
+            "snapshots": 68,
+            "mean_risk": 0.009162296857864119,
+            "observed_rate": 0.014705882352941176
+          },
+          {
+            "lower": 0.01,
+            "upper": 0.025,
+            "snapshots": 647,
+            "mean_risk": 0.0158061386939157,
+            "observed_rate": 0.03245749613601236
+          },
+          {
+            "lower": 0.025,
+            "upper": 0.05,
+            "snapshots": 117,
+            "mean_risk": 0.030796610522248927,
+            "observed_rate": 0.017094017094017096
+          },
+          {
+            "lower": 0.05,
+            "upper": 0.1,
+            "snapshots": 12,
+            "mean_risk": 0.06554897789211699,
+            "observed_rate": 0.16666666666666666
+          },
+          {
+            "lower": 0.1,
+            "upper": 1.0,
+            "snapshots": 9,
+            "mean_risk": 0.4570233522066467,
+            "observed_rate": 0.0
+          }
+        ],
+        "external": {
+          "average_precision": 0.03386255239888332,
+          "brier": 0.01608476720610819,
+          "precision": 0.0,
+          "recall": 0.0,
+          "true_positive": 0,
+          "false_positive": 4,
+          "false_negative": 101,
+          "true_negative": 6121
+        },
+        "external_calibration": [
+          {
+            "lower": 0.0,
+            "upper": 0.01,
+            "snapshots": 549,
+            "mean_risk": 0.009213449352818802,
+            "observed_rate": 0.0036429872495446266
+          },
+          {
+            "lower": 0.01,
+            "upper": 0.025,
+            "snapshots": 4997,
+            "mean_risk": 0.015576761737710009,
+            "observed_rate": 0.015209125475285171
+          },
+          {
+            "lower": 0.025,
+            "upper": 0.05,
+            "snapshots": 508,
+            "mean_risk": 0.03293621310465088,
+            "observed_rate": 0.027559055118110236
+          },
+          {
+            "lower": 0.05,
+            "upper": 0.1,
+            "snapshots": 153,
+            "mean_risk": 0.06715023274983252,
+            "observed_rate": 0.0457516339869281
+          },
+          {
+            "lower": 0.1,
+            "upper": 1.0,
+            "snapshots": 19,
+            "mean_risk": 0.23796931435313176,
+            "observed_rate": 0.10526315789473684
+          }
+        ]
+      }
+    ],
+    "external": {
+      "patients": 794,
+      "snapshots": 6226,
+      "positive_snapshots": 101,
+      "positive_patients": 92,
+      "source_loaded_at": "2026-10-21T17:56:49.178406+00:00",
+      "input_sha256": "14fe10b99b7eda1b240a55d002af0f870f72b8a22b44198633f6e67e551d3c52",
+      "observation_end": "2025-01-01"
+    }
   }
 }
