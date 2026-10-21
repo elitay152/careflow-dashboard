@@ -58,7 +58,7 @@ const utc = (value: string | null, time = true) =>
 const month = (value: string) =>
   new Intl.DateTimeFormat("en-US", {
     month: "short",
-    year: "2-digit",
+    year: "numeric",
     timeZone: "UTC",
   }).format(new Date(value));
 
@@ -248,8 +248,11 @@ function External({
 }
 
 function Overview() {
-  const loaded = current.counts.patients + current.counts.encounters
-    + current.counts.conditions + current.counts.medications;
+  const loaded =
+    current.counts.patients +
+    current.counts.encounters +
+    current.counts.conditions +
+    current.counts.medications;
   const quality = current.quality;
   const domains = [
     {
@@ -296,7 +299,11 @@ function Overview() {
         />
         <Metric
           label="Data quality checks"
-          value={quality.status === "unverified" ? "—" : `${quality.checks_passed} / ${quality.checks_total}`}
+          value={
+            quality.status === "unverified"
+              ? "—"
+              : `${quality.checks_passed} / ${quality.checks_total}`
+          }
           note="From the current warehouse build"
           icon={ShieldCheck}
         />
@@ -368,10 +375,15 @@ function Overview() {
             </li>
             <li>
               <Icon icon={Check} />
-              {quality.models_passed ?? "—"} models + {quality.checks_passed ?? "—"} passed dbt checks
+              {quality.models_passed ?? "—"} models +{" "}
+              {quality.checks_passed ?? "—"} passed dbt checks
             </li>
           </ul>
-          <a className="text-link" href={`${import.meta.env.BASE_URL}data/careflow.json`} download>
+          <a
+            className="text-link"
+            href={`${import.meta.env.BASE_URL}data/careflow.json`}
+            download
+          >
             Download current aggregate evidence
           </a>
         </Panel>
@@ -439,8 +451,8 @@ function Overview() {
           <h3>Two datasets. Clearly separated.</h3>
           <p>
             The 108-patient validation is archived evidence. Interactive
-            analytics use the current {number(current.counts.patients)}-patient cohort
-            export.
+            analytics use the current {number(current.counts.patients)}-patient
+            cohort export.
           </p>
         </div>
         <a className="button secondary" href="#analytics">
@@ -459,9 +471,7 @@ function Cohort() {
     Encounter: current.counts.encounters,
     Condition: current.counts.conditions,
     MedicationRequest: current.counts.medications,
-  }).sort(
-    (a, b) => b[1] - a[1],
-  );
+  }).sort((a, b) => b[1] - a[1]);
   const filtered = resources.filter(
     ([name]) =>
       name.toLowerCase().includes(query.toLowerCase()) &&
@@ -470,8 +480,9 @@ function Cohort() {
   return (
     <>
       <Note>
-        <strong>Current synthetic cohort.</strong> {current.label}. These are loaded
-        PostgreSQL rows exported {utc(snapshot.exported_at)}, not a live population.
+        <strong>Current synthetic cohort.</strong> {current.label}. These are
+        loaded PostgreSQL rows exported {utc(snapshot.exported_at)}, not a live
+        population.
       </Note>
       <div className="metrics-grid three">
         <Metric
@@ -498,7 +509,13 @@ function Cohort() {
         title="What's in the cohort?"
         subtitle="Resource-level inventory, not individual patient records"
         action={
-          <a className="text-link" href={`${import.meta.env.BASE_URL}data/careflow.json`} download>Aggregate evidence</a>
+          <a
+            className="text-link"
+            href={`${import.meta.env.BASE_URL}data/careflow.json`}
+            download
+          >
+            Aggregate evidence
+          </a>
         }
       >
         <div className="table-toolbar">
@@ -588,14 +605,37 @@ function Cohort() {
 }
 
 type Measure =
-  "encounter_count" | "unique_patients" | "average_duration_minutes";
+  | "encounter_count"
+  | "unique_patients"
+  | "average_duration_minutes";
 function Analytics() {
   const [measure, setMeasure] = useState<Measure>("encounter_count");
   const [showTable, setShowTable] = useState(false);
-  const [range, setRange] = useState("12");
+  const [range, setRange] = useState("60");
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [chartStyle, setChartStyle] = useState("line");
+  const [conditionView, setConditionView] = useState("clinical");
+  const [conditionSearch, setConditionSearch] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  const groups: Record<string, string> = {
+    clinical: "Clinical conditions & findings",
+    social_context: "Social context",
+    history: "Medical history",
+    care_context: "Care context",
+    unclassified: "Unclassified",
+    all: "All recorded concepts",
+  };
   const [showAllConditions, setShowAllConditions] = useState(false);
+  const filteredConditions = current.conditions.filter(
+    (row) =>
+      (conditionView === "all" || row.group === conditionView) &&
+      `${row.condition_name} ${row.code}`
+        .toLowerCase()
+        .includes(conditionSearch.toLowerCase()),
+  );
   const conditions = showAllConditions
-    ? current.conditions : current.conditions.slice(0, 10);
+    ? filteredConditions
+    : filteredConditions.slice(0, 10);
   const allRows = current.monthly_utilization;
   const rows = range === "all" ? allRows : allRows.slice(-Number(range));
   const max = Math.max(1, ...rows.map((row) => row[measure] ?? 0));
@@ -603,7 +643,55 @@ function Analytics() {
     chartHeight = 225,
     left = 45,
     plotHeight = 155;
-  const barWidth = Math.min(85, (720 / Math.max(rows.length, 1)) * 0.55);
+  const monthIndex = (date: string) =>
+    Number(date.slice(0, 4)) * 12 + Number(date.slice(5, 7));
+  const firstMonth = rows.length ? monthIndex(rows[0].encounter_month) : 0;
+  const span = rows.length
+    ? monthIndex(rows[rows.length - 1].encounter_month) - firstMonth + 1
+    : 1;
+  const xAt = (date: string) =>
+    left + ((monthIndex(date) - firstMonth + 0.5) * 775) / span;
+  const barWidth = Math.min(60, (720 / span) * 0.65);
+  const latest = rows[rows.length - 1];
+  const selected =
+    rows.find((row) => row.encounter_month === selectedMonth) ?? latest;
+  const selectedIndex = selected ? rows.indexOf(selected) : 0;
+  const segments: string[] = [];
+  rows.forEach((row, index) => {
+    if (row[measure] === null) return;
+    const previous = rows[index - 1];
+    const point = `${xAt(row.encounter_month)},${175 - ((row[measure] ?? 0) / max) * plotHeight}`;
+    if (
+      !previous ||
+      previous[measure] === null ||
+      monthIndex(row.encounter_month) - monthIndex(previous.encounter_month) !==
+        1
+    )
+      segments.push(`M${point}`);
+    else segments[segments.length - 1] += ` L${point}`;
+  });
+  const colors = [
+    "#347a67",
+    "#8daebc",
+    "#d5b673",
+    "#a9b99e",
+    "#938ba5",
+    "#b88e79",
+  ];
+  const medicationTotal = current.medication_status.reduce(
+    (sum, row) => sum + row.request_count,
+    0,
+  );
+  let medicationOffset = 0;
+  useEffect(() => {
+    const container = chartRef.current;
+    const svg = container?.querySelector("svg");
+    if (!container || !svg || !selected) return;
+    const position =
+      (xAt(selected.encounter_month) / chartWidth) *
+      svg.getBoundingClientRect().width;
+    container.scrollTo({ left: position - container.clientWidth / 2 });
+  }, [range, selected?.encounter_month]);
   return (
     <>
       <Note>
@@ -611,8 +699,40 @@ function Analytics() {
         {current.counts.patients} patients. Exported {utc(snapshot.exported_at)}
         . These charts do not describe the archived Synthea cohort.
       </Note>
+      <div className="metrics-grid three analytics-summary">
+        <Metric
+          label="Finished encounters in view"
+          value={number(
+            rows.reduce((sum, row) => sum + row.encounter_count, 0),
+          )}
+          note={`${rows.length} observed months · ${rows.length ? month(rows[0].encounter_month) : "No data"} to ${latest ? month(latest.encounter_month) : "—"}`}
+          icon={Activity}
+        />
+        <Metric
+          label="Patients in latest month"
+          value={latest ? number(latest.unique_patients) : "—"}
+          note={
+            latest
+              ? `Distinct people in ${month(latest.encounter_month)}`
+              : "No observed month"
+          }
+          icon={Users}
+          tone="blue"
+        />
+        <Metric
+          label="Mean duration in latest month"
+          value={
+            latest?.average_duration_minutes == null
+              ? "—"
+              : `${number(latest.average_duration_minutes)} min`
+          }
+          note="Elapsed encounter time; not hospital length of stay"
+          icon={Clock3}
+          tone="gold"
+        />
+      </div>
       <Panel
-        title="Monthly utilization"
+        title="Encounter activity over time"
         subtitle="Finished encounters grouped by UTC start month"
         action={
           <label className="select-field">
@@ -621,8 +741,9 @@ function Analytics() {
               value={range}
               onChange={(event) => setRange(event.target.value)}
             >
-              <option value="6">Last 6 recorded months</option>
               <option value="12">Last 12 recorded months</option>
+              <option value="60">Last 60 recorded months</option>
+              <option value="120">Last 120 recorded months</option>
               <option value="all">All recorded months</option>
             </select>
           </label>
@@ -646,11 +767,25 @@ function Analytics() {
               </button>
             ))}
           </div>
-          <span className="chart-unit">
-            {measure === "average_duration_minutes" ? "Minutes" : "Count"}
-          </span>
+          <div className="segmented" aria-label="Chart style">
+            {["line", "bars"].map((style) => (
+              <button
+                key={style}
+                aria-pressed={chartStyle === style}
+                onClick={() => setChartStyle(style)}
+              >
+                {style === "line" ? "Trend" : "Bars"}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="utilization-chart">
+        <div
+          className="utilization-chart"
+          ref={chartRef}
+          role="region"
+          aria-label="Utilization chart"
+          tabIndex={0}
+        >
           <svg
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
             role="img"
@@ -672,29 +807,60 @@ function Analytics() {
                   textAnchor="end"
                   className="axis-label"
                 >
-                  {number((max * (3 - tick)) / 3)}
+                  {number(
+                    measure === "average_duration_minutes"
+                      ? (max * (3 - tick)) / 3
+                      : Math.round((max * (3 - tick)) / 3),
+                  )}
                 </text>
               </g>
             ))}
+            {chartStyle === "line" &&
+              segments.map((path, index) => (
+                <path
+                  key={index}
+                  d={path}
+                  fill="none"
+                  stroke="#347a67"
+                  strokeWidth="2.5"
+                  strokeLinejoin="round"
+                />
+              ))}
             {rows.map((row, index) => {
               const value = row[measure];
-              const x = left + ((index + 0.5) * 775) / rows.length;
+              const x = xAt(row.encounter_month);
               return (
                 <g key={row.encounter_month}>
-                  <rect
-                    x={x - barWidth / 2}
-                    y={175 - ((value ?? 0) / max) * plotHeight}
-                    width={barWidth}
-                    height={((value ?? 0) / max) * plotHeight}
-                    fill="#347a67"
-                    rx="5"
-                  >
-                    <title>
-                      {month(row.encounter_month)}:{" "}
-                      {value === null ? "Unavailable" : number(value)}
-                    </title>
-                  </rect>
-                  {rows.length < 25 && (
+                  {chartStyle === "bars" ? (
+                    <rect
+                      x={x - barWidth / 2}
+                      y={175 - ((value ?? 0) / max) * plotHeight}
+                      width={barWidth}
+                      height={((value ?? 0) / max) * plotHeight}
+                      fill={row === selected ? "#203f35" : "#347a67"}
+                      rx="5"
+                    >
+                      <title>
+                        {month(row.encounter_month)}:{" "}
+                        {value === null ? "Unavailable" : number(value)}
+                      </title>
+                    </rect>
+                  ) : (
+                    value !== null && (
+                      <circle
+                        cx={x}
+                        cy={175 - (value / max) * plotHeight}
+                        r={row === selected ? 5 : 2.5}
+                        fill={row === selected ? "#203f35" : "#347a67"}
+                      >
+                        <title>
+                          {month(row.encounter_month)}: {number(value)}
+                        </title>
+                      </circle>
+                    )
+                  )}
+                  {(index % Math.max(1, Math.ceil(rows.length / 6)) === 0 ||
+                    index === rows.length - 1) && (
                     <text
                       x={x}
                       y="202"
@@ -719,6 +885,39 @@ function Analytics() {
             })}
           </svg>
         </div>
+        {selected && (
+          <div className="month-inspector">
+            <div>
+              <span>Explore an observed month</span>
+              <strong>{month(selected.encounter_month)}</strong>
+              <p>
+                {number(selected.encounter_count)} encounters ·{" "}
+                {number(selected.unique_patients)} distinct patients
+              </p>
+              <p>
+                Mean duration:{" "}
+                {selected.average_duration_minutes === null
+                  ? "Unavailable"
+                  : `${number(selected.average_duration_minutes)} min`}
+              </p>
+            </div>
+            <label>
+              <span className="sr-only">Explore month</span>
+              <input
+                type="range"
+                min="0"
+                max={Math.max(0, rows.length - 1)}
+                value={selectedIndex}
+                aria-valuetext={month(selected.encounter_month)}
+                onChange={(event) =>
+                  setSelectedMonth(
+                    rows[Number(event.target.value)].encounter_month,
+                  )
+                }
+              />
+            </label>
+          </div>
+        )}
         <div className="panel-foot split">
           <span>
             {rows.length} recorded month{rows.length !== 1 ? "s" : ""}. Missing
@@ -769,9 +968,41 @@ function Analytics() {
       </Panel>
       <div className="overview-grid">
         <Panel
-          title="Recorded condition prevalence"
+          title={groups[conditionView]}
           subtitle="Distinct affected patients ÷ all loaded patients"
         >
+          <div className="condition-controls">
+            <label>
+              Concept group
+              <select
+                aria-label="Condition view"
+                value={conditionView}
+                onChange={(event) => {
+                  setConditionView(event.target.value);
+                  setShowAllConditions(false);
+                }}
+              >
+                {Object.entries(groups).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Find a concept
+              <input
+                type="search"
+                aria-label="Search conditions"
+                value={conditionSearch}
+                placeholder="Name or SNOMED code"
+                onChange={(event) => {
+                  setConditionSearch(event.target.value);
+                  setShowAllConditions(false);
+                }}
+              />
+            </label>
+          </div>
           <div className="condition-list">
             {conditions.map((row) => (
               <div className="condition" key={`${row.code_system}-${row.code}`}>
@@ -789,29 +1020,100 @@ function Analytics() {
               </div>
             ))}
           </div>
+          {conditions.length === 0 && (
+            <p className="empty-message">
+              No recorded concepts match this view.
+            </p>
+          )}
           <div className="panel-foot">
-            Showing {conditions.length} of {current.conditions.length} coded
-            groups. Condition groups can overlap; counts must
-            not be added.
+            Showing {conditions.length} of {filteredConditions.length} coded
+            groups. Condition groups can overlap; counts must not be added.
           </div>
-          {current.conditions.length > 10 && (
-            <button className="button secondary" onClick={() => setShowAllConditions(!showAllConditions)}>
-              {showAllConditions ? "Show top 10 conditions" : `Show all ${current.conditions.length} conditions`}
+          {filteredConditions.length > 10 && (
+            <button
+              className="button secondary"
+              onClick={() => setShowAllConditions(!showAllConditions)}
+            >
+              {showAllConditions
+                ? "Show top 10 conditions"
+                : `Show all ${filteredConditions.length} conditions`}
             </button>
           )}
         </Panel>
         <Panel
           title="Medication requests"
-          subtitle="All statuses in the current warehouse"
+          subtitle="Share of prescription requests by recorded status"
         >
+          <div className="medication-donut">
+            <svg
+              viewBox="0 0 240 240"
+              role="img"
+              aria-label={`${number(medicationTotal)} medication requests by status`}
+            >
+              <circle
+                cx="120"
+                cy="120"
+                r="88"
+                fill="none"
+                stroke="#e7eeea"
+                strokeWidth="26"
+              />
+              {current.medication_status.map((row, index) => {
+                const share = medicationTotal
+                  ? row.request_count / medicationTotal
+                  : 0;
+                const offset = medicationOffset;
+                medicationOffset += share * 100;
+                return (
+                  <circle
+                    key={row.status}
+                    cx="120"
+                    cy="120"
+                    r="88"
+                    fill="none"
+                    stroke={colors[index % colors.length]}
+                    strokeWidth="26"
+                    pathLength="100"
+                    strokeDasharray={`${share * 100} ${100 - share * 100}`}
+                    strokeDashoffset={-offset}
+                    transform="rotate(-90 120 120)"
+                  >
+                    <title>
+                      {row.status}: {number(row.request_count)}
+                    </title>
+                  </circle>
+                );
+              })}
+              <text x="120" y="119" textAnchor="middle" className="donut-total">
+                {number(medicationTotal)}
+              </text>
+              <text x="120" y="141" textAnchor="middle" className="axis-label">
+                requests
+              </text>
+            </svg>
+          </div>
           <div className="medication-list">
-            {current.medication_status.map((row) => (
+            {current.medication_status.map((row, index) => (
               <div key={row.status}>
                 <span>
-                  <span className="resource-dot supported" />
+                  <span
+                    className="resource-dot"
+                    style={{ background: colors[index % colors.length] }}
+                  />
                   {row.status}
                 </span>
-                <strong>{number(row.request_count)}</strong>
+                <strong>
+                  {number(row.request_count)}{" "}
+                  <small>
+                    (
+                    {number(
+                      medicationTotal
+                        ? (row.request_count / medicationTotal) * 100
+                        : 0,
+                    )}
+                    %)
+                  </small>
+                </strong>
               </div>
             ))}
           </div>
@@ -824,6 +1126,13 @@ function Analytics() {
           </div>
         </Panel>
       </div>
+      <Note>
+        FHIR Condition resources also include social context, history, and care
+        situations. Groups use a curated code mapping for this synthetic
+        dataset, not a clinical ontology. Unknown codes remain unclassified.
+        Clinical findings include acute and chronic records; this is not a
+        chronic-disease registry. No records are discarded when changing views.
+      </Note>
     </>
   );
 }

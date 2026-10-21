@@ -942,9 +942,11 @@ tbody tr:last-child td {
 }
 .utilization-chart {
   padding: 15px 18px 0;
+  overflow-x: auto;
 }
 .utilization-chart svg {
   width: 100%;
+  min-width: 680px;
   display: block;
   overflow: visible;
 }
@@ -2398,5 +2400,110 @@ input::placeholder {
     color: #c5d8c7;
     width: 27px;
     height: 27px;
+  }
+}
+
+.analytics-summary {
+  margin-bottom: 24px;
+}
+.month-inspector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 4px 23px 20px;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: #f1f6ef;
+}
+.month-inspector span {
+  display: block;
+  font-size: 11px;
+  color: #617054;
+}
+.month-inspector strong {
+  display: block;
+  margin: 6px 0;
+  color: var(--ink);
+}
+.month-inspector p {
+  margin: 0;
+  font-size: 12px;
+}
+.month-inspector label {
+  width: 45%;
+}
+.month-inspector input {
+  width: 100%;
+  accent-color: var(--teal);
+}
+.condition-controls {
+  display: grid;
+  gap: 14px;
+  padding: 22px 23px 0;
+}
+.condition-controls label {
+  display: grid;
+  gap: 7px;
+  font-size: 11px;
+  color: #617054;
+}
+.condition-controls input,
+.condition-controls select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+}
+.medication-donut {
+  width: min(240px, 80%);
+  margin: 20px auto 0;
+}
+.medication-donut svg {
+  display: block;
+  width: 100%;
+}
+.donut-total {
+  fill: var(--ink);
+  font-family: inherit;
+  font-size: 27px;
+  font-weight: 600;
+}
+.medication-list small {
+  font-weight: 400;
+  color: #617054;
+}
+@media (max-width: 600px) {
+  .month-inspector {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  .month-inspector label {
+    width: 100%;
+  }
+  .analytics-summary .metric > strong {
+    font-size: 22px;
+  }
+}
+@media (max-width: 600px) {
+  .chart-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .chart-toolbar .segmented {
+    flex-wrap: nowrap;
+  }
+  .chart-toolbar .segmented button {
+    padding: 8px 9px;
+    white-space: nowrap;
+    font-size: 10px;
+    min-height: 36px;
   }
 }

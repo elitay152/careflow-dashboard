@@ -25,14 +25,20 @@ test("refresh requires synthetic confirmation and preserves the snapshot on back
   const script = new URL("../scripts/refresh-data.mjs", import.meta.url);
   const destination = new URL("../public/data/careflow.json", import.meta.url);
   const before = await readFile(destination);
-  const unconfirmed = spawnSync(process.execPath, [script.pathname], { encoding: "utf8" });
+  const unconfirmed = spawnSync(process.execPath, [script.pathname], {
+    encoding: "utf8",
+  });
   assert.notEqual(unconfirmed.status, 0);
   assert.match(unconfirmed.stderr, /confirm-synthetic/);
   const backend = await mkdtemp(join(tmpdir(), "careflow-refresh-"));
   try {
     await mkdir(join(backend, "scripts"));
     await writeFile(join(backend, "scripts/refresh_public.sh"), "exit 42\n");
-    const failed = spawnSync(process.execPath, [script.pathname, "--confirm-synthetic", "--backend-root", backend], { encoding: "utf8" });
+    const failed = spawnSync(
+      process.execPath,
+      [script.pathname, "--confirm-synthetic", "--backend-root", backend],
+      { encoding: "utf8" },
+    );
     assert.notEqual(failed.status, 0);
     assert.match(failed.stderr, /required command failed/);
     assert.deepEqual(await readFile(destination), before);
@@ -45,6 +51,18 @@ test("the shipped aggregate snapshot satisfies the strict contract", () => {
   assert.equal(validateData(snapshot), snapshot);
 });
 const mutations = [
+  [
+    "unknown condition group",
+    (d) => {
+      d.current.conditions[0].group = "chronic";
+    },
+  ],
+  [
+    "an old snapshot without condition groups",
+    (d) => {
+      d.schema_version = 1;
+    },
+  ],
   [
     "nested private fields in a clinical label",
     (d) => {

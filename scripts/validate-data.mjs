@@ -126,7 +126,7 @@ function counts(value, location) {
   );
   Object.values(value).forEach((item) => integer(item, location));
 }
-function condition(row, location, population) {
+function condition(row, location, population, grouped = false) {
   keys(
     row,
     [
@@ -136,9 +136,21 @@ function condition(row, location, population) {
       "affected_patients",
       "total_patients",
       "prevalence_fraction",
+      ...(grouped ? ["group"] : []),
     ],
     location,
   );
+  if (
+    grouped &&
+    ![
+      "clinical",
+      "social_context",
+      "history",
+      "care_context",
+      "unclassified",
+    ].includes(row.group)
+  )
+    fail(`${location}.group`);
   for (const key of ["condition_name", "code_system", "code"])
     string(row[key], location);
   integer(row.affected_patients, location);
@@ -174,7 +186,7 @@ export function validateData(data) {
     ],
     "root",
   );
-  if (data.schema_version !== 1 || data.synthetic_only !== true) fail("root");
+  if (data.schema_version !== 2 || data.synthetic_only !== true) fail("root");
   timestamp(data.exported_at, "exported_at");
   const current = data.current;
   keys(
@@ -229,7 +241,7 @@ export function validateData(data) {
   }
   array(current.conditions, "conditions");
   current.conditions.forEach((row) =>
-    condition(row, "conditions", current.counts.patients),
+    condition(row, "conditions", current.counts.patients, true),
   );
   array(
     current.medication_status,

@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "synthetic_only": true,
-  "exported_at": "2026-10-21T01:26:38.724619+00:00",
+  "exported_at": "2026-10-21T02:38:39.501047+00:00",
   "current": {
     "label": "Synthea 3.3.0 \u00b7 seed 43 \u00b7 1,000 living-patient target",
     "raw_schema": "synthea_p1000_seed43",
@@ -6450,7 +6450,8 @@
         "code": "314529007",
         "affected_patients": 638,
         "total_patients": 1194,
-        "prevalence_fraction": 0.5343383584589615
+        "prevalence_fraction": 0.5343383584589615,
+        "group": "care_context"
       },
       {
         "condition_name": "Full-time employment (finding)",
@@ -6458,7 +6459,8 @@
         "code": "160903007",
         "affected_patients": 631,
         "total_patients": 1194,
-        "prevalence_fraction": 0.5284757118927973
+        "prevalence_fraction": 0.5284757118927973,
+        "group": "social_context"
       },
       {
         "condition_name": "Body mass index 30+ - obesity (finding)",
@@ -6466,7 +6468,8 @@
         "code": "162864005",
         "affected_patients": 553,
         "total_patients": 1194,
-        "prevalence_fraction": 0.4631490787269682
+        "prevalence_fraction": 0.4631490787269682,
+        "group": "clinical"
       },
       {
         "condition_name": "Stress (finding)",
@@ -6474,7 +6477,8 @@
         "code": "73595000",
         "affected_patients": 537,
         "total_patients": 1194,
-        "prevalence_fraction": 0.44974874371859297
+        "prevalence_fraction": 0.44974874371859297,
+        "group": "clinical"
       },
       {
         "condition_name": "Received higher education (finding)",
@@ -6482,7 +6486,8 @@
         "code": "224299000",
         "affected_patients": 521,
         "total_patients": 1194,
-        "prevalence_fraction": 0.43634840871021774
+        "prevalence_fraction": 0.43634840871021774,
+        "group": "social_context"
       },
       {
         "condition_name": "Prediabetes",
@@ -6490,7 +6495,8 @@
         "code": "15777000",
         "affected_patients": 439,
         "total_patients": 1194,
-        "prevalence_fraction": 0.3676716917922948
+        "prevalence_fraction": 0.3676716917922948,
+        "group": "clinical"
       },
       {
         "condition_name": "Essential hypertension (disorder)",
@@ -6498,7 +6504,8 @@
         "code": "59621000",
         "affected_patients": 424,
         "total_patients": 1194,
-        "prevalence_fraction": 0.35510887772194305
+        "prevalence_fraction": 0.35510887772194305,
+        "group": "clinical"
       },
       {
         "condition_name": "Anemia (disorder)",
@@ -6506,7 +6513,8 @@
         "code": "271737000",
         "affected_patients": 392,
         "total_patients": 1194,
-        "prevalence_fraction": 0.32830820770519265
+        "prevalence_fraction": 0.32830820770519265,
+        "group": "clinical"
       },
       {
         "condition_name": "Gingivitis (disorder)",
@@ -6514,7 +6522,8 @@
         "code": "66383009",
         "affected_patients": 353,
         "total_patients": 1194,
-        "prevalence_fraction": 0.29564489112227804
+        "prevalence_fraction": 0.29564489112227804,
+        "group": "clinical"
       },
       {
         "condition_name": "Received certificate of high school equivalency (finding)",
@@ -6522,7 +6531,8 @@
         "code": "5251000175109",
         "affected_patients": 294,
         "total_patients": 1194,
-        "prevalence_fraction": 0.24623115577889448
+        "prevalence_fraction": 0.24623115577889448,
+        "group": "social_context"
       },
       {
         "condition_name": "Chronic pain (finding)",
@@ -6530,7 +6540,8 @@
         "code": "82423001",
         "affected_patients": 277,
         "total_patients": 1194,
-        "prevalence_fraction": 0.2319932998324958
+        "prevalence_fraction": 0.2319932998324958,
+        "group": "clinical"
       },
       {
         "condition_name": "Has a criminal record (finding)",
@@ -6538,7 +6549,8 @@
         "code": "266948004",
         "affected_patients": 258,
         "total_patients": 1194,
-        "prevalence_fraction": 0.21608040201005024
+        "prevalence_fraction": 0.21608040201005024,
+        "group": "social_context"
       },
       {
         "condition_name": "Chronic sinusitis (disorder)",
@@ -6546,7 +6558,8 @@
         "code": "40055000",
         "affected_patients": 255,
         "total_patients": 1194,
-        "prevalence_fraction": 0.2135678391959799
+        "prevalence_fraction": 0.2135678391959799,
+        "group": "clinical"
       },
       {
         "condition_name": "Past pregnancy history of miscarriage (situation)",
@@ -6554,7 +6567,8 @@
         "code": "161744009",
         "affected_patients": 242,
         "total_patients": 1194,
-        "prevalence_fraction": 0.20268006700167504
+        "prevalence_fraction": 0.20268006700167504,
+        "group": "history"
       },
       {
         "condition_name": "Limited social contact (finding)",
@@ -6562,7 +6576,8 @@
         "code": "423315002",
         "affected_patients": 221,
         "total_patients": 1194,
-        "prevalence_fraction": 0.18509212730318259
+        "prevalence_fraction": 0.18509212730318259,
+        "group": "social_context"
       },
       {
         "condition_name": "Victim of intimate partner abuse (finding)",
@@ -6570,7 +6585,8 @@
         "code": "706893006",
         "affected_patients": 218,
         "total_patients": 1194,
-        "prevalence_fraction": 0.18257956448911222
+        "prevalence_fraction": 0.18257956448911222,
+        "group": "social_context"
       },
       {
         "condition_name": "Metabolic syndrome X (disorder)",
@@ -6578,7 +6594,8 @@
         "code": "237602007",
         "affected_patients": 217,
         "total_patients": 1194,
-        "prevalence_fraction": 0.18174204355108878
+        "prevalence_fraction": 0.18174204355108878,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic low back pain (finding)",
@@ -6586,7 +6603,8 @@
         "code": "278860009",
         "affected_patients": 217,
         "total_patients": 1194,
-        "prevalence_fraction": 0.18174204355108878
+        "prevalence_fraction": 0.18174204355108878,
+        "group": "clinical"
       },
       {
         "condition_name": "Risk activity involvement (finding)",
@@ -6594,7 +6612,8 @@
         "code": "160968000",
         "affected_patients": 216,
         "total_patients": 1194,
-        "prevalence_fraction": 0.18090452261306533
+        "prevalence_fraction": 0.18090452261306533,
+        "group": "social_context"
       },
       {
         "condition_name": "Disorder of kidney due to diabetes mellitus (disorder)",
@@ -6602,7 +6621,8 @@
         "code": "127013003",
         "affected_patients": 211,
         "total_patients": 1194,
-        "prevalence_fraction": 0.17671691792294808
+        "prevalence_fraction": 0.17671691792294808,
+        "group": "clinical"
       },
       {
         "condition_name": "Abnormal findings diagnostic imaging heart+coronary circulat (finding)",
@@ -6610,7 +6630,8 @@
         "code": "274531002",
         "affected_patients": 211,
         "total_patients": 1194,
-        "prevalence_fraction": 0.17671691792294808
+        "prevalence_fraction": 0.17671691792294808,
+        "group": "clinical"
       },
       {
         "condition_name": "Ischemic heart disease (disorder)",
@@ -6618,7 +6639,8 @@
         "code": "414545008",
         "affected_patients": 211,
         "total_patients": 1194,
-        "prevalence_fraction": 0.17671691792294808
+        "prevalence_fraction": 0.17671691792294808,
+        "group": "clinical"
       },
       {
         "condition_name": "Social isolation (finding)",
@@ -6626,7 +6648,8 @@
         "code": "422650009",
         "affected_patients": 200,
         "total_patients": 1194,
-        "prevalence_fraction": 0.16750418760469013
+        "prevalence_fraction": 0.16750418760469013,
+        "group": "social_context"
       },
       {
         "condition_name": "Microalbuminuria due to type 2 diabetes mellitus (disorder)",
@@ -6634,7 +6657,8 @@
         "code": "90781000119102",
         "affected_patients": 183,
         "total_patients": 1194,
-        "prevalence_fraction": 0.15326633165829145
+        "prevalence_fraction": 0.15326633165829145,
+        "group": "clinical"
       },
       {
         "condition_name": "Part-time employment (finding)",
@@ -6642,7 +6666,8 @@
         "code": "160904001",
         "affected_patients": 167,
         "total_patients": 1194,
-        "prevalence_fraction": 0.13986599664991625
+        "prevalence_fraction": 0.13986599664991625,
+        "group": "social_context"
       },
       {
         "condition_name": "Housing unsatisfactory (finding)",
@@ -6650,7 +6675,8 @@
         "code": "105531004",
         "affected_patients": 142,
         "total_patients": 1194,
-        "prevalence_fraction": 0.11892797319932999
+        "prevalence_fraction": 0.11892797319932999,
+        "group": "social_context"
       },
       {
         "condition_name": "Chronic kidney disease stage 1 (disorder)",
@@ -6658,7 +6684,8 @@
         "code": "431855005",
         "affected_patients": 141,
         "total_patients": 1194,
-        "prevalence_fraction": 0.11809045226130653
+        "prevalence_fraction": 0.11809045226130653,
+        "group": "clinical"
       },
       {
         "condition_name": "Hyperlipidemia",
@@ -6666,7 +6693,8 @@
         "code": "55822004",
         "affected_patients": 140,
         "total_patients": 1194,
-        "prevalence_fraction": 0.11725293132328309
+        "prevalence_fraction": 0.11725293132328309,
+        "group": "clinical"
       },
       {
         "condition_name": "Proteinuria due to type 2 diabetes mellitus (disorder)",
@@ -6674,7 +6702,8 @@
         "code": "157141000119108",
         "affected_patients": 139,
         "total_patients": 1194,
-        "prevalence_fraction": 0.11641541038525963
+        "prevalence_fraction": 0.11641541038525963,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic neck pain (finding)",
@@ -6682,7 +6711,8 @@
         "code": "1121000119107",
         "affected_patients": 134,
         "total_patients": 1194,
-        "prevalence_fraction": 0.11222780569514237
+        "prevalence_fraction": 0.11222780569514237,
+        "group": "clinical"
       },
       {
         "condition_name": "History of tubal ligation (situation)",
@@ -6690,7 +6720,8 @@
         "code": "267020005",
         "affected_patients": 126,
         "total_patients": 1194,
-        "prevalence_fraction": 0.10552763819095477
+        "prevalence_fraction": 0.10552763819095477,
+        "group": "history"
       },
       {
         "condition_name": "Only received primary school education (finding)",
@@ -6698,7 +6729,8 @@
         "code": "224295006",
         "affected_patients": 120,
         "total_patients": 1194,
-        "prevalence_fraction": 0.10050251256281408
+        "prevalence_fraction": 0.10050251256281408,
+        "group": "social_context"
       },
       {
         "condition_name": "Transport problem (finding)",
@@ -6706,7 +6738,8 @@
         "code": "266934004",
         "affected_patients": 118,
         "total_patients": 1194,
-        "prevalence_fraction": 0.09882747068676717
+        "prevalence_fraction": 0.09882747068676717,
+        "group": "social_context"
       },
       {
         "condition_name": "Lack of access to transportation (finding)",
@@ -6714,7 +6747,8 @@
         "code": "713458007",
         "affected_patients": 117,
         "total_patients": 1194,
-        "prevalence_fraction": 0.09798994974874371
+        "prevalence_fraction": 0.09798994974874371,
+        "group": "social_context"
       },
       {
         "condition_name": "Chronic kidney disease stage 2 (disorder)",
@@ -6722,7 +6756,8 @@
         "code": "431856006",
         "affected_patients": 116,
         "total_patients": 1194,
-        "prevalence_fraction": 0.09715242881072027
+        "prevalence_fraction": 0.09715242881072027,
+        "group": "clinical"
       },
       {
         "condition_name": "Not in labor force (finding)",
@@ -6730,7 +6765,8 @@
         "code": "741062008",
         "affected_patients": 91,
         "total_patients": 1194,
-        "prevalence_fraction": 0.076214405360134
+        "prevalence_fraction": 0.076214405360134,
+        "group": "social_context"
       },
       {
         "condition_name": "History of coronary artery bypass grafting (situation)",
@@ -6738,7 +6774,8 @@
         "code": "399261000",
         "affected_patients": 89,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0745393634840871
+        "prevalence_fraction": 0.0745393634840871,
+        "group": "history"
       },
       {
         "condition_name": "Diabetes mellitus type 2 (disorder)",
@@ -6746,7 +6783,8 @@
         "code": "44054006",
         "affected_patients": 79,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0661641541038526
+        "prevalence_fraction": 0.0661641541038526,
+        "group": "clinical"
       },
       {
         "condition_name": "History of renal transplant (situation)",
@@ -6754,7 +6792,8 @@
         "code": "161665007",
         "affected_patients": 78,
         "total_patients": 1194,
-        "prevalence_fraction": 0.06532663316582915
+        "prevalence_fraction": 0.06532663316582915,
+        "group": "history"
       },
       {
         "condition_name": "Hypertriglyceridemia (disorder)",
@@ -6762,7 +6801,8 @@
         "code": "302870006",
         "affected_patients": 77,
         "total_patients": 1194,
-        "prevalence_fraction": 0.06448911222780569
+        "prevalence_fraction": 0.06448911222780569,
+        "group": "clinical"
       },
       {
         "condition_name": "Served in armed forces (finding)",
@@ -6770,7 +6810,8 @@
         "code": "224355006",
         "affected_patients": 66,
         "total_patients": 1194,
-        "prevalence_fraction": 0.05527638190954774
+        "prevalence_fraction": 0.05527638190954774,
+        "group": "social_context"
       },
       {
         "condition_name": "Chronic kidney disease stage 3 (disorder)",
@@ -6778,7 +6819,8 @@
         "code": "433144002",
         "affected_patients": 66,
         "total_patients": 1194,
-        "prevalence_fraction": 0.05527638190954774
+        "prevalence_fraction": 0.05527638190954774,
+        "group": "clinical"
       },
       {
         "condition_name": "Osteoporosis (disorder)",
@@ -6786,7 +6828,8 @@
         "code": "64859006",
         "affected_patients": 60,
         "total_patients": 1194,
-        "prevalence_fraction": 0.05025125628140704
+        "prevalence_fraction": 0.05025125628140704,
+        "group": "clinical"
       },
       {
         "condition_name": "Osteoarthritis of knee",
@@ -6794,7 +6837,8 @@
         "code": "239873007",
         "affected_patients": 59,
         "total_patients": 1194,
-        "prevalence_fraction": 0.049413735343383586
+        "prevalence_fraction": 0.049413735343383586,
+        "group": "clinical"
       },
       {
         "condition_name": "Sleep disorder (disorder)",
@@ -6802,7 +6846,8 @@
         "code": "39898005",
         "affected_patients": 56,
         "total_patients": 1194,
-        "prevalence_fraction": 0.04690117252931323
+        "prevalence_fraction": 0.04690117252931323,
+        "group": "clinical"
       },
       {
         "condition_name": "History of myocardial infarction (situation)",
@@ -6810,7 +6855,8 @@
         "code": "399211009",
         "affected_patients": 56,
         "total_patients": 1194,
-        "prevalence_fraction": 0.04690117252931323
+        "prevalence_fraction": 0.04690117252931323,
+        "group": "history"
       },
       {
         "condition_name": "Reports of violence in the environment (finding)",
@@ -6818,7 +6864,8 @@
         "code": "424393004",
         "affected_patients": 55,
         "total_patients": 1194,
-        "prevalence_fraction": 0.046063651591289785
+        "prevalence_fraction": 0.046063651591289785,
+        "group": "social_context"
       },
       {
         "condition_name": "Recurrent urinary tract infection (disorder)",
@@ -6826,7 +6873,8 @@
         "code": "197927001",
         "affected_patients": 54,
         "total_patients": 1194,
-        "prevalence_fraction": 0.04522613065326633
+        "prevalence_fraction": 0.04522613065326633,
+        "group": "clinical"
       },
       {
         "condition_name": "Refugee (person)",
@@ -6834,7 +6882,8 @@
         "code": "446654005",
         "affected_patients": 53,
         "total_patients": 1194,
-        "prevalence_fraction": 0.04438860971524288
+        "prevalence_fraction": 0.04438860971524288,
+        "group": "social_context"
       },
       {
         "condition_name": "Seizure disorder",
@@ -6842,7 +6891,8 @@
         "code": "128613002",
         "affected_patients": 47,
         "total_patients": 1194,
-        "prevalence_fraction": 0.03936348408710218
+        "prevalence_fraction": 0.03936348408710218,
+        "group": "clinical"
       },
       {
         "condition_name": "History of single seizure (situation)",
@@ -6850,7 +6900,8 @@
         "code": "703151001",
         "affected_patients": 47,
         "total_patients": 1194,
-        "prevalence_fraction": 0.03936348408710218
+        "prevalence_fraction": 0.03936348408710218,
+        "group": "history"
       },
       {
         "condition_name": "Unhealthy alcohol drinking behavior (finding)",
@@ -6858,7 +6909,8 @@
         "code": "10939881000119105",
         "affected_patients": 46,
         "total_patients": 1194,
-        "prevalence_fraction": 0.038525963149078725
+        "prevalence_fraction": 0.038525963149078725,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic intractable migraine without aura",
@@ -6866,7 +6918,8 @@
         "code": "124171000119105",
         "affected_patients": 46,
         "total_patients": 1194,
-        "prevalence_fraction": 0.038525963149078725
+        "prevalence_fraction": 0.038525963149078725,
+        "group": "clinical"
       },
       {
         "condition_name": "Unemployed (finding)",
@@ -6874,7 +6927,8 @@
         "code": "73438004",
         "affected_patients": 46,
         "total_patients": 1194,
-        "prevalence_fraction": 0.038525963149078725
+        "prevalence_fraction": 0.038525963149078725,
+        "group": "social_context"
       },
       {
         "condition_name": "Sepsis (disorder)",
@@ -6882,7 +6936,8 @@
         "code": "91302008",
         "affected_patients": 45,
         "total_patients": 1194,
-        "prevalence_fraction": 0.03768844221105527
+        "prevalence_fraction": 0.03768844221105527,
+        "group": "clinical"
       },
       {
         "condition_name": "History of appendectomy",
@@ -6890,7 +6945,8 @@
         "code": "428251008",
         "affected_patients": 43,
         "total_patients": 1194,
-        "prevalence_fraction": 0.036013400335008376
+        "prevalence_fraction": 0.036013400335008376,
+        "group": "history"
       },
       {
         "condition_name": "Chronic congestive heart failure (disorder)",
@@ -6898,7 +6954,8 @@
         "code": "88805009",
         "affected_patients": 42,
         "total_patients": 1194,
-        "prevalence_fraction": 0.035175879396984924
+        "prevalence_fraction": 0.035175879396984924,
+        "group": "clinical"
       },
       {
         "condition_name": "Dependent drug abuse (disorder)",
@@ -6906,7 +6963,8 @@
         "code": "6525002",
         "affected_patients": 41,
         "total_patients": 1194,
-        "prevalence_fraction": 0.03433835845896147
+        "prevalence_fraction": 0.03433835845896147,
+        "group": "clinical"
       },
       {
         "condition_name": "Obstructive sleep apnea syndrome (disorder)",
@@ -6914,7 +6972,8 @@
         "code": "78275009",
         "affected_patients": 39,
         "total_patients": 1194,
-        "prevalence_fraction": 0.032663316582914576
+        "prevalence_fraction": 0.032663316582914576,
+        "group": "clinical"
       },
       {
         "condition_name": "Impacted molars",
@@ -6922,7 +6981,8 @@
         "code": "196416002",
         "affected_patients": 38,
         "total_patients": 1194,
-        "prevalence_fraction": 0.031825795644891124
+        "prevalence_fraction": 0.031825795644891124,
+        "group": "clinical"
       },
       {
         "condition_name": "Hyperglycemia (disorder)",
@@ -6930,7 +6990,8 @@
         "code": "80394007",
         "affected_patients": 36,
         "total_patients": 1194,
-        "prevalence_fraction": 0.03015075376884422
+        "prevalence_fraction": 0.03015075376884422,
+        "group": "clinical"
       },
       {
         "condition_name": "Alzheimer's disease (disorder)",
@@ -6938,7 +6999,8 @@
         "code": "26929004",
         "affected_patients": 33,
         "total_patients": 1194,
-        "prevalence_fraction": 0.02763819095477387
+        "prevalence_fraction": 0.02763819095477387,
+        "group": "clinical"
       },
       {
         "condition_name": "Polyp of colon",
@@ -6946,7 +7008,8 @@
         "code": "68496003",
         "affected_patients": 32,
         "total_patients": 1194,
-        "prevalence_fraction": 0.02680067001675042
+        "prevalence_fraction": 0.02680067001675042,
+        "group": "clinical"
       },
       {
         "condition_name": "Awaiting transplantation of kidney (situation)",
@@ -6954,7 +7017,8 @@
         "code": "698306007",
         "affected_patients": 30,
         "total_patients": 1194,
-        "prevalence_fraction": 0.02512562814070352
+        "prevalence_fraction": 0.02512562814070352,
+        "group": "care_context"
       },
       {
         "condition_name": "Severe anxiety (panic) (finding)",
@@ -6962,7 +7026,8 @@
         "code": "80583007",
         "affected_patients": 30,
         "total_patients": 1194,
-        "prevalence_fraction": 0.02512562814070352
+        "prevalence_fraction": 0.02512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Epilepsy (disorder)",
@@ -6970,7 +7035,8 @@
         "code": "84757009",
         "affected_patients": 30,
         "total_patients": 1194,
-        "prevalence_fraction": 0.02512562814070352
+        "prevalence_fraction": 0.02512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Neoplasm of prostate",
@@ -6978,7 +7044,8 @@
         "code": "126906006",
         "affected_patients": 28,
         "total_patients": 1194,
-        "prevalence_fraction": 0.023450586264656615
+        "prevalence_fraction": 0.023450586264656615,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute non-ST segment elevation myocardial infarction (disorder)",
@@ -6986,7 +7053,8 @@
         "code": "401314000",
         "affected_patients": 28,
         "total_patients": 1194,
-        "prevalence_fraction": 0.023450586264656615
+        "prevalence_fraction": 0.023450586264656615,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic kidney disease stage 4 (disorder)",
@@ -6994,7 +7062,8 @@
         "code": "431857002",
         "affected_patients": 27,
         "total_patients": 1194,
-        "prevalence_fraction": 0.022613065326633167
+        "prevalence_fraction": 0.022613065326633167,
+        "group": "clinical"
       },
       {
         "condition_name": "Neuropathy due to type 2 diabetes mellitus (disorder)",
@@ -7002,7 +7071,8 @@
         "code": "368581000119106",
         "affected_patients": 26,
         "total_patients": 1194,
-        "prevalence_fraction": 0.021775544388609715
+        "prevalence_fraction": 0.021775544388609715,
+        "group": "clinical"
       },
       {
         "condition_name": "Carcinoma in situ of prostate (disorder)",
@@ -7010,7 +7080,8 @@
         "code": "92691004",
         "affected_patients": 26,
         "total_patients": 1194,
-        "prevalence_fraction": 0.021775544388609715
+        "prevalence_fraction": 0.021775544388609715,
+        "group": "clinical"
       },
       {
         "condition_name": "Atopic dermatitis",
@@ -7018,7 +7089,8 @@
         "code": "24079001",
         "affected_patients": 23,
         "total_patients": 1194,
-        "prevalence_fraction": 0.019262981574539362
+        "prevalence_fraction": 0.019262981574539362,
+        "group": "clinical"
       },
       {
         "condition_name": "Fibromyalgia (disorder)",
@@ -7026,7 +7098,8 @@
         "code": "203082005",
         "affected_patients": 22,
         "total_patients": 1194,
-        "prevalence_fraction": 0.018425460636515914
+        "prevalence_fraction": 0.018425460636515914,
+        "group": "clinical"
       },
       {
         "condition_name": "Localized, primary osteoarthritis of the hand",
@@ -7034,7 +7107,8 @@
         "code": "201834006",
         "affected_patients": 21,
         "total_patients": 1194,
-        "prevalence_fraction": 0.017587939698492462
+        "prevalence_fraction": 0.017587939698492462,
+        "group": "clinical"
       },
       {
         "condition_name": "Malignant neoplasm of breast (disorder)",
@@ -7042,7 +7116,8 @@
         "code": "254837009",
         "affected_patients": 21,
         "total_patients": 1194,
-        "prevalence_fraction": 0.017587939698492462
+        "prevalence_fraction": 0.017587939698492462,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute ST segment elevation myocardial infarction (disorder)",
@@ -7050,7 +7125,8 @@
         "code": "401303003",
         "affected_patients": 20,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01675041876046901
+        "prevalence_fraction": 0.01675041876046901,
+        "group": "clinical"
       },
       {
         "condition_name": "Perennial allergic rhinitis with seasonal variation",
@@ -7058,7 +7134,8 @@
         "code": "232353008",
         "affected_patients": 19,
         "total_patients": 1194,
-        "prevalence_fraction": 0.015912897822445562
+        "prevalence_fraction": 0.015912897822445562,
+        "group": "clinical"
       },
       {
         "condition_name": "Misuses drugs (finding)",
@@ -7066,7 +7143,8 @@
         "code": "361055000",
         "affected_patients": 19,
         "total_patients": 1194,
-        "prevalence_fraction": 0.015912897822445562
+        "prevalence_fraction": 0.015912897822445562,
+        "group": "clinical"
       },
       {
         "condition_name": "Childhood asthma",
@@ -7074,7 +7152,8 @@
         "code": "233678006",
         "affected_patients": 18,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01507537688442211
+        "prevalence_fraction": 0.01507537688442211,
+        "group": "clinical"
       },
       {
         "condition_name": "Osteoarthritis of hip",
@@ -7082,7 +7161,8 @@
         "code": "239872002",
         "affected_patients": 18,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01507537688442211
+        "prevalence_fraction": 0.01507537688442211,
+        "group": "clinical"
       },
       {
         "condition_name": "Normal pregnancy",
@@ -7090,7 +7170,8 @@
         "code": "72892002",
         "affected_patients": 18,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01507537688442211
+        "prevalence_fraction": 0.01507537688442211,
+        "group": "clinical"
       },
       {
         "condition_name": "Perennial allergic rhinitis",
@@ -7098,7 +7179,8 @@
         "code": "446096008",
         "affected_patients": 17,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01423785594639866
+        "prevalence_fraction": 0.01423785594639866,
+        "group": "clinical"
       },
       {
         "condition_name": "Sleep apnea (disorder)",
@@ -7106,7 +7188,8 @@
         "code": "73430006",
         "affected_patients": 17,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01423785594639866
+        "prevalence_fraction": 0.01423785594639866,
+        "group": "clinical"
       },
       {
         "condition_name": "Suspected lung cancer (situation)",
@@ -7114,7 +7197,8 @@
         "code": "162573006",
         "affected_patients": 16,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01340033500837521
+        "prevalence_fraction": 0.01340033500837521,
+        "group": "care_context"
       },
       {
         "condition_name": "End-stage renal disease (disorder)",
@@ -7122,7 +7206,8 @@
         "code": "46177005",
         "affected_patients": 16,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01340033500837521
+        "prevalence_fraction": 0.01340033500837521,
+        "group": "clinical"
       },
       {
         "condition_name": "Retinopathy due to type 2 diabetes mellitus (disorder)",
@@ -7130,7 +7215,8 @@
         "code": "422034002",
         "affected_patients": 15,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01256281407035176
+        "prevalence_fraction": 0.01256281407035176,
+        "group": "clinical"
       },
       {
         "condition_name": "Recurrent rectal polyp",
@@ -7138,7 +7224,8 @@
         "code": "713197008",
         "affected_patients": 15,
         "total_patients": 1194,
-        "prevalence_fraction": 0.01256281407035176
+        "prevalence_fraction": 0.01256281407035176,
+        "group": "clinical"
       },
       {
         "condition_name": "Pneumonia (disorder)",
@@ -7146,7 +7233,8 @@
         "code": "233604007",
         "affected_patients": 14,
         "total_patients": 1194,
-        "prevalence_fraction": 0.011725293132328308
+        "prevalence_fraction": 0.011725293132328308,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic obstructive bronchitis (disorder)",
@@ -7154,7 +7242,8 @@
         "code": "185086009",
         "affected_patients": 13,
         "total_patients": 1194,
-        "prevalence_fraction": 0.010887772194304857
+        "prevalence_fraction": 0.010887772194304857,
+        "group": "clinical"
       },
       {
         "condition_name": "Pulmonary emphysema (disorder)",
@@ -7162,7 +7251,8 @@
         "code": "87433001",
         "affected_patients": 12,
         "total_patients": 1194,
-        "prevalence_fraction": 0.010050251256281407
+        "prevalence_fraction": 0.010050251256281407,
+        "group": "clinical"
       },
       {
         "condition_name": "Non-small cell lung cancer (disorder)",
@@ -7170,7 +7260,8 @@
         "code": "254637007",
         "affected_patients": 11,
         "total_patients": 1194,
-        "prevalence_fraction": 0.009212730318257957
+        "prevalence_fraction": 0.009212730318257957,
+        "group": "clinical"
       },
       {
         "condition_name": "Fever (finding)",
@@ -7178,7 +7269,8 @@
         "code": "386661006",
         "affected_patients": 11,
         "total_patients": 1194,
-        "prevalence_fraction": 0.009212730318257957
+        "prevalence_fraction": 0.009212730318257957,
+        "group": "clinical"
       },
       {
         "condition_name": "Non-small cell carcinoma of lung, TNM stage 1 (disorder)",
@@ -7186,7 +7278,8 @@
         "code": "424132000",
         "affected_patients": 11,
         "total_patients": 1194,
-        "prevalence_fraction": 0.009212730318257957
+        "prevalence_fraction": 0.009212730318257957,
+        "group": "clinical"
       },
       {
         "condition_name": "History of aortic valve replacement (situation)",
@@ -7194,7 +7287,8 @@
         "code": "1231000119100",
         "affected_patients": 10,
         "total_patients": 1194,
-        "prevalence_fraction": 0.008375209380234505
+        "prevalence_fraction": 0.008375209380234505,
+        "group": "history"
       },
       {
         "condition_name": "Body mass index 40+ - severely obese (finding)",
@@ -7202,7 +7296,8 @@
         "code": "408512008",
         "affected_patients": 10,
         "total_patients": 1194,
-        "prevalence_fraction": 0.008375209380234505
+        "prevalence_fraction": 0.008375209380234505,
+        "group": "clinical"
       },
       {
         "condition_name": "Atrial fibrillation (disorder)",
@@ -7210,7 +7305,8 @@
         "code": "49436004",
         "affected_patients": 10,
         "total_patients": 1194,
-        "prevalence_fraction": 0.008375209380234505
+        "prevalence_fraction": 0.008375209380234505,
+        "group": "clinical"
       },
       {
         "condition_name": "Familial Alzheimer's disease of early onset (disorder)",
@@ -7218,7 +7314,8 @@
         "code": "230265002",
         "affected_patients": 9,
         "total_patients": 1194,
-        "prevalence_fraction": 0.007537688442211055
+        "prevalence_fraction": 0.007537688442211055,
+        "group": "clinical"
       },
       {
         "condition_name": "Smokes tobacco daily",
@@ -7226,7 +7323,8 @@
         "code": "449868002",
         "affected_patients": 9,
         "total_patients": 1194,
-        "prevalence_fraction": 0.007537688442211055
+        "prevalence_fraction": 0.007537688442211055,
+        "group": "clinical"
       },
       {
         "condition_name": "Cough (finding)",
@@ -7234,7 +7332,8 @@
         "code": "49727002",
         "affected_patients": 9,
         "total_patients": 1194,
-        "prevalence_fraction": 0.007537688442211055
+        "prevalence_fraction": 0.007537688442211055,
+        "group": "clinical"
       },
       {
         "condition_name": "Opioid abuse (disorder)",
@@ -7242,7 +7341,8 @@
         "code": "5602001",
         "affected_patients": 9,
         "total_patients": 1194,
-        "prevalence_fraction": 0.007537688442211055
+        "prevalence_fraction": 0.007537688442211055,
+        "group": "clinical"
       },
       {
         "condition_name": "Septic shock (disorder)",
@@ -7250,7 +7350,8 @@
         "code": "76571007",
         "affected_patients": 9,
         "total_patients": 1194,
-        "prevalence_fraction": 0.007537688442211055
+        "prevalence_fraction": 0.007537688442211055,
+        "group": "clinical"
       },
       {
         "condition_name": "Preinfarction syndrome (disorder)",
@@ -7258,7 +7359,8 @@
         "code": "4557003",
         "affected_patients": 8,
         "total_patients": 1194,
-        "prevalence_fraction": 0.006700167504187605
+        "prevalence_fraction": 0.006700167504187605,
+        "group": "clinical"
       },
       {
         "condition_name": "Aortic valve stenosis (disorder)",
@@ -7266,7 +7368,8 @@
         "code": "60573004",
         "affected_patients": 8,
         "total_patients": 1194,
-        "prevalence_fraction": 0.006700167504187605
+        "prevalence_fraction": 0.006700167504187605,
+        "group": "clinical"
       },
       {
         "condition_name": "Nonproliferative diabetic retinopathy due to type 2 diabetes mellitus (disorder)",
@@ -7274,7 +7377,8 @@
         "code": "1551000119108",
         "affected_patients": 7,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005862646566164154
+        "prevalence_fraction": 0.005862646566164154,
+        "group": "clinical"
       },
       {
         "condition_name": "Pulmonic valve stenosis (disorder)",
@@ -7282,7 +7386,8 @@
         "code": "56786000",
         "affected_patients": 7,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005862646566164154
+        "prevalence_fraction": 0.005862646566164154,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute respiratory distress syndrome (disorder)",
@@ -7290,7 +7395,8 @@
         "code": "67782005",
         "affected_patients": 7,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005862646566164154
+        "prevalence_fraction": 0.005862646566164154,
+        "group": "clinical"
       },
       {
         "condition_name": "Alcoholism",
@@ -7298,7 +7404,8 @@
         "code": "7200002",
         "affected_patients": 7,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005862646566164154
+        "prevalence_fraction": 0.005862646566164154,
+        "group": "clinical"
       },
       {
         "condition_name": "Brain damage - traumatic",
@@ -7306,7 +7413,8 @@
         "code": "275272006",
         "affected_patients": 6,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005025125628140704
+        "prevalence_fraction": 0.005025125628140704,
+        "group": "clinical"
       },
       {
         "condition_name": "Malignant tumor of colon",
@@ -7314,7 +7422,8 @@
         "code": "363406005",
         "affected_patients": 6,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005025125628140704
+        "prevalence_fraction": 0.005025125628140704,
+        "group": "clinical"
       },
       {
         "condition_name": "Major depression disorder",
@@ -7322,7 +7431,8 @@
         "code": "370143000",
         "affected_patients": 6,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005025125628140704
+        "prevalence_fraction": 0.005025125628140704,
+        "group": "clinical"
       },
       {
         "condition_name": "Died in hospice (finding)",
@@ -7330,7 +7440,8 @@
         "code": "876882001",
         "affected_patients": 6,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005025125628140704
+        "prevalence_fraction": 0.005025125628140704,
+        "group": "care_context"
       },
       {
         "condition_name": "Gout",
@@ -7338,7 +7449,8 @@
         "code": "90560007",
         "affected_patients": 6,
         "total_patients": 1194,
-        "prevalence_fraction": 0.005025125628140704
+        "prevalence_fraction": 0.005025125628140704,
+        "group": "clinical"
       },
       {
         "condition_name": "Small cell carcinoma of lung (disorder)",
@@ -7346,7 +7458,8 @@
         "code": "254632001",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Bullet wound",
@@ -7354,7 +7467,8 @@
         "code": "262574004",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Gunshot wound (disorder)",
@@ -7362,7 +7476,8 @@
         "code": "283545005",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Metastasis from malignant tumor of prostate (disorder)",
@@ -7370,7 +7485,8 @@
         "code": "314994000",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Seasonal allergic rhinitis",
@@ -7378,7 +7494,8 @@
         "code": "367498001",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Aortic valve regurgitation (disorder)",
@@ -7386,7 +7503,8 @@
         "code": "60234000",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Primary small cell malignant neoplasm of lung, TNM stage 1 (disorder)",
@@ -7394,7 +7512,8 @@
         "code": "67811000119102",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Primary fibromyalgia syndrome",
@@ -7402,7 +7521,8 @@
         "code": "95417003",
         "affected_patients": 5,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0041876046901172526
+        "prevalence_fraction": 0.0041876046901172526,
+        "group": "clinical"
       },
       {
         "condition_name": "Fracture of bone (disorder)",
@@ -7410,7 +7530,8 @@
         "code": "125605004",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Child attention deficit disorder",
@@ -7418,7 +7539,8 @@
         "code": "192127007",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Sputum finding (finding)",
@@ -7426,7 +7548,8 @@
         "code": "248595008",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Loss of taste (finding)",
@@ -7434,7 +7557,8 @@
         "code": "36955009",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Sprain (morphologic abnormality)",
@@ -7442,7 +7566,8 @@
         "code": "384709000",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Transformed migraine (disorder)",
@@ -7450,7 +7575,8 @@
         "code": "427419006",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Sprain of ankle",
@@ -7458,7 +7584,8 @@
         "code": "44465007",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Otitis media",
@@ -7466,7 +7593,8 @@
         "code": "65363002",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Idiopathic atrophic hypothyroidism",
@@ -7474,7 +7602,8 @@
         "code": "83664006",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Fatigue (finding)",
@@ -7482,7 +7611,8 @@
         "code": "84229001",
         "affected_patients": 4,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0033500837520938024
+        "prevalence_fraction": 0.0033500837520938024,
+        "group": "clinical"
       },
       {
         "condition_name": "Overlapping malignant neoplasm of colon",
@@ -7490,7 +7620,8 @@
         "code": "109838007",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Cerebral palsy (disorder)",
@@ -7498,7 +7629,8 @@
         "code": "128188000",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "History of artificial joint (situation)",
@@ -7506,7 +7638,8 @@
         "code": "161679004",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "history"
       },
       {
         "condition_name": "Spasticity (finding)",
@@ -7514,7 +7647,8 @@
         "code": "221360009",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Protracted diarrhea",
@@ -7522,7 +7656,8 @@
         "code": "236077008",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Headache (finding)",
@@ -7530,7 +7665,8 @@
         "code": "25064002",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Dyspnea (finding)",
@@ -7538,7 +7674,8 @@
         "code": "267036007",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Respiratory distress (finding)",
@@ -7546,7 +7683,8 @@
         "code": "271825005",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Sinusitis (disorder)",
@@ -7554,7 +7692,8 @@
         "code": "36971009",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Hypoxemia (disorder)",
@@ -7562,7 +7701,8 @@
         "code": "389087006",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Chill (finding)",
@@ -7570,7 +7710,8 @@
         "code": "43724002",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Burn injury (morphologic abnormality)",
@@ -7578,7 +7719,8 @@
         "code": "48333001",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Wheezing (finding)",
@@ -7586,7 +7728,8 @@
         "code": "56018004",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Bleeding from anus",
@@ -7594,7 +7737,8 @@
         "code": "6072007",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute respiratory failure (disorder)",
@@ -7602,7 +7746,8 @@
         "code": "65710008",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Sepsis caused by virus (disorder)",
@@ -7610,7 +7755,8 @@
         "code": "770349000",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "COVID-19",
@@ -7618,7 +7764,8 @@
         "code": "840539006",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Human immunodeficiency virus infection (disorder)",
@@ -7626,7 +7773,8 @@
         "code": "86406008",
         "affected_patients": 3,
         "total_patients": 1194,
-        "prevalence_fraction": 0.002512562814070352
+        "prevalence_fraction": 0.002512562814070352,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute bronchitis (disorder)",
@@ -7634,7 +7782,8 @@
         "code": "10509002",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Concussion injury of brain (disorder)",
@@ -7642,7 +7791,8 @@
         "code": "110030002",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic hepatitis C (disorder)",
@@ -7650,7 +7800,8 @@
         "code": "128302006",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Dislocation of hip joint (disorder)",
@@ -7658,7 +7809,8 @@
         "code": "157265008",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute viral pharyngitis (disorder)",
@@ -7666,7 +7818,8 @@
         "code": "195662009",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Renal dysplasia (disorder)",
@@ -7674,7 +7827,8 @@
         "code": "204949001",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Acquired coagulation disorder (disorder)",
@@ -7682,7 +7836,8 @@
         "code": "234466008",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Gastroesophageal reflux disease (disorder)",
@@ -7690,7 +7845,8 @@
         "code": "235595009",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Fracture subluxation of wrist",
@@ -7698,7 +7854,8 @@
         "code": "263102004",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Shock (disorder)",
@@ -7706,7 +7863,8 @@
         "code": "27942005",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Poor muscle tone (finding)",
@@ -7714,7 +7872,8 @@
         "code": "398152000",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Preeclampsia",
@@ -7722,7 +7881,8 @@
         "code": "398254007",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Injury of kidney (disorder)",
@@ -7730,7 +7890,8 @@
         "code": "40095003",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Mitral valve regurgitation (disorder)",
@@ -7738,7 +7899,8 @@
         "code": "48724000",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Excessive salivation (disorder)",
@@ -7746,7 +7908,8 @@
         "code": "53827007",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Joint pain (finding)",
@@ -7754,7 +7917,8 @@
         "code": "57676002",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Acquired immune deficiency syndrome (disorder)",
@@ -7762,7 +7926,8 @@
         "code": "62479008",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Muscle pain (finding)",
@@ -7770,7 +7935,8 @@
         "code": "68962001",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic paralysis due to lesion of spinal cord",
@@ -7778,7 +7944,8 @@
         "code": "698754002",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Rheumatoid arthritis",
@@ -7786,7 +7953,8 @@
         "code": "69896004",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute pulmonary embolism (disorder)",
@@ -7794,7 +7962,8 @@
         "code": "706870000",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "Heart failure (disorder)",
@@ -7802,7 +7971,8 @@
         "code": "84114007",
         "affected_patients": 2,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0016750418760469012
+        "prevalence_fraction": 0.0016750418760469012,
+        "group": "clinical"
       },
       {
         "condition_name": "History of autologous bone marrow transplant (situation)",
@@ -7810,7 +7980,8 @@
         "code": "108631000119101",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "history"
       },
       {
         "condition_name": "Intellectual disability (disorder)",
@@ -7818,7 +7989,8 @@
         "code": "110359009",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Tricuspid valve regurgitation (disorder)",
@@ -7826,7 +7998,8 @@
         "code": "111287006",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "History of lower limb amputation (situation)",
@@ -7834,7 +8007,8 @@
         "code": "161622006",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "history"
       },
       {
         "condition_name": "Asthma",
@@ -7842,7 +8016,8 @@
         "code": "195967001",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Tooth eruption disorder",
@@ -7850,7 +8025,8 @@
         "code": "234949000",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Sore throat symptom (finding)",
@@ -7858,7 +8034,8 @@
         "code": "267102003",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Laceration of foot",
@@ -7866,7 +8043,8 @@
         "code": "284551006",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Unable to swallow saliva (finding)",
@@ -7874,7 +8052,8 @@
         "code": "288959006",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Acute infective cystitis (disorder)",
@@ -7882,7 +8061,8 @@
         "code": "307426000",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Laceration - injury (disorder)",
@@ -7890,7 +8070,8 @@
         "code": "312608009",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Fracture of rib",
@@ -7898,7 +8079,8 @@
         "code": "33737001",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Contact dermatitis",
@@ -7906,7 +8088,8 @@
         "code": "40275004",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Epidermal burn of skin (disorder)",
@@ -7914,7 +8097,8 @@
         "code": "403190006",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Pathological fracture due to osteoporosis (disorder)",
@@ -7922,7 +8106,8 @@
         "code": "443165006",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Viral sinusitis (disorder)",
@@ -7930,7 +8115,8 @@
         "code": "444814009",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Fracture of clavicle",
@@ -7938,7 +8124,8 @@
         "code": "58150001",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Chronic type B viral hepatitis (disorder)",
@@ -7946,7 +8133,8 @@
         "code": "61977001",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Concussion with no loss of consciousness",
@@ -7954,7 +8142,8 @@
         "code": "62106007",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Dribbling from mouth (finding)",
@@ -7962,7 +8151,8 @@
         "code": "62718007",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Nasal congestion (finding)",
@@ -7970,7 +8160,8 @@
         "code": "68235000",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Mitral valve stenosis (disorder)",
@@ -7978,7 +8169,8 @@
         "code": "79619009",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Pulmonic valve regurgitation (disorder)",
@@ -7986,7 +8178,8 @@
         "code": "91434003",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Leukemia, disease (disorder)",
@@ -7994,7 +8187,8 @@
         "code": "93143009",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       },
       {
         "condition_name": "Secondary malignant neoplasm of colon",
@@ -8002,7 +8196,8 @@
         "code": "94260004",
         "affected_patients": 1,
         "total_patients": 1194,
-        "prevalence_fraction": 0.0008375209380234506
+        "prevalence_fraction": 0.0008375209380234506,
+        "group": "clinical"
       }
     ],
     "medication_status": [
@@ -8017,11 +8212,11 @@
     ],
     "quality": {
       "status": "passed",
-      "completed_at": "2026-10-21T01:26:38.030880Z",
+      "completed_at": "2026-10-21T02:38:38.568592Z",
       "models_passed": 10,
       "checks_passed": 32,
       "checks_total": 32,
-      "invocation_id": "00a66399-99ae-4a39-a4e3-583967a066b2"
+      "invocation_id": "4225505e-373e-45a7-8a70-d640204344c5"
     }
   },
   "archive": {
@@ -8182,7 +8377,8 @@
               "This is a current recorded snapshot, not historical population prevalence.",
               "The denominator includes all loaded patients, including deceased patients.",
               "Unknown verification, refuted, error, and inactive conditions are excluded.",
-              "Name filters are literal substring matches, not clinical concept sets; condition groups can overlap."
+              "Name filters are literal substring matches, not clinical concept sets; condition groups can overlap.",
+              "FHIR Condition resources may describe social context, history, and care situations as well as clinical conditions; this metric includes them and does not identify chronic disease. Dashboard groups are a separate curated presentation mapping."
             ]
           }
         ],

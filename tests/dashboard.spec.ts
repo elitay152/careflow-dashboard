@@ -86,7 +86,10 @@ test("agent replays cited baseline answers and declines unsupported text", async
 }) => {
   await page.goto("./#agent");
   await page
-    .getByRole("button", { name: data.assistant.examples[0].question, exact: true })
+    .getByRole("button", {
+      name: data.assistant.examples[0].question,
+      exact: true,
+    })
     .click();
   await expect(page.locator(".answer-panel")).toContainText(
     data.assistant.examples[0].answer,
@@ -113,19 +116,29 @@ test("current metrics and archived evidence remain separate", async ({
   await expect(
     page.locator(".note").filter({ hasText: "Current cohort export:" }),
   ).toContainText(`${data.current.counts.patients} patients`);
-  await expect(page.locator(".condition-list .condition")).toHaveCount(Math.min(10, data.current.conditions.length));
-  if (data.current.conditions.length > 10) {
-    await page.getByRole("button", { name: `Show all ${data.current.conditions.length} conditions` }).click();
-    await expect(page.locator(".condition-list .condition")).toHaveCount(data.current.conditions.length);
+  const clinical = data.current.conditions.filter(
+    (row) => row.group === "clinical",
+  );
+  await expect(page.locator(".condition-list .condition")).toHaveCount(
+    Math.min(10, clinical.length),
+  );
+  if (clinical.length > 10) {
+    await page
+      .getByRole("button", { name: `Show all ${clinical.length} conditions` })
+      .click();
+    await expect(page.locator(".condition-list .condition")).toHaveCount(
+      clinical.length,
+    );
     await page.getByRole("button", { name: "Show top 10 conditions" }).click();
   }
   await page.getByRole("button", { name: "View exact values" }).click();
-  await expect(page.locator("table tbody")).toContainText(data.current.monthly_utilization.at(-1)!.encounter_month);
-  await page.getByRole("button", { name: "Mean duration" }).click();
-  await expect(page.getByRole("img")).toHaveAttribute(
-    "aria-label",
-    /average duration minutes/,
+  await expect(page.locator("table tbody")).toContainText(
+    data.current.monthly_utilization.at(-1)!.encounter_month,
   );
+  await page.getByRole("button", { name: "Mean duration" }).click();
+  await expect(
+    page.getByRole("img", { name: /across .* recorded months/ }),
+  ).toHaveAttribute("aria-label", /average duration minutes/);
   await page.goto("./#health");
   await expect(page.locator(".invocation")).toContainText(
     data.current.quality.invocation_id,
@@ -133,6 +146,49 @@ test("current metrics and archived evidence remain separate", async ({
   const response = await page.request.get("./data/careflow.json");
   expect(response.status()).toBe(200);
   expect(await response.json()).toEqual(data);
+});
+
+test("social concepts stay separate from clinical findings and remain searchable", async ({
+  page,
+}) => {
+  await page.goto("./#analytics");
+  await page
+    .getByRole("searchbox", { name: "Search conditions" })
+    .fill("5251000175109");
+  await expect(
+    page.getByText("No recorded concepts match this view."),
+  ).toBeVisible();
+  await page.getByLabel("Condition view").selectOption("social_context");
+  await expect(page.locator(".condition-list")).toContainText(
+    "high school equivalency",
+  );
+  await expect(page.locator(".condition-list .condition")).toHaveCount(1);
+  await page.getByLabel("Condition view").selectOption("all");
+  await expect(page.locator(".condition-list .condition")).toHaveCount(1);
+});
+
+test("trend controls expose exact observations without fabricating missing data", async ({
+  page,
+}) => {
+  await page.goto("./#analytics");
+  const slider = page.getByRole("slider", { name: "Explore month" });
+  await slider.focus();
+  await slider.press("Home");
+  const first = data.current.monthly_utilization.slice(-60)[0];
+  await expect(page.locator(".month-inspector")).toContainText(
+    `${new Intl.NumberFormat("en-US").format(first.encounter_count)} encounters`,
+  );
+  await page.getByRole("button", { name: "Bars", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Bars", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByLabel("Time range").selectOption("12");
+  await page.getByRole("button", { name: "View exact values" }).click();
+  await expect(page.locator("table tbody tr")).toHaveCount(12);
+  await page.getByLabel("Time range").selectOption("all");
+  await expect(page.locator("table tbody tr")).toHaveCount(
+    data.current.monthly_utilization.length,
+  );
 });
 
 test("forecasting has no invented predictions or accuracy", async ({
