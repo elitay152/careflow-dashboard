@@ -50,7 +50,99 @@ test("refresh requires synthetic confirmation and preserves the snapshot on back
 test("the shipped aggregate snapshot satisfies the strict contract", () => {
   assert.equal(validateData(snapshot), snapshot);
 });
+
+test("an explicit unevaluated forecast keeps all evidence and predictions null", () => {
+  const data = structuredClone(snapshot);
+  data.forecast = {
+    status: "not_evaluated",
+    reason: "Insufficient observed history.",
+    predictions: null,
+    held_out_metrics: null,
+    evaluation: null,
+  };
+  assert.equal(validateData(data), data);
+});
+
+test("a consistent improvement gate allows a bounded future artifact", () => {
+  const data = structuredClone(snapshot);
+  const f = data.forecast,
+    e = f.evaluation;
+  e.selected_model = "seasonal_mean";
+  e.selected_beats_baseline = true;
+  e.validation_metrics[1] = {
+    model: "seasonal_mean",
+    mae: 0,
+    rmse: 0,
+    wape: 0,
+  };
+  e.test_predictions.forEach((row) => {
+    row.seasonal_mean = row.actual;
+  });
+  f.held_out_metrics[1] = { model: "seasonal_mean", mae: 0, rmse: 0, wape: 0 };
+  f.predictions = Array.from({ length: 12 }, (_, i) => {
+    const date = new Date(`${e.test_end}T00:00:00Z`);
+    date.setUTCMonth(date.getUTCMonth() + i + 1);
+    return { encounter_month: date.toISOString().slice(0, 10), value: 10 };
+  });
+  assert.equal(validateData(data), data);
+  f.predictions[0].encounter_month = e.test_end;
+  assert.throws(() => validateData(data));
+});
 const mutations = [
+  [
+    "private forecast evaluation metadata",
+    (d) => {
+      d.forecast.evaluation.patient_ids = ["audit-sentinel"];
+    },
+  ],
+  [
+    "a fabricated KPI patient ratio",
+    (d) => {
+      d.current.utilization_summary.encounters_per_seen_patient = 1000;
+    },
+  ],
+  [
+    "an annual patient count smaller than an observed month",
+    (d) => {
+      d.current.annual_utilization.at(-1).unique_patients = 0;
+    },
+  ],
+  [
+    "a median without any measured encounters",
+    (d) => {
+      d.current.utilization_summary.measured_duration_count = 0;
+    },
+  ],
+  [
+    "an invalid chronic-subset flag",
+    (d) => {
+      d.current.conditions[0].chronic_subset = "yes";
+    },
+  ],
+  [
+    "a fabricated held-out accuracy score",
+    (d) => {
+      d.forecast.held_out_metrics[0].mae = 0;
+    },
+  ],
+  [
+    "a changed holdout actual",
+    (d) => {
+      d.forecast.evaluation.test_predictions[0].actual += 1;
+    },
+  ],
+  [
+    "a model selected after viewing the holdout",
+    (d) => {
+      d.forecast.evaluation.selected_model = "seasonal_naive";
+    },
+  ],
+  [
+    "a changed evaluation input hash",
+    (d) => {
+      d.forecast.evaluation.input_sha256 = "0".repeat(64);
+    },
+  ],
   [
     "unknown condition group",
     (d) => {

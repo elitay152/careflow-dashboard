@@ -37,7 +37,7 @@ validated static build; pull requests never deploy.
 | Simulated cohort | Searchable inventory of the four loaded FHIR resource types. No patient-level records. |
 | Analytics | The current larger Synthea cohort export. Trend/bar switching, a month explorer, exact monthly values, grouped clinical/social concepts, and medication-status shares. |
 | Analytics agent | Replay of three baseline responses exported by Careflow, with source definitions and caveats. Free-form inputs outside those examples are declined; there is no live API connection. |
-| Forecasting | Explicitly unevaluated research plan. No invented predictions, intervals or accuracy metrics. |
+| Forecasting | Held-out evaluation of seasonal naive, seasonal mean, and seasonal trend. Future predictions are withheld when the validation-selected model does not improve on the baseline. |
 | Pipeline health | Actual source-load, dbt invocation and snapshot timestamps; current quarantine counts remain visible. No uptime or active-schedule claims. |
 
 The older 108-patient validation remains separate historical evidence on Pipeline health. The larger
@@ -89,9 +89,8 @@ synthetic. Never copy `.env`, raw FHIR bundles, database credentials, API keys,
 usage ledgers or patient-level exports. Keep any future live agent credentials
 and request controls on a backend.
 
-Version 2 includes current aggregates and dbt evidence, a separate archived
-validation summary, baseline example responses, and explicit null forecast
-results. Dates are displayed in UTC. Missing months are not synthesized as zero;
+Version 3 includes current aggregates and dbt evidence, a separate archived
+validation summary, baseline example responses, and forecast evaluation evidence and gated future predictions. Dates are displayed in UTC. Missing months are not synthesized as zero;
 condition groups can overlap; medication requests do not imply dispensing.
 
 ## Clinical findings and social context
@@ -116,8 +115,8 @@ shows observed values; the exact-values table remains available. Counts cover
 the selected window, while monthly distinct-patient counts are not summed into
 a population. Medication percentages use all exported request statuses.
 
-Version 2 requires the updated Careflow exporter and a fresh aggregate snapshot;
-old version-1 exports are rejected rather than silently guessing concept groups.
+Version 3 requires the updated Careflow exporter and a fresh aggregate snapshot;
+older exports are rejected rather than silently guessing concept groups.
 
 ## Validation
 
@@ -136,10 +135,10 @@ For an existing Chromium installation:
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm test
 ```
 
-The 30 desktop/mobile browser tests per hosting path cover all pages, keyboard-accessible tables,
+The 32 desktop/mobile browser tests per hosting path cover all pages, keyboard-accessible tables,
 navigation/history, resource filtering, baseline replay and unsupported inputs,
 exact current values, dataset separation, evidence download, and honest forecast
-empty states. Each page is checked with axe's WCAG A/AA rules and for horizontal
+evaluation/publication states. Each page is checked with axe's WCAG A/AA rules and for horizontal
 overflow, JavaScript errors and unexpected outbound requests. These automated
 checks do not replace a complete accessibility audit.
 
@@ -155,3 +154,58 @@ contents access; only the separate deployment job gets Pages publishing and
 OIDC permissions. It publishes checked builds from `main` when Pages is enabled
 and runs no paid evaluations. Hosted CI/deployment results must be checked on
 GitHub; local tests alone do not establish a hosted pass or a live website.
+
+## KPI definitions and evaluation
+
+Analytics cards describe the latest observed month and the preceding 11 calendar
+months, independently of the chart range. Patients seen is a distinct count;
+encounters per seen patient divides finished encounters by that count. The median
+is computed over individual timed encounters, never over monthly medians. Missing
+end times are excluded from duration statistics, with a measured-count denominator.
+Durations display in hours below one day, otherwise days; the chart uses a common
+axis unit. Elapsed encounter time is not hospital length of stay.
+
+Annual counts and distinct patients are calculated in Careflow, not by adding
+monthly distinct counts. This retrospective synthetic cohort has varying historical
+coverage; annual patient counts are not an annual population denominator. The
+selected chronic-condition subset uses 19 explicit SNOMED codes documented in
+Careflow. Its patient total is a distinct union among all loaded patients, including
+deceased patients, not a sum of condition bars or a validated clinical registry.
+
+Forecast evaluation uses the latest 120 consecutive observed months: 108 available
+training months and 12 held-out months. Three earlier rolling 12-month folds select
+the model by MAE, with stable ties favoring seasonal naive. Seasonal mean and
+linear trend with month effects use trailing 60-month windows; seasonal naive
+repeats the prior year's month. No settings are tuned on the final test year.
+
+All models' MAE, RMSE, and WAPE are reported on the same holdout. WAPE is undefined
+when the observed total is zero. The selected model must beat seasonal naive on
+test MAE before future predictions are exported. In the shipped cohort it does
+not, so the evaluation is shown and future predictions remain withheld. No
+uncertainty bands or live accuracy claims are produced. Input hashes, split dates,
+validation scores, and test observations are part of the aggregate snapshot.
+
+## Short reproducible demo
+
+With both updated repos checked out side by side, start in Careflow:
+
+```bash
+bash scripts/bootstrap.sh
+cd ../careflow-dashboard
+npm ci
+npm run data:refresh -- --confirm-synthetic \
+  --raw-schema public --analytics-schema analytics \
+  --label "Hand-authored extended demo"
+npm run dev
+```
+
+This fast path demonstrates ingestion, quarantine, dbt checks, metric export and
+website refresh with the small fictional demo. Its history is too short for
+forecast evaluation; the page reports that explicitly. It replaces only your
+local website snapshot, so review before committing it. To return to the retained
+seed-43 cohort, rerun the refresh command with its defaults.
+
+To reproduce the larger cohort from scratch, use Careflow's documented Synthea
+generation and validation commands, then supply the newly created raw/analytics
+schemas to `data:refresh`. Generation and full validation take longer than this
+short demo. No paid model or AWS service is used by either path.

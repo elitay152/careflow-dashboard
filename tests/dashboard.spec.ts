@@ -138,7 +138,7 @@ test("current metrics and archived evidence remain separate", async ({
   await page.getByRole("button", { name: "Mean duration" }).click();
   await expect(
     page.getByRole("img", { name: /across .* recorded months/ }),
-  ).toHaveAttribute("aria-label", /average duration minutes/);
+  ).toHaveAttribute("aria-label", /average duration/);
   await page.goto("./#health");
   await expect(page.locator(".invocation")).toContainText(
     data.current.quality.invocation_id,
@@ -191,16 +191,87 @@ test("trend controls expose exact observations without fabricating missing data"
   );
 });
 
-test("forecasting has no invented predictions or accuracy", async ({
+test("forecasting shows evaluated holdout results and honors the publication gate", async ({
   page,
 }) => {
   await page.goto("./#forecasting");
+  if (data.forecast.status === "not_evaluated") {
+    await expect(
+      page.getByText("Not evaluated.", { exact: true }),
+    ).toBeVisible();
+    expect(data.forecast.predictions).toBeNull();
+    return;
+  }
+  const passed = data.forecast.evaluation!.selected_beats_baseline;
   await expect(
-    page.getByRole("heading", { name: "No forecast published yet." }),
+    page.getByRole("heading", {
+      name: passed
+        ? "Selected model clears the baseline"
+        : "The simpler baseline wins the held-out year",
+    }),
   ).toBeVisible();
-  await expect(page.getByText("Not evaluated", { exact: true })).toHaveCount(2);
-  expect(data.forecast.predictions).toBeNull();
-  expect(data.forecast.held_out_metrics).toBeNull();
+  if (!passed) {
+    await expect(
+      page.getByText("Future predictions withheld.", { exact: true }),
+    ).toBeVisible();
+    expect(data.forecast.predictions).toBeNull();
+  }
+
+  expect(data.forecast.held_out_metrics).toHaveLength(3);
+  await expect(
+    page
+      .getByRole("region", { name: "Model comparison metrics" })
+      .locator("tbody tr"),
+  ).toHaveCount(3);
+  await page.getByRole("button", { name: "View held-out values" }).click();
+  await expect(
+    page
+      .getByRole("region", { name: "Held-out monthly values" })
+      .locator("tbody tr"),
+  ).toHaveCount(12);
+  await expect(
+    page.getByRole("region", { name: "Held-out monthly values" }),
+  ).toContainText(data.forecast.evaluation!.test_start);
+});
+
+test("KPIs use distinct patients and median duration while annual trends retain their own grain", async ({
+  page,
+}) => {
+  await page.goto("./#analytics");
+  const summary = data.current.utilization_summary!;
+  const patients = page
+    .locator(".analytics-summary .metric")
+    .filter({ hasText: "Patients seen · latest 12 months" });
+  await expect(patients).toContainText(
+    new Intl.NumberFormat("en-US").format(summary.unique_patients),
+  );
+  await expect(page.locator(".analytics-summary")).not.toContainText(
+    "Finished encounters in view",
+  );
+  const median = page
+    .locator(".analytics-summary .metric")
+    .filter({ hasText: "Median encounter duration" });
+  await expect(median.locator("strong")).toContainText(
+    `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(summary.median_duration_minutes! / (summary.median_duration_minutes! >= 1440 ? 1440 : 60))} ${summary.median_duration_minutes! >= 1440 ? "days" : "h"}`,
+  );
+  await page.getByRole("button", { name: "Annual", exact: true }).click();
+  await page.getByRole("button", { name: "View exact values" }).click();
+  await expect(page.locator("table tbody tr")).toHaveCount(
+    Math.min(5, data.current.annual_utilization.length),
+  );
+  const last = data.current.annual_utilization.at(-1)!;
+  await expect(page.locator("table tbody tr").last()).toContainText(
+    new Intl.NumberFormat("en-US").format(last.unique_patients),
+  );
+  await expect(patients).toContainText(
+    new Intl.NumberFormat("en-US").format(summary.unique_patients),
+  );
+  await page
+    .getByRole("button", { name: "Median duration", exact: true })
+    .click();
+  await expect(page.getByText(/Duration axis:/)).toContainText(/h|days/);
+  await page.getByLabel("Condition view").selectOption("chronic");
+  await expect(page.locator("main")).toContainText("distinct union, not a sum");
 });
 
 test("CSP blocks inline script and off-origin connections", async ({

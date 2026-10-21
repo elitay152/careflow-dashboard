@@ -2507,3 +2507,57 @@ input::placeholder {
     min-height: 36px;
   }
 }
+.metric-definition {
+  margin: -10px 0 24px;
+  font-size: 12px;
+  color: #617054;
+  line-height: 1.7;
+}
+.chart-toolbar .segmented[aria-label="Utilization metric"] {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.forecast-legend {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  padding: 22px 23px 0;
+  font-size: 12px;
+  color: #617054;
+}
+.forecast-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.forecast-legend i {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+}
+.forecast-result-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin: 24px 0;
+}
+.evaluation-notes {
+  margin: 20px 28px;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #617054;
+}
+.evaluation-notes li {
+  margin-bottom: 10px;
+}
+.forecast-hash {
+  margin: 20px 28px;
+  font-size: 11px;
+  color: #617054;
+}
+.forecast-hash code {
+  display: block;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
