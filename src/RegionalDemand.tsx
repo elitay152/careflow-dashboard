@@ -468,8 +468,8 @@ export default function RegionalDemand({
         views overlap and must not be added.
       </p>
       <p className="note demand-note">
-        <strong>Hospitalization is a separate target.</strong> The latest year
-        contains {number(data.hospitalization.annual_encounters)} inpatient
+        <strong>Inpatient episodes are a separate target.</strong> The latest
+        year contains {number(data.hospitalization.annual_encounters)} inpatient
         encounters among {number(data.hospitalization.annual_patients)}{" "}
         patients. Patient-level risk uses dated snapshots and a separate
         evaluation. See the <a href="#risk">hospitalization risk study</a> for

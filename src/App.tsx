@@ -127,10 +127,10 @@ const nav = [
   },
   {
     id: "risk",
-    label: "Hospitalization risk",
+    label: "Inpatient risk study",
     icon: HeartPulse,
     eyebrow: "PATIENT-LEVEL MODEL STUDY",
-    title: "Hospitalization within 90 days",
+    title: "Inpatient episodes within 90 days",
     accent: "",
     description:
       "A synthetic-data experiment predicting a new inpatient episode from earlier patient history. Readiness, baselines, and evaluation are shown together.",

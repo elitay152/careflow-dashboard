@@ -426,7 +426,7 @@ test("facility demand separates care settings and withholds sparse comparisons",
     page.getByRole("region", { name: "Location model comparison" }),
   ).toHaveCount(0);
   await expect(
-    page.getByText("Hospitalization is a separate target.", {
+    page.getByText("Inpatient episodes are a separate target.", {
       exact: true,
     }),
   ).toBeVisible();
@@ -509,7 +509,7 @@ test("hospitalization evaluation shows honest splits and aggregate model compari
 }) => {
   await page.goto("./#risk");
   await expect(
-    page.getByRole("heading", { name: "Hospitalization within 90 days" }),
+    page.getByRole("heading", { name: "Inpatient episodes within 90 days" }),
   ).toBeVisible();
   await expect(
     page.getByText("The selected threshold missed the positive outcomes.", {
@@ -517,7 +517,7 @@ test("hospitalization evaluation shows honest splits and aggregate model compari
     }),
   ).toBeVisible();
   const table = page.getByRole("region", {
-    name: "Hospitalization model comparison",
+    name: "Inpatient model comparison",
   });
   await expect(table.locator("tbody tr")).toHaveCount(3);
   await expect(
