@@ -95,6 +95,20 @@ test("risk evidence may be absent without exposing private artifacts", () => {
 });
 const mutations = [
   [
+    "measurement values in aggregate counts",
+    (d) => {
+      d.current.counts.observations = [
+        { patient_id: "audit-sentinel", bmi: 25 },
+      ];
+    },
+  ],
+  [
+    "private observation rows",
+    (d) => {
+      d.current.observations = [{ patient_id: "audit-sentinel", value: 25 }];
+    },
+  ],
+  [
     "private fields in risk evidence",
     (d) => {
       d.risk.patient_rows = [{ patient_id: "audit-sentinel" }];

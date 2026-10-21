@@ -1,19 +1,20 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "synthetic_only": true,
-  "exported_at": "2026-10-21T17:59:53.354798+00:00",
+  "exported_at": "2026-10-21T18:44:34.627125+00:00",
   "current": {
     "label": "Synthea 3.3.0 \u00b7 seed 43 \u00b7 1,000 living-patient target",
     "raw_schema": "synthea_p1000_seed43",
     "analytics_schema": "synthea_p1000_seed43_analytics",
-    "source_loaded_at": "2026-10-21T17:41:42.554906+00:00",
+    "source_loaded_at": "2026-10-21T18:43:05.748532+00:00",
     "counts": {
       "patients": 1194,
       "encounters": 95852,
       "conditions": 48406,
       "medications": 85333,
       "loads": 1196,
-      "quarantine": 0
+      "quarantine": 0,
+      "observations": 90885
     },
     "monthly_utilization": [
       {
@@ -12856,11 +12857,11 @@
     ],
     "quality": {
       "status": "passed",
-      "completed_at": "2026-10-21T17:59:51.892219Z",
-      "models_passed": 11,
-      "checks_passed": 39,
-      "checks_total": 39,
-      "invocation_id": "0990b9c9-7e95-46a8-be7e-d286c15376b4"
+      "completed_at": "2026-10-21T18:44:32.688200Z",
+      "models_passed": 13,
+      "checks_passed": 49,
+      "checks_total": 49,
+      "invocation_id": "a6173d37-8cb0-4ce5-a66a-cf582b8ac4fb"
     }
   },
   "archive": {
@@ -13106,7 +13107,7 @@
     "evaluation": {
       "protocol": "rolling_origin_v2",
       "benchmark_status": "development",
-      "evaluated_at": "2026-10-21T17:59:53.354695+00:00",
+      "evaluated_at": "2026-10-21T18:44:34.626921+00:00",
       "input_sha256": "9e03e72292a09dbcf66d5940643fdd5bfc11bfae0b8d6d2b0becf048f8a4a121",
       "training_start": "2015-01-01",
       "training_end": "2023-12-01",
@@ -13791,7 +13792,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.124342+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.366723+00:00",
             "input_sha256": "a48ae91210f36fa1e0f61b8fc3cacdc52084dad2b86d4c6d9885283984b39826",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -14810,7 +14811,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.135213+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.377004+00:00",
             "input_sha256": "06d48abde40aa926d3a02b3bdd3715df32aeb8a99c620a1a763de5b5b16aaef3",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -16109,7 +16110,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.144960+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.386794+00:00",
             "input_sha256": "8da3ac9c72ddeb02ff7db064a39d1903dabf4d45f0b2f095cd77be6ba4137ca3",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -17048,7 +17049,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.155126+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.396298+00:00",
             "input_sha256": "8df87c7d2b930908a5dbbae9e11f6b62612173b26185f83f258e53808ae40bad",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -18377,7 +18378,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.164516+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.405800+00:00",
             "input_sha256": "bb84ba797b88c575f6d27fe90b829e19351cb1b8e932837caa269eb8b56c335c",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -20536,7 +20537,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.173852+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.417192+00:00",
             "input_sha256": "91d932146a42d53bf41e0ad4b89e083846a6a9500075b49cb03d1dfcccd19acc",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -21345,7 +21346,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.183844+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.429281+00:00",
             "input_sha256": "9da028d81ad8679e8f1fe066ec91791c2f4bea5c4c2fdd0a60b41753451c33fa",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -23364,7 +23365,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.194211+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.445206+00:00",
             "input_sha256": "e91db180e1ccae0ed3fe4acb3d48362c69a055af966f35441ba2b812c8d29d62",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -24023,7 +24024,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.203602+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.454961+00:00",
             "input_sha256": "8820062287731f1a0fa431e51aa8d49fa01e1fbac6a4d0ded1ac5eee27a4ea0c",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -24602,7 +24603,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.212250+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.465045+00:00",
             "input_sha256": "49b7927a92f61381fd7b4b8ac6040c3b9b24eaf47beb09234137f2b2e5010001",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -25171,7 +25172,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.220960+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.476256+00:00",
             "input_sha256": "206300d2c5cf5e51bf21be9fe974fa89bec84b606c598553ec7a006c0ca98924",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -25750,7 +25751,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.229975+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.486391+00:00",
             "input_sha256": "5e02da0b7376d0c8c9d1355f8756a7a6536f2f7b91ded298078ad903efd2cf59",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -26319,7 +26320,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.239232+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.497800+00:00",
             "input_sha256": "2a32f12e0e6fe8a574cfe6d1cc37635131941c6674436f8705b46a5191af67d4",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -26898,7 +26899,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.248589+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.509441+00:00",
             "input_sha256": "2c26d41d1b6cd86db00a79c2b7340af4ecccdb7548bd40078e1ad5fd5a4a911c",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -27477,7 +27478,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.257668+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.518868+00:00",
             "input_sha256": "7cd1a8a59a33d99f30a7891608e7fd3d787f205e0db85ae0a376b74e834a4a79",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -28056,7 +28057,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.267009+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.528724+00:00",
             "input_sha256": "a9b30b4c9c92ea01f284f67c8129eeb10bfad961afd119133c9e9b2674ff21a0",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -28645,7 +28646,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.276101+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.537940+00:00",
             "input_sha256": "23cd43c0bef66ed4a0b4832b506889007a37734e41558bd1438aa7968e4fa490",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -29224,7 +29225,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.285486+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.547013+00:00",
             "input_sha256": "b7ab922b5d5644f914ff713b35c013fe5109705d588cc0f3a3cefafec4df799f",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -29803,7 +29804,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.294689+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.555692+00:00",
             "input_sha256": "77c1f6e639bd7958c74158bb313c4004a88f9a57c050e3702442bb0a37673cff",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -30402,7 +30403,7 @@
           "evaluation": {
             "protocol": "rolling_origin_v2",
             "benchmark_status": "development",
-            "evaluated_at": "2026-10-21T17:59:53.303499+00:00",
+            "evaluated_at": "2026-10-21T18:44:34.565322+00:00",
             "input_sha256": "eca06d9c374cb6e8ace1039d7a43ad502295e33a1136f86200acfbf607aae6eb",
             "training_start": "2015-01-01",
             "training_end": "2023-12-01",
@@ -30942,8 +30943,8 @@
     "observation_end": "2025-01-01",
     "status": "evaluated",
     "blockers": [],
-    "evaluated_at": "2026-10-21T17:58:45.293475+00:00",
-    "source_loaded_at": "2026-10-21T17:41:42.554906+00:00",
+    "evaluated_at": "2026-10-21T18:43:50.384842+00:00",
+    "source_loaded_at": "2026-10-21T18:43:05.748532+00:00",
     "input_sha256": "8188692cb7b291b740b2287b7afb5f031021e8e07c94005ffe0975fc63c7902a",
     "patients": 1194,
     "candidate_snapshots": 47760,

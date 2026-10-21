@@ -112,7 +112,7 @@ function identifier(value, location) {
   if (typeof value !== "string" || !/^[a-z][a-z0-9_]{0,62}$/u.test(value))
     fail(location);
 }
-function counts(value, location) {
+function counts(value, location, includeObservations = false) {
   keys(
     value,
     [
@@ -122,6 +122,7 @@ function counts(value, location) {
       "medications",
       "loads",
       "quarantine",
+      ...(includeObservations ? ["observations"] : []),
     ],
     location,
   );
@@ -956,7 +957,7 @@ export function validateData(data) {
     ],
     "root",
   );
-  if (data.schema_version !== 7 || data.synthetic_only !== true) fail("root");
+  if (data.schema_version !== 8 || data.synthetic_only !== true) fail("root");
   timestamp(data.exported_at, "exported_at");
   const current = data.current;
   keys(
@@ -986,7 +987,7 @@ export function validateData(data) {
     if (Date.parse(current.source_loaded_at) > Date.parse(data.exported_at))
       fail("source_loaded_at");
   }
-  counts(current.counts, "current.counts");
+  counts(current.counts, "current.counts", true);
   array(current.monthly_utilization, "monthly_utilization", 2400);
   let previous = "";
   for (const row of current.monthly_utilization) {
@@ -1196,9 +1197,9 @@ export function validateData(data) {
       fail("quality");
     if (
       quality.status === "passed" &&
-      (quality.models_passed !== 11 ||
-        quality.checks_passed !== 39 ||
-        quality.checks_total !== 39)
+      (quality.models_passed !== 13 ||
+        quality.checks_passed !== 49 ||
+        quality.checks_total !== 49)
     )
       fail("quality.passed");
   }

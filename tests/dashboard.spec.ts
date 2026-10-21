@@ -68,7 +68,7 @@ test("navigation and browser history work", async ({ page }, testInfo) => {
 test("cohort filters show only persisted resource types", async ({ page }) => {
   await page.goto("./#cohort");
   await page.getByRole("button", { name: "Persisted subset" }).click();
-  await expect(page.locator("tbody tr")).toHaveCount(5);
+  await expect(page.locator("tbody tr")).toHaveCount(6);
   await page
     .getByRole("textbox", { name: "Search resource types" })
     .fill("Medication");
