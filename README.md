@@ -64,7 +64,7 @@ schedule, or publish. Review the snapshot change and merge it to `main` for Page
 deployment. A browser reload alone does not refresh PostgreSQL data.
 
 For an existing export, use `npm run data:sync -- /path/to/careflow.json`, then
-`npm run build`. The site requires contract version 3. Only reviewed aggregate
+`npm run build`. The site requires contract version 4. Analytics includes an aggregate cohort explorer with combined demographic, clinical-profile, and encounter-frequency filters; these filters apply only to the explorer. Only reviewed aggregate
 JSON belongs in `public/data/`; keep raw files, ledgers, keys, and dumps outside it.
 
 ## Small reproducible demo

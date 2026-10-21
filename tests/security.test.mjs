@@ -144,6 +144,36 @@ const mutations = [
     },
   ],
   [
+    "private fields in a segment cell",
+    (d) => {
+      d.current.segments.cells[0].patient_id = "audit-sentinel";
+    },
+  ],
+  [
+    "duplicate segment cells",
+    (d) => {
+      d.current.segments.cells.push({ ...d.current.segments.cells[0] });
+    },
+  ],
+  [
+    "unknown segment dimension",
+    (d) => {
+      d.current.segments.cells[0].gender = "private-category";
+    },
+  ],
+  [
+    "inconsistent segment totals",
+    (d) => {
+      d.current.segments.cells[0].patient_count += 1;
+    },
+  ],
+  [
+    "incorrect simulation cutoff",
+    (d) => {
+      d.current.segments.age_as_of = "2020-01-01";
+    },
+  ],
+  [
     "unknown condition group",
     (d) => {
       d.current.conditions[0].group = "chronic";

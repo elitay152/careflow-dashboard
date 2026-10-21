@@ -356,6 +356,107 @@ function validateForecast(forecast, monthly, exportedAt) {
   }
 }
 
+const SEGMENT_DIMENSIONS = {
+  age_band: ["0_17", "18_34", "35_49", "50_64", "65_79", "80_plus", "unknown"],
+  gender: ["male", "female", "other", "unknown"],
+  clinical_profile: [
+    "diabetes_and_hypertension",
+    "diabetes_without_hypertension",
+    "hypertension_without_diabetes",
+    "other_selected_chronic",
+    "no_selected_chronic",
+  ],
+  utilization_band: ["none", "one", "two_to_five", "six_plus"],
+};
+function validateSegments(segments, current) {
+  const summary = current.utilization_summary;
+  if (segments === null) {
+    if (summary !== null) fail("segments");
+    return;
+  }
+  if (!summary) fail("segments");
+  keys(
+    segments,
+    ["start_month", "end_month_exclusive", "age_as_of", "cells"],
+    "segments",
+  );
+  date(segments.age_as_of, "segments.age_as_of");
+  const cutoff = new Date(
+    Date.parse(`${summary.end_month_exclusive}T00:00:00Z`) - 86400000,
+  )
+    .toISOString()
+    .slice(0, 10);
+  if (
+    segments.start_month !== summary.start_month ||
+    segments.end_month_exclusive !== summary.end_month_exclusive ||
+    segments.age_as_of !== cutoff
+  )
+    fail("segments.window");
+  array(segments.cells, "segments.cells", 560);
+  const dimensions = Object.keys(SEGMENT_DIMENSIONS);
+  const measures = [
+    "patient_count",
+    "seen_patients",
+    "encounter_count",
+    "active_request_count",
+  ];
+  const observed = new Set();
+  for (const cell of segments.cells) {
+    keys(cell, [...dimensions, ...measures], "segments.cell");
+    dimensions.forEach((key) => {
+      if (!SEGMENT_DIMENSIONS[key].includes(cell[key]))
+        fail("segments.dimension");
+    });
+    const signature = JSON.stringify(dimensions.map((key) => cell[key]));
+    if (observed.has(signature)) fail("segments.duplicate");
+    observed.add(signature);
+    measures.forEach((key) => integer(cell[key], "segments.measure"));
+    if (
+      !cell.patient_count ||
+      cell.seen_patients > cell.patient_count ||
+      cell.encounter_count < cell.seen_patients
+    )
+      fail("segments.measure");
+    const n = cell.patient_count;
+    if (cell.utilization_band === "none") {
+      if (cell.seen_patients !== 0 || cell.encounter_count !== 0)
+        fail("segments.utilization");
+    } else {
+      if (cell.seen_patients !== n) fail("segments.utilization");
+      if (cell.utilization_band === "one" && cell.encounter_count !== n)
+        fail("segments.utilization");
+      if (
+        cell.utilization_band === "two_to_five" &&
+        (cell.encounter_count < 2 * n || cell.encounter_count > 5 * n)
+      )
+        fail("segments.utilization");
+      if (cell.utilization_band === "six_plus" && cell.encounter_count < 6 * n)
+        fail("segments.utilization");
+    }
+  }
+  const sum = (key, rows = segments.cells) =>
+    rows.reduce((s, r) => s + r[key], 0);
+  const active =
+    current.medication_status.find((r) => r.status === "active")
+      ?.request_count ?? 0;
+  if (
+    sum("patient_count") !== current.counts.patients ||
+    sum("seen_patients") !== summary.unique_patients ||
+    sum("encounter_count") !== summary.encounter_count ||
+    sum("active_request_count") !== active
+  )
+    fail("segments.totals");
+  if (
+    sum(
+      "patient_count",
+      segments.cells.filter(
+        (r) => r.clinical_profile !== "no_selected_chronic",
+      ),
+    ) !== current.chronic_summary.affected_patients
+  )
+    fail("segments.clinical");
+}
+
 export function validateData(data) {
   keys(
     data,
@@ -370,7 +471,7 @@ export function validateData(data) {
     ],
     "root",
   );
-  if (data.schema_version !== 3 || data.synthetic_only !== true) fail("root");
+  if (data.schema_version !== 4 || data.synthetic_only !== true) fail("root");
   timestamp(data.exported_at, "exported_at");
   const current = data.current;
   keys(
@@ -385,6 +486,7 @@ export function validateData(data) {
       "annual_utilization",
       "utilization_summary",
       "chronic_summary",
+      "segments",
       "conditions",
       "medication_status",
       "quality",
@@ -573,6 +675,7 @@ export function validateData(data) {
     ) !== current.counts.medications
   )
     fail("medication_status");
+  validateSegments(current.segments, current);
   const quality = current.quality;
   keys(
     quality,

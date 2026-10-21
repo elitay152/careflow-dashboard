@@ -91,6 +91,8 @@ test("agent replays cited baseline answers and declines unsupported text", async
       exact: true,
     })
     .click();
+  await expect(page.locator(".agent-response")).toBeFocused();
+  await expect(page.locator(".answer-text")).toBeInViewport();
   await expect(page.locator(".answer-panel")).toContainText(
     data.assistant.examples[0].answer,
   );
@@ -337,4 +339,42 @@ test("hostile form text stays inert and never contacts a model", async ({
       session: sessionStorage.length,
     })),
   ).toEqual({ local: 0, session: 0 });
+});
+
+test("segment filters combine and aggregate popouts remain accessible", async ({
+  page,
+}) => {
+  await page.goto("./#analytics");
+  const explorer = page.locator(".segment-explorer");
+  const cells = data.current.segments.cells.filter(
+    (c) => c.age_band === "50_64" && c.gender === "female",
+  );
+  const count = cells.reduce((sum, cell) => sum + cell.patient_count, 0);
+  await explorer
+    .getByLabel("Filter age band", { exact: true })
+    .selectOption("50_64");
+  await explorer
+    .getByLabel("Filter recorded gender", { exact: true })
+    .selectOption("female");
+  await expect(explorer.getByRole("status")).toContainText(`${count} of`);
+  await explorer.getByRole("button", { name: "Expand results" }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator("tbody tr")).toHaveCount(cells.length);
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toBeVisible();
+  await expect(
+    explorer.getByRole("button", { name: "Expand results" }),
+  ).toBeFocused();
+  await explorer.getByRole("button", { name: "Reset filters" }).click();
+  await expect(explorer.getByRole("status")).toContainText("1,194 of 1,194");
+  await explorer
+    .getByLabel("Filter recorded gender", { exact: true })
+    .selectOption("other");
+  await expect(explorer.locator(".segment-empty")).toBeVisible();
+  await explorer
+    .getByRole("button", { name: "Definitions", exact: true })
+    .click();
+  await expect(dialog).toContainText("includes deceased patients");
+  await page.keyboard.press("Escape");
 });

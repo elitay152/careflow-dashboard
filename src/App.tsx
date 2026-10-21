@@ -30,6 +30,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import snapshot from "../public/data/careflow.json";
+import CohortExplorer from "./CohortExplorer";
 
 const current = snapshot.current;
 const archive = snapshot.archive;
@@ -840,6 +841,10 @@ function Analytics() {
           is not hospital length of stay.
         </p>
       )}
+      <CohortExplorer
+        data={current.segments}
+        totalPatients={current.counts.patients}
+      />
       <Panel
         title="Encounter activity over time"
         subtitle={
@@ -1168,7 +1173,11 @@ function Analytics() {
           </div>
           <div className="condition-list">
             {conditions.map((row) => (
-              <div className="condition" key={`${row.code_system}-${row.code}`}>
+              <div
+                className="condition"
+                data-group={row.group}
+                key={`${row.code_system}-${row.code}`}
+              >
                 <div>
                   <strong>{row.condition_name}</strong>
                   <span>{number(row.prevalence_fraction * 100)}%</span>
@@ -1178,7 +1187,7 @@ function Analytics() {
                 </div>
                 <small>
                   {row.affected_patients} of {row.total_patients} loaded
-                  patients · {row.code}
+                  patients · {row.group} · {row.code}
                 </small>
               </div>
             ))}
@@ -1306,6 +1315,11 @@ function Agent() {
     (typeof snapshot.assistant.examples)[number] | null
   >(null);
   const [message, setMessage] = useState("");
+  const responseRef = useRef<HTMLDivElement>(null);
+  const [responseNumber, setResponseNumber] = useState(0);
+  useEffect(() => {
+    if (responseNumber > 0) responseRef.current?.focus();
+  }, [responseNumber]);
   const normalize = (text: string) =>
     text
       .trim()
@@ -1313,6 +1327,7 @@ function Agent() {
       .replace(/[?.!]+$/, "")
       .replace(/\s+/g, " ");
   function ask(value: string) {
+    setResponseNumber((number) => number + 1);
     setQuestion(value);
     const match = snapshot.assistant.examples.find(
       (item) => normalize(item.question) === normalize(value),
@@ -1354,7 +1369,11 @@ function Agent() {
           </div>
           <div className="example-questions">
             {snapshot.assistant.examples.map((item) => (
-              <button key={item.question} onClick={() => ask(item.question)}>
+              <button
+                key={item.question}
+                aria-pressed={answer?.question === item.question}
+                onClick={() => ask(item.question)}
+              >
                 {item.question}
                 <Icon icon={ArrowUpRight} size={16} />
               </button>
@@ -1382,6 +1401,41 @@ function Agent() {
               <Icon icon={Send} size={18} />
             </button>
           </form>
+          <div
+            aria-live="polite"
+            ref={responseRef}
+            tabIndex={-1}
+            className="agent-response"
+          >
+            {message && <Note>{message}</Note>}
+            {answer && (
+              <Panel
+                className="answer-panel"
+                title="An answer with a paper trail"
+                subtitle={`Replayed from the ${utc(snapshot.exported_at)} export`}
+                action={<Badge>Baseline · no model</Badge>}
+              >
+                <p className="answer-text">{answer.answer}</p>
+                <div className="answer-sources">
+                  {answer.citations.map((citation) => (
+                    <article key={citation.metric_id}>
+                      <span className="source-label">
+                        <Icon icon={FileJson} size={15} /> SOURCE DEFINITION
+                      </span>
+                      <h3>{citation.title}</h3>
+                      <p>{citation.definition}</p>
+                      <code>{citation.relation}</code>
+                      <ul>
+                        {citation.limitations.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </article>
+                  ))}
+                </div>
+              </Panel>
+            )}
+          </div>
           <p className="agent-disclosure">
             Exported responses · no live API · no model calls ·{" "}
             {current.counts.patients}-patient cohort
@@ -1419,36 +1473,6 @@ function Agent() {
             </p>
           </div>
         </aside>
-      </div>
-      <div aria-live="polite">
-        {message && <Note>{message}</Note>}
-        {answer && (
-          <Panel
-            className="answer-panel"
-            title="An answer with a paper trail"
-            subtitle={`Replayed from the ${utc(snapshot.exported_at)} export`}
-            action={<Badge>Baseline · no model</Badge>}
-          >
-            <p className="answer-text">{answer.answer}</p>
-            <div className="answer-sources">
-              {answer.citations.map((citation) => (
-                <article key={citation.metric_id}>
-                  <span className="source-label">
-                    <Icon icon={FileJson} size={15} /> SOURCE DEFINITION
-                  </span>
-                  <h3>{citation.title}</h3>
-                  <p>{citation.definition}</p>
-                  <code>{citation.relation}</code>
-                  <ul>
-                    {citation.limitations.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-          </Panel>
-        )}
       </div>
     </>
   );

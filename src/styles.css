@@ -2622,3 +2622,276 @@ input::placeholder {
   font-size: 12px;
   font-weight: 600;
 }
+
+.explorer-content {
+  padding: 0 23px 22px;
+}
+.explorer-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.explorer-actions .button {
+  gap: 7px;
+}
+.segment-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+}
+.segment-filters label {
+  display: grid;
+  gap: 8px;
+  font-size: 11px;
+  color: #506358;
+}
+.segment-filters select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+.segment-selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 17px 0;
+  font-size: 12px;
+  color: #506358;
+}
+.segment-selection .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.segment-selection button:disabled {
+  color: #68726b;
+  cursor: default;
+}
+.segment-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--line);
+}
+.segment-kpis > div {
+  padding: 17px;
+  background: #f2f6ef;
+}
+.segment-kpis span {
+  display: block;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #506358;
+}
+.segment-kpis strong {
+  display: block;
+  margin-top: 9px;
+  font-size: 25px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.segment-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 24px;
+}
+.segment-charts > section {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  min-width: 0;
+}
+.segment-charts h3 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink);
+}
+.segment-charts section > p {
+  margin: 8px 0 14px;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #617054;
+}
+.segment-bar {
+  display: block;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.segment-bar:hover,
+.segment-bar[aria-pressed="true"] {
+  background: #edf3e9;
+  border-color: #aec9b6;
+}
+.segment-bar > span:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.segment-bar strong {
+  font-weight: 600;
+}
+.segment-track {
+  display: block;
+  height: 6px;
+  margin-top: 7px;
+  border-radius: 4px;
+  background: #e7eee5;
+  overflow: hidden;
+}
+.segment-track > span {
+  display: block;
+  height: 100%;
+  background: var(--teal);
+  border-radius: inherit;
+}
+.explorer-scope {
+  margin: 20px 0 0;
+  font-size: 11px;
+  line-height: 1.8;
+  color: #617054;
+}
+.segment-empty {
+  padding: 16px;
+  border-radius: 8px;
+  background: #f6f2e7;
+  color: #67572e;
+  font-size: 12px;
+}
+.explorer-dialog {
+  box-sizing: border-box;
+  width: min(1100px, 94vw);
+  max-height: 86vh;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 26px;
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 0 18px 70px #123e3540;
+}
+.explorer-dialog::backdrop {
+  background: #123e3580;
+  backdrop-filter: blur(2px);
+}
+.explorer-dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+.explorer-dialog-heading h2 {
+  margin: 5px 0 15px;
+  font-size: 21px;
+}
+.dialog-close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--ink);
+  background: #f2f6ef;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.explorer-dialog p {
+  font-size: 12px;
+  line-height: 1.9;
+}
+.explorer-definitions p {
+  margin: 18px 0;
+}
+.selected-filter-label {
+  color: #617054;
+}
+@media (max-width: 850px) {
+  .segment-filters,
+  .segment-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .segment-explorer .panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+@media (max-width: 600px) {
+  .segment-charts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .explorer-content {
+    padding: 0 18px 20px;
+  }
+  .segment-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .explorer-dialog {
+    padding: 18px;
+  }
+}
+
+/* Muted category accents retain text labels and pressed-state borders. */
+[data-dimension="age_band"] .segment-track > span {
+  background: #63869b;
+}
+[data-dimension="gender"] .segment-track > span {
+  background: #9480a0;
+}
+[data-dimension="utilization_band"] .segment-track > span {
+  background: #ac8b51;
+}
+[data-segment="diabetes_and_hypertension"] .segment-track > span {
+  background: #88729a;
+}
+[data-segment="diabetes_without_hypertension"] .segment-track > span {
+  background: #63869b;
+}
+[data-segment="hypertension_without_diabetes"] .segment-track > span {
+  background: #b18a54;
+}
+[data-segment="no_selected_chronic"] .segment-track > span {
+  background: #8e9a89;
+}
+.condition[data-group="social"] .bar-track > div {
+  background: #63869b;
+}
+.condition[data-group="history"] .bar-track > div {
+  background: #9480a0;
+}
+.condition[data-group="care"] .bar-track > div {
+  background: #ac8b51;
+}
+.condition[data-group="unclassified"] .bar-track > div {
+  background: #82908b;
+}
+.agent-response:not(:empty) {
+  margin-top: 22px;
+  scroll-margin-top: 24px;
+}
+.agent-response:focus-visible {
+  outline: 2px solid #347a67;
+  outline-offset: 5px;
+}
+.example-questions button[aria-pressed="true"] {
+  border-color: #347a67;
+  background: #edf5ee;
+}

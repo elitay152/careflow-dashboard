@@ -1,7 +1,7 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "synthetic_only": true,
-  "exported_at": "2026-10-21T03:08:40.441489+00:00",
+  "exported_at": "2026-10-21T15:05:39.689393+00:00",
   "current": {
     "label": "Synthea 3.3.0 \u00b7 seed 43 \u00b7 1,000 living-patient target",
     "raw_schema": "synthea_p1000_seed43",
@@ -11387,6 +11387,1463 @@
       "total_patients": 1194,
       "mapped_codes": 19
     },
+    "segments": {
+      "start_month": "2024-01-01",
+      "end_month_exclusive": "2025-01-01",
+      "age_as_of": "2024-12-31",
+      "cells": [
+        {
+          "age_band": "0_17",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 2,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "0_17",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 31,
+          "seen_patients": 31,
+          "encounter_count": 31,
+          "active_request_count": 7
+        },
+        {
+          "age_band": "0_17",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 7,
+          "seen_patients": 7,
+          "encounter_count": 99,
+          "active_request_count": 13
+        },
+        {
+          "age_band": "0_17",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 72,
+          "seen_patients": 72,
+          "encounter_count": 208,
+          "active_request_count": 30
+        },
+        {
+          "age_band": "0_17",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 2,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 5
+        },
+        {
+          "age_band": "0_17",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 5,
+          "seen_patients": 5,
+          "encounter_count": 59,
+          "active_request_count": 18
+        },
+        {
+          "age_band": "0_17",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 4,
+          "seen_patients": 4,
+          "encounter_count": 11,
+          "active_request_count": 13
+        },
+        {
+          "age_band": "0_17",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 21,
+          "seen_patients": 21,
+          "encounter_count": 21,
+          "active_request_count": 10
+        },
+        {
+          "age_band": "0_17",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 12,
+          "seen_patients": 12,
+          "encounter_count": 100,
+          "active_request_count": 12
+        },
+        {
+          "age_band": "0_17",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 77,
+          "seen_patients": 77,
+          "encounter_count": 230,
+          "active_request_count": 31
+        },
+        {
+          "age_band": "0_17",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "0_17",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 2,
+          "active_request_count": 6
+        },
+        {
+          "age_band": "0_17",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 33,
+          "active_request_count": 11
+        },
+        {
+          "age_band": "0_17",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 4,
+          "seen_patients": 4,
+          "encounter_count": 12,
+          "active_request_count": 8
+        },
+        {
+          "age_band": "18_34",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 6,
+          "seen_patients": 6,
+          "encounter_count": 99,
+          "active_request_count": 19
+        },
+        {
+          "age_band": "18_34",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 5,
+          "seen_patients": 5,
+          "encounter_count": 17,
+          "active_request_count": 10
+        },
+        {
+          "age_band": "18_34",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 7,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "18_34",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 13,
+          "seen_patients": 13,
+          "encounter_count": 13,
+          "active_request_count": 13
+        },
+        {
+          "age_band": "18_34",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 40,
+          "seen_patients": 40,
+          "encounter_count": 407,
+          "active_request_count": 72
+        },
+        {
+          "age_band": "18_34",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 63,
+          "seen_patients": 63,
+          "encounter_count": 206,
+          "active_request_count": 100
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 3,
+          "active_request_count": 8
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 14,
+          "active_request_count": 9
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 5,
+          "seen_patients": 5,
+          "encounter_count": 15,
+          "active_request_count": 16
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 25,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 13
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 25,
+          "seen_patients": 25,
+          "encounter_count": 25,
+          "active_request_count": 19
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 19,
+          "active_request_count": 0
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 30,
+          "seen_patients": 30,
+          "encounter_count": 81,
+          "active_request_count": 54
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 3
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 2,
+          "active_request_count": 3
+        },
+        {
+          "age_band": "18_34",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 3,
+          "active_request_count": 7
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 9,
+          "active_request_count": 11
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 4,
+          "active_request_count": 14
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "none",
+          "patient_count": 2,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 8
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 6,
+          "seen_patients": 6,
+          "encounter_count": 6,
+          "active_request_count": 18
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 7,
+          "seen_patients": 7,
+          "encounter_count": 70,
+          "active_request_count": 20
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 13,
+          "seen_patients": 13,
+          "encounter_count": 38,
+          "active_request_count": 43
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 5,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 10,
+          "seen_patients": 10,
+          "encounter_count": 10,
+          "active_request_count": 11
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 12,
+          "seen_patients": 12,
+          "encounter_count": 91,
+          "active_request_count": 25
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 35,
+          "seen_patients": 35,
+          "encounter_count": 115,
+          "active_request_count": 44
+        },
+        {
+          "age_band": "35_49",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 7,
+          "active_request_count": 2
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 2,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 7,
+          "active_request_count": 5
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 13,
+          "seen_patients": 13,
+          "encounter_count": 13,
+          "active_request_count": 44
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 7,
+          "seen_patients": 7,
+          "encounter_count": 161,
+          "active_request_count": 32
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 22,
+          "seen_patients": 22,
+          "encounter_count": 62,
+          "active_request_count": 56
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 10,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 8
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 11,
+          "seen_patients": 11,
+          "encounter_count": 11,
+          "active_request_count": 15
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 12,
+          "seen_patients": 12,
+          "encounter_count": 31,
+          "active_request_count": 17
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 2
+        },
+        {
+          "age_band": "35_49",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 9,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "one",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 2,
+          "active_request_count": 6
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 8,
+          "active_request_count": 15
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 2,
+          "active_request_count": 3
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "none",
+          "patient_count": 6,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 27
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 3,
+          "active_request_count": 7
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 21,
+          "seen_patients": 21,
+          "encounter_count": 492,
+          "active_request_count": 116
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 28,
+          "seen_patients": 28,
+          "encounter_count": 76,
+          "active_request_count": 114
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 3,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 3
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 11,
+          "seen_patients": 11,
+          "encounter_count": 11,
+          "active_request_count": 6
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 10,
+          "seen_patients": 10,
+          "encounter_count": 83,
+          "active_request_count": 8
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 19,
+          "seen_patients": 19,
+          "encounter_count": 53,
+          "active_request_count": 28
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 2
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 19,
+          "active_request_count": 10
+        },
+        {
+          "age_band": "50_64",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 15,
+          "seen_patients": 15,
+          "encounter_count": 46,
+          "active_request_count": 42
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 2
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "six_plus",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 44,
+          "active_request_count": 15
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 10,
+          "active_request_count": 14
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 8
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 5,
+          "seen_patients": 5,
+          "encounter_count": 15,
+          "active_request_count": 20
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "none",
+          "patient_count": 7,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 34
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 15,
+          "seen_patients": 15,
+          "encounter_count": 15,
+          "active_request_count": 66
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 14,
+          "seen_patients": 14,
+          "encounter_count": 274,
+          "active_request_count": 69
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 21,
+          "seen_patients": 21,
+          "encounter_count": 67,
+          "active_request_count": 105
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 4,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 4,
+          "seen_patients": 4,
+          "encounter_count": 4,
+          "active_request_count": 7
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 15,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 15,
+          "seen_patients": 15,
+          "encounter_count": 36,
+          "active_request_count": 19
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 4,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 10
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 3,
+          "active_request_count": 15
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 6,
+          "active_request_count": 6
+        },
+        {
+          "age_band": "50_64",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 5,
+          "seen_patients": 5,
+          "encounter_count": 13,
+          "active_request_count": 22
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 6,
+          "active_request_count": 11
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 7,
+          "active_request_count": 11
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "none",
+          "patient_count": 2,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 10
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 7
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 6,
+          "seen_patients": 6,
+          "encounter_count": 23,
+          "active_request_count": 51
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "none",
+          "patient_count": 6,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 32
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 4,
+          "seen_patients": 4,
+          "encounter_count": 4,
+          "active_request_count": 23
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 16,
+          "seen_patients": 16,
+          "encounter_count": 452,
+          "active_request_count": 112
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 13,
+          "seen_patients": 13,
+          "encounter_count": 45,
+          "active_request_count": 82
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 11,
+          "active_request_count": 2
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 6,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 5,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 10
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 2,
+          "active_request_count": 8
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 26,
+          "active_request_count": 12
+        },
+        {
+          "age_band": "65_79",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 7,
+          "seen_patients": 7,
+          "encounter_count": 23,
+          "active_request_count": 29
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "one",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 3,
+          "active_request_count": 17
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "six_plus",
+          "patient_count": 4,
+          "seen_patients": 4,
+          "encounter_count": 116,
+          "active_request_count": 38
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 4,
+          "seen_patients": 4,
+          "encounter_count": 9,
+          "active_request_count": 40
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "none",
+          "patient_count": 1,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 2,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "none",
+          "patient_count": 23,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 117
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 13,
+          "seen_patients": 13,
+          "encounter_count": 362,
+          "active_request_count": 109
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 14,
+          "seen_patients": 14,
+          "encounter_count": 43,
+          "active_request_count": 85
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 4,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 2
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 0
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 29,
+          "active_request_count": 0
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 5,
+          "active_request_count": 6
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 9,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 46
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 5
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 7,
+          "active_request_count": 6
+        },
+        {
+          "age_band": "65_79",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 6,
+          "seen_patients": 6,
+          "encounter_count": 18,
+          "active_request_count": 34
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "none",
+          "patient_count": 3,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 20
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "six_plus",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 54,
+          "active_request_count": 21
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 4,
+          "active_request_count": 17
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "none",
+          "patient_count": 4,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 29
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 8,
+          "active_request_count": 16
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "none",
+          "patient_count": 15,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 107
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 2,
+          "active_request_count": 24
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 81,
+          "active_request_count": 16
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 5,
+          "seen_patients": 5,
+          "encounter_count": 18,
+          "active_request_count": 48
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 2,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 2,
+          "active_request_count": 1
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 11,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 49
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "female",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 9,
+          "active_request_count": 21
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "none",
+          "patient_count": 5,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 49
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "one",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 1,
+          "active_request_count": 7
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 17,
+          "active_request_count": 14
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "diabetes_and_hypertension",
+          "utilization_band": "two_to_five",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 2,
+          "active_request_count": 12
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "none",
+          "patient_count": 4,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 21
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "diabetes_without_hypertension",
+          "utilization_band": "six_plus",
+          "patient_count": 1,
+          "seen_patients": 1,
+          "encounter_count": 23,
+          "active_request_count": 10
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "none",
+          "patient_count": 39,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 272
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "one",
+          "patient_count": 3,
+          "seen_patients": 3,
+          "encounter_count": 3,
+          "active_request_count": 25
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "six_plus",
+          "patient_count": 8,
+          "seen_patients": 8,
+          "encounter_count": 283,
+          "active_request_count": 78
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "hypertension_without_diabetes",
+          "utilization_band": "two_to_five",
+          "patient_count": 8,
+          "seen_patients": 8,
+          "encounter_count": 19,
+          "active_request_count": 70
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "no_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 5,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 4
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "none",
+          "patient_count": 11,
+          "seen_patients": 0,
+          "encounter_count": 0,
+          "active_request_count": 34
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "one",
+          "patient_count": 2,
+          "seen_patients": 2,
+          "encounter_count": 2,
+          "active_request_count": 15
+        },
+        {
+          "age_band": "80_plus",
+          "gender": "male",
+          "clinical_profile": "other_selected_chronic",
+          "utilization_band": "two_to_five",
+          "patient_count": 4,
+          "seen_patients": 4,
+          "encounter_count": 14,
+          "active_request_count": 27
+        }
+      ]
+    },
     "medication_status": [
       {
         "status": "active",
@@ -11399,11 +12856,11 @@
     ],
     "quality": {
       "status": "passed",
-      "completed_at": "2026-10-21T03:08:39.636225Z",
+      "completed_at": "2026-10-21T15:05:38.716593Z",
       "models_passed": 10,
       "checks_passed": 32,
       "checks_total": 32,
-      "invocation_id": "b77d9067-1dd3-4c1b-b755-a7f0040f160b"
+      "invocation_id": "2bb1ff05-bae9-48c3-8bb2-9fc51e552ab5"
     }
   },
   "archive": {
@@ -11636,7 +13093,7 @@
     ],
     "evaluation": {
       "protocol": "rolling_origin_v1",
-      "evaluated_at": "2026-10-21T03:08:40.441378+00:00",
+      "evaluated_at": "2026-10-21T15:05:39.689259+00:00",
       "input_sha256": "9e03e72292a09dbcf66d5940643fdd5bfc11bfae0b8d6d2b0becf048f8a4a121",
       "training_start": "2015-01-01",
       "training_end": "2023-12-01",
