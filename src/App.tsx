@@ -43,6 +43,7 @@ const supported = new Set([
   "Condition",
   "MedicationRequest",
   "Organization",
+  "Observation",
 ]);
 const number = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(value);
@@ -274,6 +275,7 @@ function Overview() {
     current.counts.encounters +
     current.counts.conditions +
     current.counts.medications +
+    current.counts.observations +
     (snapshot.demand?.facility_count ?? 0);
   const quality = current.quality;
   const domains = [
@@ -294,11 +296,16 @@ function Overview() {
     },
     { label: "Patients", value: current.counts.patients, color: "var(--gold)" },
     {
+      label: "Selected observations",
+      value: current.counts.observations,
+      color: "#b78259",
+    },
+    {
       label: "Provider organizations",
       value: snapshot.demand?.facility_count ?? 0,
       color: "#9480a0",
     },
-  ];
+  ].sort((a, b) => b.value - a.value);
   return (
     <>
       <section className="author-intro" aria-labelledby="author-heading">
@@ -354,7 +361,7 @@ function Overview() {
         <Metric
           label="Supported records loaded"
           value={number(loaded)}
-          note="Across five persisted FHIR resource types"
+          note="Across six persisted FHIR resource types"
           icon={Layers}
           tone="blue"
         />
@@ -378,7 +385,7 @@ function Overview() {
       </div>
       <div className="overview-grid">
         <Panel
-          title="Four healthcare data domains"
+          title="Healthcare data domains"
           subtitle="Loaded rows in the current PostgreSQL cohort"
           action={
             <a href="#cohort" className="text-link">
@@ -406,8 +413,8 @@ function Overview() {
           </div>
           <div className="panel-foot">
             <span className="mini-dot" />
-            Five supported resource types are persisted, including provider
-            organizations.
+            Six supported resource types are persisted, including selected
+            Observations and provider organizations.
           </div>
         </Panel>
         <Panel
@@ -533,6 +540,7 @@ function Cohort() {
     Encounter: current.counts.encounters,
     Condition: current.counts.conditions,
     MedicationRequest: current.counts.medications,
+    Observation: current.counts.observations,
     Organization: snapshot.demand?.facility_count ?? 0,
   }).sort((a, b) => b[1] - a[1]);
   const filtered = resources.filter(
@@ -561,8 +569,10 @@ function Cohort() {
           <p>
             Careflow validates the supported records, loads them into
             PostgreSQL, and transforms them with dbt for the metrics on this
-            site. The Synthea records are simulated, not anonymized records from
-            real patients.
+            site. Selected Observations cover BMI, HbA1c, kidney measurements,
+            and blood pressure; other Observation concepts are outside the
+            ingestion subset. The Synthea records are simulated, not anonymized
+            records from real patients.
           </p>
           <External href="https://synthetichealth.github.io/synthea/">
             About Synthea
