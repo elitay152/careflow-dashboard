@@ -69,7 +69,6 @@ const mutations = [
   [
     "a credential-bearing evidence URL",
     (d) => {
-      // Deliberately fake userinfo for the URL-rejection regression test.
       d.archive.evidence_url =
         "https://user:audit-sentinel@github.com/elitay152/Careflow/blob/main/docs/validation-results.json"; // pragma: allowlist secret
     },
