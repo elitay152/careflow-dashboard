@@ -60,7 +60,7 @@ test("navigation and browser history work", async ({ page }, testInfo) => {
   );
   await page.goBack();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "Synthetic healthcare",
+    "Careflow.",
   );
 });
 

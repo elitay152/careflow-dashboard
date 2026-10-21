@@ -14,7 +14,6 @@ import {
   Download,
   FileJson,
   FlaskConical,
-  GitBranch,
   Code2 as Github,
   HeartPulse,
   Info,
@@ -73,11 +72,11 @@ const nav = [
     id: "overview",
     label: "Overview",
     icon: LayoutDashboard,
-    eyebrow: "THE BIG PICTURE",
-    title: "Synthetic healthcare.",
-    accent: "Real engineering.",
+    eyebrow: "A DATA ENGINEERING PORTFOLIO",
+    title: "Careflow.",
+    accent: "Built to show my work.",
     description:
-      "A small healthcare data platform with a clear path from raw FHIR to trustworthy analytics.",
+      "A custom portfolio project built with agentic development, using synthetic healthcare data to demonstrate an ETL pipeline and example metrics.",
   },
   {
     id: "cohort",
@@ -280,6 +279,42 @@ function Overview() {
   ];
   return (
     <>
+      <section className="author-intro" aria-labelledby="author-heading">
+        <div className="author-role">
+          FORMER NURSE
+          <br />
+          DATA ENGINEER
+        </div>
+        <div>
+          <h2 id="author-heading">Hi, I’m Eli Taylor.</h2>
+          <p>
+            I’m a former nurse turned data engineer. My work spans healthcare
+            data pipelines, reporting automation, and data quality using Python,
+            SQL, Snowflake, Databricks, and dbt. At CareOregon, that included
+            immunization registry ingestion for roughly 600,000 members and
+            standardizing data feeds from more than 15 external partners.
+          </p>
+          <p>
+            I’m also pursuing a Doctor of Information Technology with an AI
+            concentration. Careflow brings my healthcare background and
+            engineering experience together in a project I can share openly.
+          </p>
+          <p>
+            This is a custom portfolio project built with an agentic development
+            workflow. I use synthetic data to demonstrate the pipeline end to
+            end, from FHIR records and PostgreSQL to dbt quality checks and the
+            analytics you can explore here.
+          </p>
+          <a
+            className="text-link"
+            href={source}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Explore the project on GitHub <Icon icon={ArrowUpRight} size={15} />
+          </a>
+        </div>
+      </section>
       <div className="evidence-banner">
         <div>
           <Icon icon={Database} />
@@ -451,14 +486,14 @@ function Overview() {
       </Panel>
       <div className="cohort-callout">
         <div className="callout-icon">
-          <Icon icon={GitBranch} size={24} />
+          <Icon icon={BarChart3} size={24} />
         </div>
         <div>
-          <h3>Two datasets. Clearly separated.</h3>
+          <h3>Explore this cohort</h3>
           <p>
-            The 108-patient validation is archived evidence. Interactive
-            analytics use the current {number(current.counts.patients)}-patient
-            cohort export.
+            The analytics page shows encounter trends, duration statistics,
+            conditions, and medication requests for{" "}
+            {number(current.counts.patients)} synthetic patients.
           </p>
         </div>
         <a className="button secondary" href="#analytics">
