@@ -293,9 +293,7 @@ function Overview() {
           <p>
             I’m a former nurse turned data engineer. My work spans healthcare
             data pipelines, reporting automation, and data quality using Python,
-            SQL, Snowflake, Databricks, and dbt. At CareOregon, that included
-            immunization registry ingestion for roughly 600,000 members and
-            standardizing data feeds from more than 15 external partners.
+            SQL, Snowflake, Databricks, and dbt.
           </p>
           <p>
             I’m also pursuing a Doctor of Information Technology with an AI
