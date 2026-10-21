@@ -2603,3 +2603,22 @@ input::placeholder {
     max-width: none;
   }
 }
+
+.cohort-source {
+  padding: 0 23px 24px;
+}
+.cohort-source p {
+  max-width: 850px;
+  margin: 0 0 14px;
+  color: #506358;
+  font-size: 13px;
+  line-height: 1.85;
+}
+.cohort-source a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 600;
+}

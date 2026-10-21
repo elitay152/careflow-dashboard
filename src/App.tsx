@@ -525,6 +525,28 @@ function Cohort() {
         loaded PostgreSQL rows exported {utc(snapshot.exported_at)}, not a live
         population.
       </Note>
+      <Panel
+        title="Where the data comes from"
+        subtitle="Simulated patient histories generated with Synthea"
+      >
+        <div className="cohort-source">
+          <p>
+            Synthea is an open-source patient simulator that generates fictional
+            people and their medical histories, including healthcare visits,
+            diagnoses, and prescriptions. It exports those histories as FHIR
+            JSON bundles, a standard format for exchanging healthcare data.
+          </p>
+          <p>
+            Careflow validates the supported records, loads them into
+            PostgreSQL, and transforms them with dbt for the metrics on this
+            site. The Synthea records are simulated, not anonymized records from
+            real patients.
+          </p>
+          <External href="https://synthetichealth.github.io/synthea/">
+            About Synthea
+          </External>
+        </div>
+      </Panel>
       <div className="metrics-grid three">
         <Metric
           label="Synthetic patients"
@@ -636,11 +658,6 @@ function Cohort() {
           compatibility testing, not full FHIR conformance.
         </div>
       </Panel>
-      <Note>
-        Resource totals are not interchangeable. A MedicationRequest is a
-        request, not evidence that medication was dispensed. Patient histories
-        can contain many encounters and conditions.
-      </Note>
     </>
   );
 }
