@@ -5,18 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/validate-data.mjs && node scripts/validate-flu.mjs && node scripts/check-artifacts.mjs --public && tsc --noEmit && vite build && node scripts/check-artifacts.mjs",
+    "build": "node scripts/validate-data.mjs && node scripts/validate-flu.mjs && node scripts/validate-readmission.mjs && node scripts/check-artifacts.mjs --public && tsc --noEmit && vite build && node scripts/check-artifacts.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "npm run test:capacity && playwright test",
     "data:sync": "node scripts/sync-data.mjs",
     "data:refresh": "node scripts/refresh-data.mjs",
     "data:check": "node scripts/validate-data.mjs",
-    "test:security": "node --test tests/security.test.mjs tests/flu-security.test.mjs",
+    "test:security": "node --test tests/security.test.mjs tests/flu-security.test.mjs tests/readmission-security.test.mjs",
     "test:pages": "playwright test --config playwright.pages.config.ts",
     "test:capacity": "node --experimental-strip-types --test tests/capacity.test.mjs",
     "flu:sync": "node scripts/sync-flu.mjs",
     "flu:refresh": "node scripts/refresh-flu.mjs",
-    "flu:check": "node scripts/validate-flu.mjs"
+    "flu:check": "node scripts/validate-flu.mjs",
+    "readmission:sync": "node scripts/sync-readmission.mjs",
+    "readmission:check": "node scripts/validate-readmission.mjs"
   },
   "engines": {
     "node": ">=22.12"

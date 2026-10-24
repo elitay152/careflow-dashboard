@@ -1,0 +1,123 @@
+.readmission-panel {
+  padding: 1.5rem;
+}
+.readmission-panel .panel-heading {
+  padding: 0;
+  margin-bottom: 1rem;
+}
+.readmission-panel h2 {
+  font-size: 1.15rem;
+}
+.readmission-panel p,
+.readmission-panel li {
+  font-size: 0.85rem;
+  line-height: 1.85;
+  color: #52675b;
+}
+.readmission-panel p {
+  margin: 1rem 0;
+}
+.readmission-panel summary {
+  min-height: 44px;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #24483b;
+  font-weight: 600;
+}
+.readmission-controls,
+.readmission-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.readmission-controls label {
+  display: grid;
+  gap: 0.5rem;
+  color: #52675b;
+  font-size: 0.8rem;
+}
+.readmission-controls select {
+  min-height: 44px;
+  padding: 0.6rem;
+  border: 1px solid #cad9cd;
+  border-radius: 7px;
+  color: #24483b;
+  background: white;
+}
+.readmission-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.readmission-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.readmission-kpis article {
+  border: 1px solid #dce6dd;
+  border-radius: 10px;
+  padding: 1.3rem;
+  background: white;
+}
+.readmission-kpis span,
+.readmission-kpis small {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #52675b;
+}
+.readmission-kpis strong {
+  display: block;
+  font-size: 1.65rem;
+  color: #24483b;
+  margin: 0.8rem 0;
+}
+.readmission-selected {
+  background: #f0f5eb;
+}
+.readmission-selected small {
+  display: block;
+  margin-top: 0.4rem;
+  font-weight: 400;
+}
+.readmission-fingerprint {
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, monospace;
+}
+@media (max-width: 700px) {
+  .readmission-kpis {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .readmission-panel {
+    padding: 1rem;
+  }
+  .readmission-controls {
+    display: grid;
+  }
+}
+.readmission-calibration-chart {
+  width: 100%;
+  max-width: 650px;
+  display: block;
+  margin: 1rem auto;
+}
+.readmission-calibration-chart text {
+  font:
+    16px system-ui,
+    sans-serif;
+  fill: #52675b;
+}
+.readmission-controls label {
+  min-width: 0;
+}
+.readmission-controls select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.readmission-links a {
+  gap: 0.35rem;
+}

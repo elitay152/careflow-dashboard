@@ -3,7 +3,7 @@
 A React/TypeScript portfolio website for the
 [Careflow healthcare data platform](https://github.com/elitay152/Careflow).
 It renders aggregate synthetic data exported from PostgreSQL and a separate
-observed public influenza admissions benchmark. The public browser
+public-data forecasting and readmission studies. The public browser
 has no database connection, model credentials, or live agent endpoint.
 
 **Website:** https://elitay152.github.io/careflow-dashboard/
@@ -35,7 +35,7 @@ support the GitHub Pages repository path.
 | Analytics | Latest-12-month KPIs, monthly/annual trends, duration statistics, clinical/contextual groups, and medication request statuses. |
 | Analytics agent | Three cited baseline answers replayed from the export; other inputs are declined. |
 | Forecasting | Observed U.S. influenza admissions and a frozen holdout benchmark, plus separate synthetic facility/ZIP histories and capacity experiments. |
-| Inpatient risk study | Adult 90-day mixed-setting inpatient-episode experiment with readiness, patient/time splits, baselines, and aggregate calibration. |
+| Readmission risk | UCI discharge-time readmission benchmark, plus a separate synthetic 90-day inpatient experiment. |
 | Pipeline health | Source-load, build, and export timestamps, quality checks, quarantines, and downloadable evidence. |
 
 The synthetic snapshot contains 1,194 synthetic patients and a reference catalog of 852
@@ -160,3 +160,28 @@ It contains focused references for chart design, page critique, and verification
 plus upstream MIT notices and source revisions. It is explicitly invoked, adds no
 application dependencies, and is not part of the public website build. Sessions
 that discover skills only at startup may need to be reopened after checkout.
+
+## UCI readmission deployment
+
+Main-branch deployments fetch UCI dataset 296 through its metadata API, run the
+fixed patient-grouped benchmark from a pinned Careflow commit, and atomically sync
+only `public/data/readmission.json` before build and browser checks. The study is
+separate from synthetic `careflow.json` and observed flu `flusight.json`.
+
+PRs stay offline and use an explicit `not_run` snapshot; no fabricated real-data
+scores are committed. On main, a failed fetch, source/license check, evaluation, or
+contract check blocks deployment and retains the previous live site. Raw records
+and fitted models are never uploaded. No API key, PostgreSQL, or paid model is needed.
+The first real-data result is pending a successful Actions run.
+
+The source CSV hash is recorded in each build. After reviewing a successful run,
+set the Actions repository variable `UCI_READMISSION_SHA256` to that CSV hash to
+require identical input on subsequent deployments. Each main deployment fetches
+and trains again; there are no scheduled refreshes or automatic retries. Run the
+existing website workflow manually to retry after an upstream failure.
+
+For local refresh with an accessible UCI endpoint, run the backend command
+`.venv/bin/python -m careflow.uci_readmission --download`, then in this repo
+`npm run readmission:sync -- /path/to/Careflow/data/public/readmission.json` and
+`npm run build`. The sync refuses pending evidence and leaves the prior file intact
+on validation failure. See the [backend protocol](https://github.com/elitay152/Careflow/blob/main/docs/readmission.md).

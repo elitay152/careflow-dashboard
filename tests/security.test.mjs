@@ -489,6 +489,12 @@ test("unverified build evidence remains valid only with null outcome fields", ()
   assert.doesNotThrow(() => validateData(candidate));
 });
 
+const readmissionSnapshot = JSON.parse(
+  await readFile(
+    new URL("../public/data/readmission.json", import.meta.url),
+    "utf8",
+  ),
+);
 const fluSnapshot = JSON.parse(
   await readFile(
     new URL("../public/data/flusight.json", import.meta.url),
@@ -502,6 +508,10 @@ async function fixture(t) {
   for (const directory of ["public/data", "dist/data", "dist/assets"])
     await mkdir(join(root, directory), { recursive: true });
   for (const stage of ["public", "dist"]) {
+    await writeFile(
+      join(root, stage, "data/readmission.json"),
+      JSON.stringify(readmissionSnapshot),
+    );
     await writeFile(
       join(root, stage, "data/flusight.json"),
       JSON.stringify(fluSnapshot),

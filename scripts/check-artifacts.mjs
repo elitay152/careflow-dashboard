@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readSnapshot } from "./validate-data.mjs";
 import { readFluSnapshot } from "./validate-flu.mjs";
+import { readReadmission } from "./validate-readmission.mjs";
 
 async function walk(root, prefix = "") {
   const files = [];
@@ -28,6 +29,7 @@ export async function checkArtifacts(root, stage) {
     "favicon.svg",
     "data/careflow.json",
     "data/flusight.json",
+    "data/readmission.json",
     ...(stage === "dist" ? ["index.html"] : []),
   ];
   for (const file of files) {
@@ -50,6 +52,7 @@ export async function checkRelease(root) {
   for (const [name, read] of [
     ["careflow", readSnapshot],
     ["flusight", readFluSnapshot],
+    ["readmission", readReadmission],
   ]) {
     const source = await read(join(root, `public/data/${name}.json`));
     const built = await readFile(join(root, `dist/data/${name}.json`));

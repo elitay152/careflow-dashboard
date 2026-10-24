@@ -2,6 +2,8 @@ import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import data from "../public/data/careflow.json" with { type: "json" };
 import flu from "../public/data/flusight.json" with { type: "json" };
+import readmission from "../public/data/readmission.json" with { type: "json" };
+import type { ReadmissionEvidence } from "../src/ReadmissionStudy";
 
 for (const route of [
   "overview",
@@ -515,8 +517,14 @@ test("hospitalization evaluation shows honest splits and aggregate model compari
   page,
 }) => {
   await page.goto("./#risk");
+  await page
+    .getByRole("button", {
+      name: "Synthetic inpatient experiment",
+      exact: true,
+    })
+    .click();
   await expect(
-    page.getByRole("heading", { name: "Inpatient episodes within 90 days" }),
+    page.getByRole("heading", { name: "Readmission risk at discharge" }),
   ).toBeVisible();
   await expect(
     page.getByText("The selected threshold missed the positive outcomes.", {
@@ -914,4 +922,85 @@ test("segment distribution disclosure preserves bar filters and full-cohort tren
   ).toHaveValue("all");
   await disclosure.click();
   await expect(details).not.toHaveAttribute("open", "");
+});
+
+test("UCI readmission page shows actual run status and preserves the separate synthetic experiment", async ({
+  page,
+}) => {
+  await page.goto("./#risk");
+  await expect(
+    page.getByRole("button", {
+      name: "UCI readmission benchmark",
+      exact: true,
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  const evidence = readmission as unknown as ReadmissionEvidence;
+  if (evidence.status === "not_run") {
+    await expect(
+      page.getByRole("heading", { name: "Awaiting the first UCI benchmark" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("No real-data model results have been published yet.", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("region", {
+        name: "Readmission model comparison",
+        exact: true,
+      }),
+    ).toHaveCount(0);
+  } else {
+    const table = page.getByRole("region", {
+      name: "Readmission model comparison",
+      exact: true,
+    });
+    await expect(table.locator("tbody tr")).toHaveCount(4);
+    await page
+      .getByLabel("Readmission model", { exact: true })
+      .selectOption("prevalence");
+    await page
+      .getByLabel("Readmission evaluation split", { exact: true })
+      .selectOption("validation");
+    await expect(
+      page
+        .getByRole("region", {
+          name: "Readmission review capacity",
+          exact: true,
+        })
+        .locator("tbody tr"),
+    ).toHaveCount(2);
+    await expect(
+      page
+        .getByRole("region", {
+          name: "Readmission calibration values",
+          exact: true,
+        })
+        .locator("tbody tr"),
+    ).toHaveCount(10);
+    await page.getByText("Source and reproducibility", { exact: true }).click();
+    await expect(
+      page.getByText(/No individual encounter rows, patient IDs/),
+    ).toBeVisible();
+  }
+  await page
+    .getByRole("button", {
+      name: "Synthetic inpatient experiment",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page
+      .getByRole("region", { name: "Inpatient model comparison", exact: true })
+      .locator("tbody tr"),
+  ).toHaveCount(3);
+  await page
+    .getByRole("button", { name: "UCI readmission benchmark", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", {
+      name: "UCI readmission benchmark",
+      exact: true,
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
 });
