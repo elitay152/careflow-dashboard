@@ -11,7 +11,7 @@ concurrency:
 jobs:
   website:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -22,7 +22,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm audit --audit-level=moderate
-      - run: npm run test:security
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
@@ -36,6 +35,27 @@ jobs:
           "$tools_dir/bin/python" -m pip install 'pip==26.2.2'
           "$tools_dir/bin/python" -m pip install 'detect-secrets==1.5.0'
           git ls-files -z | xargs -0 "$tools_dir/bin/detect-secrets-hook" --baseline .secrets.baseline
+      - name: Check out the reviewed readmission pipeline
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: elitay152/Careflow
+          ref: 9bfcc9352255c88ee98b66c679ab19971fa5223f # Pinned readmission implementation
+          path: .careflow-backend
+          persist-credentials: false
+      - name: Fetch UCI and evaluate discharge-time readmission
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          UCI_READMISSION_SHA256: ${{ vars.UCI_READMISSION_SHA256 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv .careflow-backend/.venv
+          .careflow-backend/.venv/bin/python -m pip install 'pip==26.2.2'
+          .careflow-backend/.venv/bin/python -m pip install -c .careflow-backend/security-constraints.txt -e '.careflow-backend[ml]'
+          .careflow-backend/.venv/bin/python -m careflow.uci_readmission --download
+          node scripts/sync-readmission.mjs .careflow-backend/data/public/readmission.json
+      - run: npm run test:security
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm test

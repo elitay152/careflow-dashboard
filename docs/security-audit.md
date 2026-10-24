@@ -1,7 +1,7 @@
 # Security boundaries
 
 The website is a public, read-only view of aggregate synthetic data and a separate
-public national influenza admissions series. Computation,
+public national influenza admissions series and UCI readmission study. Computation,
 database access, model credentials, and spending controls belong in Careflow.
 
 ## Data and release controls
@@ -48,3 +48,12 @@ Keep FastAPI, Dagster, database ports, and development forwarding private.
 Package scans are point-in-time advisory checks, not operating-system, unknown
 vulnerability, or clinical compliance assessments. Automated accessibility tests
 are not a complete accessibility review.
+
+The UCI deployment step runs only for main-branch builds, using a pinned backend
+commit and read-only checkout permissions. Tracked-source secret scanning happens
+before generated evidence replaces the pending artifact; strict contracts and
+release allowlists validate the generated aggregates afterward. The fetch accepts
+fixed UCI endpoints, bounds response sizes, and rejects redirects. No raw UCI data,
+identifiers, per-encounter probabilities, or model files reach the Pages artifact.
+Failure blocks publication; the first real-data deployment remains unverified
+until Actions succeeds.

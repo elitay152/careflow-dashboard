@@ -35,6 +35,8 @@ import RegionalDemand from "./RegionalDemand";
 import FluForecast, { type FluSnapshot } from "./FluForecast";
 import fluSnapshot from "../public/data/flusight.json";
 import RiskOverview, { type RiskSummary } from "./RiskOverview";
+import ReadmissionStudy, { type ReadmissionEvidence } from "./ReadmissionStudy";
+import readmission from "../public/data/readmission.json";
 
 const current = snapshot.current;
 const archive = snapshot.archive;
@@ -129,13 +131,13 @@ const nav = [
   },
   {
     id: "risk",
-    label: "Inpatient risk study",
+    label: "Readmission risk",
     icon: HeartPulse,
     eyebrow: "PATIENT-LEVEL MODEL STUDY",
-    title: "Inpatient episodes within 90 days",
+    title: "Readmission risk at discharge",
     accent: "",
     description:
-      "A synthetic-data experiment predicting a new inpatient episode from earlier patient history. Readiness, baselines, and evaluation are shown together.",
+      "A patient-grouped UCI readmission benchmark, with a separate synthetic inpatient experiment.",
   },
   {
     id: "health",
@@ -1421,6 +1423,37 @@ function Analytics() {
   );
 }
 
+function PatientRiskStudies() {
+  const [view, setView] = useState("uci");
+  return (
+    <>
+      <div className="segmented demand-view" aria-label="Patient risk study">
+        <button
+          aria-pressed={view === "uci"}
+          className={view === "uci" ? "active" : ""}
+          onClick={() => setView("uci")}
+        >
+          UCI readmission benchmark
+        </button>
+        <button
+          aria-pressed={view === "synthetic"}
+          className={view === "synthetic" ? "active" : ""}
+          onClick={() => setView("synthetic")}
+        >
+          Synthetic inpatient experiment
+        </button>
+      </div>
+      {view === "uci" ? (
+        <ReadmissionStudy
+          data={readmission as unknown as ReadmissionEvidence}
+        />
+      ) : (
+        <RiskOverview data={snapshot.risk as RiskSummary | null} />
+      )}
+    </>
+  );
+}
+
 function Agent() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<
@@ -2323,7 +2356,7 @@ export default function App() {
           <div className="synthetic-seal">
             <Icon icon={ShieldCheck} size={19} />
             <div>
-              <strong>Synthetic FHIR + public flu data</strong>
+              <strong>Synthetic FHIR + public studies</strong>
               <span>Sources are labeled by page.</span>
             </div>
           </div>
@@ -2404,7 +2437,7 @@ export default function App() {
           ) : page === "forecasting" ? (
             <Forecasting />
           ) : page === "risk" ? (
-            <RiskOverview data={snapshot.risk as RiskSummary | null} />
+            <PatientRiskStudies />
           ) : (
             <Health />
           )}
