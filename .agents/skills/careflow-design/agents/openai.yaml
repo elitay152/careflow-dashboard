@@ -1,0 +1,6 @@
+interface:
+  display_name: "Careflow Design"
+  short_description: "Refine Careflow pages and charts without losing evidence"
+  default_prompt: "Use $careflow-design to improve or review the requested Careflow dashboard page while preserving its existing behavior and data meaning."
+policy:
+  allow_implicit_invocation: false
