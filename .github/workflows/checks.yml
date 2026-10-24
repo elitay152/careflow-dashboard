@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           repository: elitay152/Careflow
-          ref: 9bfcc9352255c88ee98b66c679ab19971fa5223f # Pinned readmission implementation
+          ref: 91b08f3000d80e09ea53aabb14140913d7472c33 # Pinned readmission implementation
           path: .careflow-backend
           persist-credentials: false
       - name: Fetch UCI and evaluate discharge-time readmission
