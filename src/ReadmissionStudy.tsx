@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ReadmissionFinding, { type ReviewBudget } from "./ReadmissionFinding";
 import { ArrowUpRight } from "lucide-react";
 
 type Calibration = {
@@ -17,13 +18,7 @@ type Metrics = {
   roc_auc: number;
   brier: number;
   calibration: Calibration[];
-  review: {
-    capacity: number;
-    reviewed: number;
-    captured: number;
-    precision: number;
-    recall: number;
-  }[];
+  review: ReviewBudget[];
 };
 export type ReadmissionEvidence = {
   status: "not_run" | "completed";
@@ -179,6 +174,41 @@ export default function ReadmissionStudy({
           <small>Highest average precision among four fixed candidates</small>
         </article>
       </div>
+      <div className="readmission-controls readmission-study-controls">
+        <label>
+          Evaluation split
+          <select
+            aria-label="Readmission evaluation split"
+            value={split}
+            onChange={(event) =>
+              setSplit(event.target.value as "validation" | "test")
+            }
+          >
+            <option value="test">Patient-held-out test</option>
+            <option value="validation">Validation</option>
+          </select>
+        </label>
+        <label>
+          Inspect a model
+          <select
+            aria-label="Readmission model"
+            value={model}
+            onChange={(event) => setModel(event.target.value)}
+          >
+            {e.models.map((m) => (
+              <option key={m.model} value={m.model}>
+                {names[m.model]}
+                {m.model === e.selected_model ? " · validation selection" : ""}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <ReadmissionFinding
+        budget={metrics.review.find((r) => r.capacity === 0.2)!}
+        model={names[model]}
+        split={split}
+      />
       <section
         className="panel readmission-panel"
         aria-labelledby="readmission-models-title"
@@ -193,38 +223,7 @@ export default function ReadmissionStudy({
             </p>
           </div>
         </div>
-        <div className="readmission-controls">
-          <label>
-            Evaluation split
-            <select
-              aria-label="Readmission evaluation split"
-              value={split}
-              onChange={(event) =>
-                setSplit(event.target.value as "validation" | "test")
-              }
-            >
-              <option value="test">Patient-held-out test</option>
-              <option value="validation">Validation</option>
-            </select>
-          </label>
-          <label>
-            Inspect a model
-            <select
-              aria-label="Readmission model"
-              value={model}
-              onChange={(event) => setModel(event.target.value)}
-            >
-              {e.models.map((m) => (
-                <option key={m.model} value={m.model}>
-                  {names[m.model]}
-                  {m.model === e.selected_model
-                    ? " · validation selection"
-                    : ""}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+
         <p>
           The {split} split contains {number(reviewed.encounters)} encounters
           from {number(reviewed.patients)} patients. Each patient belongs to

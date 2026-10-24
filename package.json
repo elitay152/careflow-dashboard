@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "node scripts/validate-data.mjs && node scripts/validate-flu.mjs && node scripts/validate-readmission.mjs && node scripts/check-artifacts.mjs --public && tsc --noEmit && vite build && node scripts/check-artifacts.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "npm run test:capacity && playwright test",
+    "test": "npm run test:capacity && npm run test:components && playwright test",
     "data:sync": "node scripts/sync-data.mjs",
     "data:refresh": "node scripts/refresh-data.mjs",
     "data:check": "node scripts/validate-data.mjs",
@@ -18,7 +18,8 @@
     "flu:refresh": "node scripts/refresh-flu.mjs",
     "flu:check": "node scripts/validate-flu.mjs",
     "readmission:sync": "node scripts/sync-readmission.mjs",
-    "readmission:check": "node scripts/validate-readmission.mjs"
+    "readmission:check": "node scripts/validate-readmission.mjs",
+    "test:components": "node --test tests/readmission-finding.test.mjs"
   },
   "engines": {
     "node": ">=22.12"

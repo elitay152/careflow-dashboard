@@ -121,3 +121,76 @@
 .readmission-links a {
   gap: 0.35rem;
 }
+
+.readmission-study-controls {
+  margin: 1.25rem 0;
+}
+.readmission-finding {
+  margin: 0 0 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #c9dacb;
+  border-radius: 12px;
+  background: #edf4e9;
+  color: #24483b;
+}
+.readmission-finding-scope {
+  margin: 0 0 0.6rem;
+  color: #52675b;
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+.readmission-finding h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.readmission-finding-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1.7rem 0;
+  max-width: 720px;
+}
+.readmission-finding-flow > div {
+  min-width: 0;
+}
+.readmission-finding-flow span {
+  display: block;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.readmission-finding-flow strong {
+  display: block;
+  margin: 0.3rem 0;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+.readmission-finding-counts {
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid #d0ddcc;
+  font-size: 0.85rem;
+  line-height: 1.9;
+}
+.readmission-finding-limit {
+  margin: 0.7rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: #52675b;
+}
+@media (max-width: 600px) {
+  .readmission-finding {
+    padding: 1.1rem;
+  }
+  .readmission-finding-flow {
+    gap: 0.7rem;
+  }
+  .readmission-finding-flow span {
+    font-size: 0.8rem;
+  }
+  .readmission-finding-flow > svg {
+    width: 22px;
+  }
+}
