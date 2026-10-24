@@ -51,7 +51,8 @@ assumptions. Whole slots are rounded down per clinician session; scenario visits
 are rounded up, and monthly shortfalls do not carry forward. It runs locally over
 exported counts without forecasting future demand or estimating real staffing.
 The steady/increasing/decreasing examples use recorded histories, not model scores.
-`npm test` checks the arithmetic before running the browser suite.
+`npm test` checks the arithmetic and focused component rendering before running
+the browser suite.
 
 ## Refresh from PostgreSQL
 

@@ -950,18 +950,52 @@ test("UCI readmission page shows actual run status and preserves the separate sy
         exact: true,
       }),
     ).toHaveCount(0);
+    await expect(
+      page.getByRole("region", {
+        name: "Review capacity at a glance",
+        exact: true,
+      }),
+    ).toHaveCount(0);
   } else {
     const table = page.getByRole("region", {
       name: "Readmission model comparison",
       exact: true,
     });
     await expect(table.locator("tbody tr")).toHaveCount(4);
+    const finding = page.getByRole("region", {
+      name: "Review capacity at a glance",
+      exact: true,
+    });
+    const pct = (value: number) =>
+      new Intl.NumberFormat("en-US", {
+        style: "percent",
+        maximumFractionDigits: 1,
+      }).format(value);
+    const selected = evidence.evaluation!.models.find(
+      (m) => m.model === evidence.evaluation!.selected_model,
+    )!;
+    const budget = selected.test.review.find((r) => r.capacity === 0.2)!;
+    await expect(finding).toContainText(pct(budget.recall));
+    await expect(finding).toContainText(
+      new Intl.NumberFormat("en-US").format(budget.reviewed),
+    );
+    await expect(finding).toContainText("Patient-held-out test");
     await page
       .getByLabel("Readmission model", { exact: true })
       .selectOption("prevalence");
     await page
       .getByLabel("Readmission evaluation split", { exact: true })
       .selectOption("validation");
+    const baselineBudget =
+      evidence.evaluation!.models[0].validation.review.find(
+        (r) => r.capacity === 0.2,
+      )!;
+    await expect(finding).toContainText("Training prevalence");
+    await expect(finding).toContainText("Validation");
+    await expect(finding).toContainText(pct(baselineBudget.recall));
+    await expect(finding).toContainText(
+      new Intl.NumberFormat("en-US").format(baselineBudget.captured),
+    );
     await expect(
       page
         .getByRole("region", {
