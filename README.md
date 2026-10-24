@@ -144,3 +144,19 @@ and never updates from holdout outcomes. This
 retrospective revised-data evaluation assumes week-end availability; it does not
 replay release delays or establish real-time planning performance. See the
 [backend protocol and attribution](https://github.com/elitay152/Careflow/blob/main/docs/flusight.md).
+
+## Project design skill
+
+The repository-local [`careflow-design`](.agents/skills/careflow-design/SKILL.md)
+skill guides frontend refinements and critiques. In a coding assistant that supports
+repository-local `.agents/skills`, invoke it explicitly, for example:
+
+```text
+Use $careflow-design to improve chart readability on Analytics while preserving
+the current palette, metric definitions, filters, and security boundaries.
+```
+
+It contains focused references for chart design, page critique, and verification,
+plus upstream MIT notices and source revisions. It is explicitly invoked, adds no
+application dependencies, and is not part of the public website build. Sessions
+that discover skills only at startup may need to be reopened after checkout.
