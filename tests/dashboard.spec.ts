@@ -779,3 +779,139 @@ test("overview tour connects the source, evidence, analytics and forecasting", a
     await expect(tour).toBeVisible();
   }
 });
+
+test("analytics trend fits its container and period controls expose exact records", async ({
+  page,
+}) => {
+  await page.goto("./#analytics");
+  const trend = page.locator(".analytics-trend");
+  const explorer = page.locator(".segment-explorer");
+  expect((await trend.boundingBox())!.y).toBeLessThan(
+    (await explorer.boundingBox())!.y,
+  );
+  const chart = page.getByRole("region", {
+    name: "Utilization chart",
+    exact: true,
+  });
+  await expect
+    .poll(() =>
+      chart
+        .locator("svg")
+        .evaluate((el) =>
+          Math.abs(
+            el.getBoundingClientRect().width -
+              (el as SVGSVGElement).viewBox.baseVal.width,
+          ),
+        ),
+    )
+    .toBeLessThan(2);
+  expect(
+    await chart.evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+  ).toBe(true);
+  const latest = data.current.monthly_utilization.slice(-60);
+  const number = (n: number) =>
+    new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(n);
+  const reading = page.locator(".trend-reading");
+  await expect(reading.locator("strong")).toHaveText(
+    number(latest.at(-1)!.encounter_count),
+  );
+  await expect(
+    page.getByRole("button", { name: "Next observed month", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("button", { name: "Previous observed month", exact: true })
+    .click();
+  await expect(reading.locator("strong")).toHaveText(
+    number(latest.at(-2)!.encounter_count),
+  );
+  const slider = page.getByRole("slider", {
+    name: "Explore month",
+    exact: true,
+  });
+  await slider.focus();
+  await slider.press("Home");
+  await expect(
+    page.getByRole("button", { name: "Previous observed month", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("button", { name: "Next observed month", exact: true })
+    .click();
+  await expect(reading.locator("strong")).toHaveText(
+    number(latest[1].encounter_count),
+  );
+  await page.getByRole("button", { name: "Annual", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Next observed year", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("button", { name: "Distinct patients", exact: true })
+    .click();
+  await expect(reading.locator("strong")).toHaveText(
+    number(data.current.annual_utilization.at(-1)!.unique_patients),
+  );
+  await expect(page.locator(".analytics-trend .chart-unit")).toHaveText(
+    "Patients · distinct within each year",
+  );
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await expect
+    .poll(() =>
+      chart
+        .locator("svg")
+        .evaluate((el) =>
+          Math.abs(
+            el.getBoundingClientRect().width -
+              (el as SVGSVGElement).viewBox.baseVal.width,
+          ),
+        ),
+    )
+    .toBeLessThan(2);
+});
+
+test("segment distribution disclosure preserves bar filters and full-cohort trends", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#analytics");
+  const explorer = page.locator(".segment-explorer");
+  const readingBefore = await page.locator(".trend-reading").innerText();
+  const kpisBefore = await page.locator(".analytics-summary").innerText();
+  const details = explorer.locator(".segment-distributions");
+  await expect(details).not.toHaveAttribute("open", "");
+  const disclosure = explorer
+    .locator("summary")
+    .filter({ hasText: "Compare segment distributions" });
+  await disclosure.focus();
+  await disclosure.press("Enter");
+  await expect(details).toHaveAttribute("open", "");
+  const bar = explorer.locator(
+    '[data-dimension="age_band"] [data-segment="50_64"]',
+  );
+  await bar.click();
+  await expect(bar).toHaveAttribute("aria-pressed", "true");
+  const accessibility = await new AxeBuilder({ page })
+    .include(".segment-explorer")
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+    .analyze();
+  expect(accessibility.violations).toEqual([]);
+  await explorer.screenshot({
+    path: testInfo.outputPath("segments-expanded.png"),
+  });
+  await expect(
+    explorer.getByLabel("Filter age band", { exact: true }),
+  ).toHaveValue("50_64");
+  const patients = data.current.segments.cells
+    .filter((c) => c.age_band === "50_64")
+    .reduce((sum, c) => sum + c.patient_count, 0);
+  await expect(explorer.getByRole("status")).toContainText(`${patients} of`);
+  await expect(page.locator(".trend-reading")).toHaveText(readingBefore, {
+    useInnerText: true,
+  });
+  await expect(page.locator(".analytics-summary")).toHaveText(kpisBefore, {
+    useInnerText: true,
+  });
+  await bar.click();
+  await expect(
+    explorer.getByLabel("Filter age band", { exact: true }),
+  ).toHaveValue("all");
+  await disclosure.click();
+  await expect(details).not.toHaveAttribute("open", "");
+});

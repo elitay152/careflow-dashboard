@@ -1,0 +1,299 @@
+.analytics-page {
+  --analytics-muted: #52675b;
+}
+.analytics-page > .note {
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
+.analytics-page .analytics-summary {
+  margin-bottom: 1rem;
+}
+.analytics-page .metric-label {
+  color: var(--analytics-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.analytics-page .metric > strong {
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-variant-numeric: tabular-nums;
+}
+.analytics-page .metric > p,
+.analytics-page .metric-definition {
+  color: var(--analytics-muted);
+  font-size: 0.78rem;
+  line-height: 1.8;
+}
+.analytics-page .metric-definition {
+  margin: 0 0 1.5rem;
+}
+.analytics-page .panel-heading h2 {
+  font-size: 1.05rem;
+}
+.analytics-page .panel-heading p {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--analytics-muted);
+  margin-top: 0.4rem;
+}
+.analytics-trend {
+  border-top: 3px solid var(--teal);
+}
+.analytics-page .analytics-trend .panel-heading h2 {
+  font-size: 1.25rem;
+}
+.analytics-page .chart-toolbar {
+  padding-top: 1rem;
+  flex-wrap: wrap;
+}
+.analytics-page .chart-toolbar .segmented button {
+  font-size: 0.8rem;
+  min-height: 44px;
+  padding: 0.6rem 0.85rem;
+}
+.analytics-page .chart-unit,
+.analytics-page .select-field {
+  color: var(--analytics-muted);
+  font-size: 0.78rem;
+}
+.analytics-page .select-field select {
+  min-height: 44px;
+  color: var(--ink);
+  font-size: 0.8rem;
+}
+.trend-reading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.4rem 1.5rem 0.25rem;
+  color: var(--analytics-muted);
+  font-size: 0.8rem;
+}
+.trend-reading > span:first-child {
+  padding-right: 1rem;
+  border-right: 1px solid var(--line);
+}
+.trend-reading small {
+  display: block;
+  margin-top: 0.35rem;
+  line-height: 1.6;
+  font-size: 0.75rem;
+}
+.trend-reading > strong {
+  color: var(--ink);
+  font-size: 1.9rem;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+.trend-reading .trend-window {
+  margin-left: auto;
+  text-align: right;
+}
+.analytics-page .utilization-chart {
+  padding: 0.8rem 1.25rem 0;
+}
+.analytics-page .utilization-chart svg {
+  min-width: 0;
+  overflow: visible;
+}
+.analytics-page .utilization-chart .axis-label {
+  font-size: 12px;
+  fill: #52675b;
+}
+.analytics-page .month-inspector {
+  margin-top: 0;
+  padding: 1.1rem 1.25rem;
+}
+.analytics-page .month-inspector p {
+  color: var(--analytics-muted);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+.analytics-page .month-inspector > div:first-child > span {
+  font-size: 0.78rem;
+  color: var(--analytics-muted);
+}
+.period-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: min(48%, 450px);
+}
+.analytics-page .month-inspector .period-controls label {
+  width: auto;
+  flex: 1;
+  min-width: 50px;
+}
+.period-controls input {
+  min-height: 44px;
+}
+.period-controls button {
+  min-height: 44px;
+  font-size: 0.75rem;
+}
+.period-controls button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.analytics-page .panel-foot {
+  font-size: 0.76rem;
+  line-height: 1.7;
+  color: var(--analytics-muted);
+}
+.analytics-page .panel-foot .text-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.analytics-page .explorer-content {
+  padding-top: 0.4rem;
+}
+.explorer-filter-note {
+  margin: 0 0 1.2rem;
+  color: #52675b;
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+.analytics-page .segment-filters label {
+  font-size: 0.8rem;
+  color: var(--analytics-muted);
+}
+.analytics-page .segment-filters select,
+.analytics-page .explorer-actions .button {
+  min-height: 44px;
+  font-size: 0.8rem;
+}
+.analytics-page .segment-selection,
+.analytics-page .segment-kpis span {
+  font-size: 0.8rem;
+}
+.analytics-page .segment-selection .text-link {
+  min-height: 44px;
+}
+.segment-distributions {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+.segment-distributions summary {
+  cursor: pointer;
+  padding: 0.6rem 0;
+  min-height: 44px;
+  font-size: 0.9rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+.segment-distributions summary > span {
+  display: block;
+  font-weight: 400;
+  margin: 0.45rem 0 0 1rem;
+  color: #52675b;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+.analytics-page .segment-charts h3 {
+  font-size: 0.9rem;
+}
+.analytics-page .segment-charts section > p,
+.analytics-page .explorer-scope {
+  font-size: 0.78rem;
+  color: var(--analytics-muted);
+}
+.analytics-page .segment-bar {
+  min-height: 44px;
+}
+.analytics-page .segment-bar > span:first-child {
+  font-size: 0.8rem;
+}
+.analytics-concepts {
+  align-items: start;
+}
+.analytics-page .condition-controls label,
+.analytics-page .condition-controls input,
+.analytics-page .condition-controls select {
+  font-size: 0.8rem;
+  color: var(--analytics-muted);
+}
+.analytics-page .condition-controls input,
+.analytics-page .condition-controls select {
+  min-height: 44px;
+}
+.analytics-page .condition {
+  margin-bottom: 1.2rem;
+}
+.analytics-page .condition > div:first-child {
+  font-size: 0.85rem;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.analytics-page .condition small {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--analytics-muted);
+}
+.analytics-page .condition[data-group="social_context"] .bar-track > div {
+  background: #63869b;
+}
+.analytics-page .condition[data-group="care_context"] .bar-track > div {
+  background: #ac8b51;
+}
+.analytics-page .medication-list > div {
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  font-size: 0.85rem;
+}
+@media (max-width: 850px) {
+  .analytics-page .month-inspector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .analytics-page .period-controls {
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .analytics-page .chart-toolbar {
+    align-items: stretch;
+  }
+  .analytics-page .chart-toolbar .segmented[aria-label="Utilization metric"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    overflow: visible;
+  }
+  .analytics-page
+    .chart-toolbar
+    .segmented[aria-label="Utilization metric"]
+    button {
+    white-space: normal;
+  }
+  .analytics-page .chart-toolbar .segmented[aria-label="Chart style"] {
+    align-self: flex-start;
+  }
+  .trend-reading {
+    padding: 1.2rem 1rem 0;
+    gap: 0.8rem;
+  }
+  .trend-reading .trend-window {
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+  .trend-reading .trend-window small {
+    display: inline;
+    margin-left: 0.5rem;
+  }
+  .analytics-page .utilization-chart {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .analytics-page .month-inspector {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 1rem;
+  }
+  .analytics-page .segment-kpis strong {
+    font-size: 1.5rem;
+  }
+}
