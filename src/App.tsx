@@ -706,6 +706,7 @@ function Analytics() {
   const [range, setRange] = useState("60");
   const [granularity, setGranularity] = useState("monthly");
   const chartRef = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(850);
   const [chartStyle, setChartStyle] = useState("line");
   const [conditionView, setConditionView] = useState("clinical");
   const [conditionSearch, setConditionSearch] = useState("");
@@ -745,10 +746,16 @@ function Analytics() {
   const periodLabel = (value: string) =>
     granularity === "annual" ? value.slice(0, 4) : month(value);
   const max = Math.max(1, ...rows.map((row) => row[measure] ?? 0));
-  const chartWidth = 850,
-    chartHeight = 225,
-    left = 45,
-    plotHeight = 155;
+  const chartHeight = 300,
+    left = 58,
+    plotHeight = 190;
+  const plotWidth = Math.max(1, chartWidth - left - 24);
+  const measureNames: Record<Measure, string> = {
+    encounter_count: "Finished encounters",
+    unique_patients: "Distinct patients",
+    average_duration_minutes: "Mean encounter duration",
+    median_duration_minutes: "Median encounter duration",
+  };
   const monthIndex = (date: string) =>
     Number(date.slice(0, 4)) * 12 + Number(date.slice(5, 7));
   const firstMonth = rows.length ? monthIndex(rows[0].encounter_month) : 0;
@@ -757,7 +764,7 @@ function Analytics() {
     ? monthIndex(rows[rows.length - 1].encounter_month) - firstMonth + step
     : step;
   const xAt = (date: string) =>
-    left + ((monthIndex(date) - firstMonth + step / 2) * 775) / span;
+    left + ((monthIndex(date) - firstMonth + step / 2) * plotWidth) / span;
   const isDuration = measure.endsWith("duration_minutes");
   const durationDivisor =
     measure === "median_duration_minutes"
@@ -777,7 +784,7 @@ function Analytics() {
         : isDuration
           ? duration(value)
           : number(value);
-  const barWidth = Math.min(60, (720 / (span / step)) * 0.65);
+  const barWidth = Math.min(60, (plotWidth / (span / step)) * 0.65);
   const latest = rows[rows.length - 1];
   const selected =
     rows.find((row) => row.encounter_month === selectedMonth) ?? latest;
@@ -786,7 +793,7 @@ function Analytics() {
   rows.forEach((row, index) => {
     if (row[measure] === null) return;
     const previous = rows[index - 1];
-    const point = `${xAt(row.encounter_month)},${175 - ((row[measure] ?? 0) / max) * plotHeight}`;
+    const point = `${xAt(row.encounter_month)},${220 - ((row[measure] ?? 0) / max) * plotHeight}`;
     if (
       !previous ||
       previous[measure] === null ||
@@ -809,21 +816,31 @@ function Analytics() {
     0,
   );
   let medicationOffset = 0;
+  const tickCount = chartWidth < 500 ? 3 : 6;
+  const tickIndices = new Set(
+    Array.from({ length: Math.min(tickCount, rows.length) }, (_, i) =>
+      Math.round(
+        (i * (rows.length - 1)) /
+          Math.max(1, Math.min(tickCount, rows.length) - 1),
+      ),
+    ),
+  );
   useEffect(() => {
     const container = chartRef.current;
-    const svg = container?.querySelector("svg");
-    if (!container || !svg || !selected) return;
-    const position =
-      (xAt(selected.encounter_month) / chartWidth) *
-      svg.getBoundingClientRect().width;
-    container.scrollTo({ left: position - container.clientWidth / 2 });
-  }, [range, granularity, selected?.encounter_month]);
+    if (!container) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width > 0)
+        setChartWidth(Math.floor(entry.contentRect.width));
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
   return (
-    <>
+    <div className="analytics-page">
       <Note>
         <strong>Current cohort export:</strong> {current.label},{" "}
         {current.counts.patients} patients. Exported {utc(snapshot.exported_at)}
-        . These charts do not describe the archived Synthea cohort.
+        . Synthetic histories; this page shows the current exported cohort.
       </Note>
       <div className="metrics-grid three analytics-summary">
         <Metric
@@ -871,11 +888,8 @@ function Analytics() {
           is not hospital length of stay.
         </p>
       )}
-      <CohortExplorer
-        data={current.segments}
-        totalPatients={current.counts.patients}
-      />
       <Panel
+        className="analytics-trend"
         title="Encounter activity over time"
         subtitle={
           granularity === "annual"
@@ -929,8 +943,11 @@ function Analytics() {
             ))}
           </div>
           <span className="chart-unit">
-            {isDuration ? `Duration axis: ${durationUnit}` : "Count"} · annual
-            patients are counted distinctly
+            {isDuration
+              ? `Duration axis: ${durationUnit}`
+              : measure === "unique_patients"
+                ? `Patients · distinct within each ${granularity === "annual" ? "year" : "month"}`
+                : `Finished encounters · per ${granularity === "annual" ? "year" : "month"}`}
           </span>
         </div>
         <div className="chart-toolbar">
@@ -964,6 +981,24 @@ function Analytics() {
             ))}
           </div>
         </div>
+        {selected && (
+          <div className="trend-reading" aria-live="polite" aria-atomic="true">
+            <span>
+              {measureNames[measure]}
+              <small>{periodLabel(selected.encounter_month)}</small>
+            </span>
+            <strong>{measureValue(selected[measure])}</strong>
+            <span className="trend-window">
+              {rows.length
+                ? `${periodLabel(rows[0].encounter_month)}–${periodLabel(rows.at(-1)!.encounter_month)}`
+                : "No recorded periods"}
+              <small>
+                {rows.length} recorded{" "}
+                {granularity === "annual" ? "years" : "months"} in view
+              </small>
+            </span>
+          </div>
+        )}
         <div
           className="utilization-chart"
           ref={chartRef}
@@ -976,19 +1011,34 @@ function Analytics() {
             role="img"
             aria-label={`${measure.replaceAll("_minutes", "").replaceAll("_", " ")} across ${rows.length} recorded ${granularity === "annual" ? "years" : "months"}`}
           >
+            <title>
+              {measureNames[measure]} by recorded{" "}
+              {granularity === "annual" ? "year" : "month"}; use the period
+              slider or exact values for details
+            </title>
+            {selected && selected[measure] !== null && (
+              <line
+                x1={xAt(selected.encounter_month)}
+                x2={xAt(selected.encounter_month)}
+                y1="30"
+                y2="220"
+                stroke="#9aaf9f"
+                strokeDasharray="3 5"
+              />
+            )}
             {[0, 1, 2, 3].map((tick) => (
               <g key={tick}>
                 <line
                   x1={left}
-                  x2="825"
-                  y1={20 + (tick * plotHeight) / 3}
-                  y2={20 + (tick * plotHeight) / 3}
+                  x2={chartWidth - 24}
+                  y1={30 + (tick * plotHeight) / 3}
+                  y2={30 + (tick * plotHeight) / 3}
                   stroke="#e7eeea"
                   strokeDasharray="4 5"
                 />
                 <text
-                  x="30"
-                  y={24 + (tick * plotHeight) / 3}
+                  x={left - 12}
+                  y={34 + (tick * plotHeight) / 3}
                   textAnchor="end"
                   className="axis-label"
                 >
@@ -1003,7 +1053,7 @@ function Analytics() {
                   d={path}
                   fill="none"
                   stroke="#347a67"
-                  strokeWidth="2.5"
+                  strokeWidth="3"
                   strokeLinejoin="round"
                 />
               ))}
@@ -1012,56 +1062,62 @@ function Analytics() {
               const x = xAt(row.encounter_month);
               return (
                 <g key={row.encounter_month}>
-                  {chartStyle === "bars" ? (
-                    <rect
-                      x={x - barWidth / 2}
-                      y={175 - ((value ?? 0) / max) * plotHeight}
-                      width={barWidth}
-                      height={((value ?? 0) / max) * plotHeight}
-                      fill={row === selected ? "#203f35" : "#347a67"}
-                      rx="5"
-                    >
-                      <title>
-                        {periodLabel(row.encounter_month)}:{" "}
-                        {measureValue(value)}
-                      </title>
-                    </rect>
-                  ) : (
-                    value !== null && (
-                      <circle
-                        cx={x}
-                        cy={175 - (value / max) * plotHeight}
-                        r={row === selected ? 5 : 2.5}
-                        fill={row === selected ? "#203f35" : "#347a67"}
-                      >
-                        <title>
-                          {periodLabel(row.encounter_month)}:{" "}
-                          {measureValue(value)}
-                        </title>
-                      </circle>
-                    )
-                  )}
-                  {(index % Math.max(1, Math.ceil(rows.length / 6)) === 0 ||
-                    index === rows.length - 1) && (
+                  {chartStyle === "bars"
+                    ? value !== null && (
+                        <rect
+                          x={x - barWidth / 2}
+                          y={220 - ((value ?? 0) / max) * plotHeight}
+                          width={barWidth}
+                          height={((value ?? 0) / max) * plotHeight}
+                          fill={row === selected ? "#203f35" : "#347a67"}
+                          rx="5"
+                        >
+                          <title>
+                            {periodLabel(row.encounter_month)}:{" "}
+                            {measureValue(value)}
+                          </title>
+                        </rect>
+                      )
+                    : value !== null && (
+                        <circle
+                          cx={x}
+                          cy={220 - (value / max) * plotHeight}
+                          r={row === selected ? 5 : 2.5}
+                          fill={row === selected ? "#203f35" : "#347a67"}
+                        >
+                          <title>
+                            {periodLabel(row.encounter_month)}:{" "}
+                            {measureValue(value)}
+                          </title>
+                        </circle>
+                      )}
+                  {tickIndices.has(index) && (
                     <text
                       x={x}
-                      y="202"
-                      textAnchor="middle"
+                      y="260"
+                      textAnchor={
+                        index === 0
+                          ? "start"
+                          : index === rows.length - 1
+                            ? "end"
+                            : "middle"
+                      }
                       className="axis-label"
                     >
                       {periodLabel(row.encounter_month)}
                     </text>
                   )}
-                  {rows.length < 8 && (
-                    <text
-                      x={x}
-                      y={165 - ((value ?? 0) / max) * plotHeight}
-                      textAnchor="middle"
-                      className="value-label"
-                    >
-                      {measureValue(value)}
-                    </text>
-                  )}
+                  {rows.length < 8 &&
+                    (chartWidth >= 500 || rows.length <= 3) && (
+                      <text
+                        x={x}
+                        y={210 - ((value ?? 0) / max) * plotHeight}
+                        textAnchor="middle"
+                        className="value-label"
+                      >
+                        {measureValue(value)}
+                      </text>
+                    )}
                 </g>
               );
             })}
@@ -1084,23 +1140,45 @@ function Analytics() {
                 {medianDuration(selected.median_duration_minutes)}
               </p>
             </div>
-            <label>
-              <span className="sr-only">
-                Explore {granularity === "annual" ? "year" : "month"}
-              </span>
-              <input
-                type="range"
-                min="0"
-                max={Math.max(0, rows.length - 1)}
-                value={selectedIndex}
-                aria-valuetext={periodLabel(selected.encounter_month)}
-                onChange={(event) =>
-                  setSelectedMonth(
-                    rows[Number(event.target.value)].encounter_month,
-                  )
+            <div className="period-controls">
+              <button
+                className="button secondary"
+                aria-label={`Previous observed ${granularity === "annual" ? "year" : "month"}`}
+                disabled={selectedIndex === 0}
+                onClick={() =>
+                  setSelectedMonth(rows[selectedIndex - 1].encounter_month)
                 }
-              />
-            </label>
+              >
+                Previous
+              </button>
+              <label>
+                <span className="sr-only">
+                  Explore {granularity === "annual" ? "year" : "month"}
+                </span>
+                <input
+                  type="range"
+                  min="0"
+                  max={Math.max(0, rows.length - 1)}
+                  value={selectedIndex}
+                  aria-valuetext={periodLabel(selected.encounter_month)}
+                  onChange={(event) =>
+                    setSelectedMonth(
+                      rows[Number(event.target.value)].encounter_month,
+                    )
+                  }
+                />
+              </label>
+              <button
+                className="button secondary"
+                aria-label={`Next observed ${granularity === "annual" ? "year" : "month"}`}
+                disabled={selectedIndex === rows.length - 1}
+                onClick={() =>
+                  setSelectedMonth(rows[selectedIndex + 1].encounter_month)
+                }
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
         <div className="panel-foot split">
@@ -1152,7 +1230,11 @@ function Analytics() {
           </div>
         )}
       </Panel>
-      <div className="overview-grid">
+      <CohortExplorer
+        data={current.segments}
+        totalPatients={current.counts.patients}
+      />
+      <div className="overview-grid analytics-concepts">
         <Panel
           title={groups[conditionView]}
           subtitle="Distinct affected patients ÷ all loaded patients"
@@ -1217,7 +1299,7 @@ function Analytics() {
                 </div>
                 <small>
                   {row.affected_patients} of {row.total_patients} loaded
-                  patients · {row.group} · {row.code}
+                  patients · {groups[row.group] ?? row.group} · {row.code}
                 </small>
               </div>
             ))}
@@ -1335,7 +1417,7 @@ function Analytics() {
         Clinical findings include acute and chronic records; this is not a
         chronic-disease registry. No records are discarded when changing views.
       </Note>
-    </>
+    </div>
   );
 }
 

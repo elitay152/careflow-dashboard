@@ -119,7 +119,8 @@ export default function CohortExplorer({
         <div>
           <h2 id="explorer-heading">Explore patient segments</h2>
           <p>
-            Combine filters or select a bar to explore this synthetic cohort.
+            Combine filters to explore this synthetic cohort; compare its
+            distributions below.
           </p>
         </div>
         <div className="explorer-actions">
@@ -140,6 +141,10 @@ export default function CohortExplorer({
         </div>
       </div>
       <div className="explorer-content">
+        <p className="explorer-filter-note">
+          Filters update this explorer only. The trend and condition charts show
+          the full cohort.
+        </p>
         <div className="segment-filters">
           {dimensions.map((key) => (
             <label key={key}>
@@ -202,60 +207,69 @@ export default function CohortExplorer({
             reset the filters.
           </p>
         )}
-        <div className="segment-charts">
-          {dimensions.map((key) => {
-            const eligible = data.cells.filter((cell) => matches(cell, key));
-            const bars = Object.entries(labels[key]).map(([value, label]) => ({
-              value,
-              label,
-              count: eligible
-                .filter((cell) => cell[key] === value)
-                .reduce((sum, cell) => sum + cell.patient_count, 0),
-            }));
-            const max = Math.max(1, ...bars.map((bar) => bar.count));
-            return (
-              <section
-                key={key}
-                data-dimension={key}
-                aria-label={`${dimensionNames[key]} distribution`}
-              >
-                <h3>
-                  {key === "age_band"
-                    ? "Age at simulation cutoff"
-                    : dimensionNames[key]}
-                </h3>
-                <p>
-                  Counts reflect the other filters. Click again to clear a
-                  selection.
-                </p>
-                {bars.map((bar) => (
-                  <button
-                    className="segment-bar"
-                    key={bar.value}
-                    data-segment={bar.value}
-                    aria-label={`${dimensionNames[key]}: ${bar.label}, ${bar.count} patients`}
-                    aria-pressed={filters[key] === bar.value}
-                    onClick={() => choose(key, bar.value)}
-                  >
-                    <span>
-                      <span>{bar.label}</span>
-                      <strong>{number(bar.count)}</strong>
-                    </span>
-                    <span className="segment-track">
-                      <span style={{ width: `${(bar.count / max) * 100}%` }} />
-                    </span>
-                  </button>
-                ))}
-              </section>
-            );
-          })}
-        </div>
+        <details className="segment-distributions">
+          <summary>
+            Compare segment distributions
+            <span>Age, gender, clinical profile, and encounter frequency</span>
+          </summary>
+          <div className="segment-charts">
+            {dimensions.map((key) => {
+              const eligible = data.cells.filter((cell) => matches(cell, key));
+              const bars = Object.entries(labels[key]).map(
+                ([value, label]) => ({
+                  value,
+                  label,
+                  count: eligible
+                    .filter((cell) => cell[key] === value)
+                    .reduce((sum, cell) => sum + cell.patient_count, 0),
+                }),
+              );
+              const max = Math.max(1, ...bars.map((bar) => bar.count));
+              return (
+                <section
+                  key={key}
+                  data-dimension={key}
+                  aria-label={`${dimensionNames[key]} distribution`}
+                >
+                  <h3>
+                    {key === "age_band"
+                      ? "Age at simulation cutoff"
+                      : dimensionNames[key]}
+                  </h3>
+                  <p>
+                    Counts reflect the other filters. Click again to clear a
+                    selection.
+                  </p>
+                  {bars.map((bar) => (
+                    <button
+                      className="segment-bar"
+                      key={bar.value}
+                      data-segment={bar.value}
+                      aria-label={`${dimensionNames[key]}: ${bar.label}, ${bar.count} patients`}
+                      aria-pressed={filters[key] === bar.value}
+                      onClick={() => choose(key, bar.value)}
+                    >
+                      <span>
+                        <span>{bar.label}</span>
+                        <strong>{number(bar.count)}</strong>
+                      </span>
+                      <span className="segment-track">
+                        <span
+                          style={{ width: `${(bar.count / max) * 100}%` }}
+                        />
+                      </span>
+                    </button>
+                  ))}
+                </section>
+              );
+            })}
+          </div>
+        </details>
         <p className="explorer-scope">
-          These filters apply to this explorer; the trend and condition charts
-          below show the full cohort. Age is calculated at{" "}
-          {date(data.age_as_of)} for all loaded patients, including deceased
-          patients. Visit counts use the same latest-12-month KPI window; active
-          prescriptions and clinical profiles use recorded snapshot statuses.
+          Age is calculated at {date(data.age_as_of)} for all loaded patients,
+          including deceased patients. Visit counts use the same latest-12-month
+          KPI window; active prescriptions and clinical profiles use recorded
+          snapshot statuses.
         </p>
       </div>
       <dialog
